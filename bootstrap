@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+FORCE=false
+DRY=false
+
+for arg in "$@"
+do
+    case "$arg" in
+        -f | --force )   FORCE=true; shift ;;
+        -d | --dry-run ) DRY=true; shift ;;
+    esac
+done
+
+cd "$(dirname "${BASH_SOURCE}")";
+
+git pull;
+
+if [ "$FORCE" != true -a "$DRY" != true ]; then
+    read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1;
+    echo "";
+    if ! [[ $REPLY =~ ^[Yy]$ ]]; then
+        exit 0;
+    fi;
+fi;
+
+if [ "$DRY" != true ]; then
+    rsync -avh --no-perms --exclude ".DS_Store" home/. ~;
+else
+    rsync --dry-run --itemize-changes -avh --no-perms --exclude ".DS_Store" home/. ~;
+fi;
