@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+get_tmux_option() {
+	local option="$1"
+	local default_value="$2"
+	local option_value="$(tmux show-option -gqv "$option")"
+	if [ -z "$option_value" ]; then
+		echo "$default_value"
+	else
+		echo "$option_value"
+	fi
+}
+
+X=$(get_tmux_option @menu_location_x P)
+Y=$(get_tmux_option @menu_location_y S)
+
+# TODO: Go back?
+SECOND="menu -O -T 'Second menu' -x $X -y $Y \
+    g h i \
+    k l m"
+
+# #[align=centre]
+tmux $@ menu -O -T "Main menu" -x $X -y $Y \
+    "Panes"   p c \
+    "Windows" w "$SECOND" \
+    "" \
+    "Detach from tmux" d detach-client \
+    "" \
+    "Toggle ASCII mode" C-a "run-shell \"$CURRENT_DIR/ascii\"" \
+    "Toggle WAN segment" C-w "run-shell \"$CURRENT_DIR/wan --toggle\"" \
+    "" \
+    "Help" h "run-shell \"$CURRENT_DIR/help\""

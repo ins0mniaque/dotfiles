@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then CLOCK_ICON=" 🗓  ";
+else                                        CLOCK_ICON=" ";
+fi
+
+echo "#[fg=default]$CLOCK_ICON$(date '+%a %b %d %H:%M')"

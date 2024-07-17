@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then MACHINE_ICON="💻 ";
+else                                        MACHINE_ICON="";
+fi
+
+echo "#{?client_prefix,#[fg=colour208]PREFIX,#{?pane_in_mode,#[fg=colour48]COPY,#{?pane_synchronized,#[fg=red]SYNC,#[fg=default]$MACHINE_ICON#h}}}"

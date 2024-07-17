@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then CAFFEINATED_ICON=" ☕ ";
+else                                        CAFFEINATED_ICON="#[fg=colour255] ♨";
+fi
+
+if pgrep caffeinate > /dev/null; then
+    echo "$CAFFEINATED_ICON"
+fi

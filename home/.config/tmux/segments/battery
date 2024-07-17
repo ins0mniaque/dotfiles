@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then POWER_ICON="#[fg=default] 🔌 "; BATTERY_ICON="#[fg=default] 🔋 ";
+else                                        POWER_ICON="#[fg=colour220] ↑"; BATTERY_ICON="#[fg=colour160] ↓";
+fi
+
+type pmset >/dev/null 2>&1 && pmset -g batt | awk -v POWER_ICON="$POWER_ICON" -v BATTERY_ICON="$BATTERY_ICON" 'NR==2 {if($4 != "discharging;") {printf POWER_ICON} else {printf BATTERY_ICON} {gsub(/;/,"",$3); print "#[fg=default]"$3}}'

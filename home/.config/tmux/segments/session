@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then SESSION_ICON=" 🖥  "; ZOOMED_ICON=" 🔎 ";
+else                                        SESSION_ICON=" ";     ZOOMED_ICON=" ⚲";
+fi
+
+echo "#[fg=default]$SESSION_ICON#S:#I.#P#{?window_zoomed_flag,$ZOOMED_ICON,}"

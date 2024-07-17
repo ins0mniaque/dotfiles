@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then DOCKER_ICON=" 🐳";
+else                                        DOCKER_ICON="#[fg=colour33] D#[fg=default]";
+fi
+
+if docker stats --no-stream &> /dev/null; then
+    echo "$DOCKER_ICON" $((`docker ps -q | wc -l`)) ""
+fi
