@@ -1,0 +1,56 @@
+[user]
+	useconfigonly = true
+
+[alias]
+	ss = status -sb
+	ls = log --graph --pretty=format:'%C(cyan)%h%Creset %s %C(yellow)(%cr) %C(dim white)<%an>%Creset%C(red)%d%Creset '
+	ll = log --graph --stat --pretty=format:'%C(cyan)%h%Creset %s %C(yellow)(%cr) %C(dim white)<%an>%Creset%C(red)%d%Creset '
+	ld = log -p
+	d = diff
+	ds = diff --staged
+	dl = log -p
+	browse = !open `git config remote.origin.url`
+
+[core]
+	autocrlf = input
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	features = theme
+	navigate = true
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
+
+[delta "theme"]
+	commit-decoration-style = bold box ul
+	dark = true
+	file-decoration-style = none
+	file-style = omit
+	hunk-header-decoration-style = "#022b45" box ul
+	hunk-header-file-style = "#999999"
+	hunk-header-line-number-style = bold "#003300"
+	hunk-header-style = file line-number syntax
+	line-numbers = true
+	line-numbers-left-style = "#022b45"
+	line-numbers-minus-style = "#800000"
+	line-numbers-plus-style = "#003300"
+	line-numbers-right-style = "#022b45"
+	line-numbers-zero-style = "#999999"
+	minus-emph-style = normal "#800000"
+	minus-style = normal "#330000"
+	plus-emph-style = syntax "#003300"
+	plus-style = syntax "#001a00"
+	syntax-theme = Monokai Extended
+
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
