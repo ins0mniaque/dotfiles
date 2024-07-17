@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "${BASH_SOURCE}")";
+
+git clone https://github.com/Aloxaf/fzf-tab
+git clone https://github.com/zsh-users/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting
+git clone https://github.com/ins0mniaque/zsh-modern-keybindings

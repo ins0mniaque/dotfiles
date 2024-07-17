@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "${BASH_SOURCE}")";
+
+cd fzf-tab
+git pull
+cd ..
+
+cd zsh-autosuggestions
+git pull
+cd ..
+
+cd zsh-syntax-highlighting
+git pull
+cd ..
+
+cd zsh-modern-keybindings
+git pull
+cd ..
