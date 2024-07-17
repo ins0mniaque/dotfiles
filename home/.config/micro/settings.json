@@ -1,0 +1,14 @@
+{
+    "basename": true,
+    "colorscheme": "monokai-tc",
+    "diffgutter": true,
+    "divchars": "│─",
+    "divreverse": false,
+    "eofnewline": false,
+    "ftoptions": false,
+    "hlsearch": true,
+    "parsecursor": true,
+    "scrollbar": true,
+    "statusformatl": "$(filename) $(modified)($(line),$(col)) $(status.paste)| ft:$(opt:filetype) | $(opt:fileformat) | $(opt:encoding) | magic",
+    "statusformatr": "\u001b[0;31mmagic\u001b[0m;0"
+}

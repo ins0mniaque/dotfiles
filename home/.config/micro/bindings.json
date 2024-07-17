@@ -1,0 +1,20 @@
+{
+    "Alt-/": "lua:comment.comment",
+    "Ctrl-Alt-C": "Copy",
+    "Ctrl-Alt-Left": "lua:bounce.bounce",
+    "Ctrl-Alt-O": "OpenFile",
+    "Ctrl-Alt-Right": "lua:bounce.bounce",
+    "Ctrl-F2": "command:toggleBookmark",
+    "Ctrl-J": "command:fzf-jump",
+    "Ctrl-O": "command:fzf-tab",
+    "Ctrl-W": "command:quit",
+    "CtrlShift-F2": "command:clearBookmarks",
+    "CtrlUnderscore": "lua:comment.comment",
+    "F12": "command:jumptag",
+    "F2": "command:nextBookmark",
+    "F4": "command:jumptag",
+    "F6": "command-edit:gorename ",
+    "Shift-F2": "command:prevBookmark",
+    "Shift-MouseWheelDown": "CursorRight",
+    "Shift-MouseWheelUp": "CursorLeft"
+}

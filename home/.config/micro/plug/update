@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+micro -plugin update bounce
+micro -plugin update editorconfig
+micro -plugin update filemanager
+micro -plugin update fish
+micro -plugin update fzf
+micro -plugin update go
+micro -plugin update jump
+micro -plugin update manipulator
+micro -plugin update quickfix
