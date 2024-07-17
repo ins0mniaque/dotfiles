@@ -1,0 +1,43 @@
+# Layout
+
+add_newline = false
+format = """$directory$character"""
+right_format = """$shell$all"""
+
+[line_break]
+disabled = true
+
+# Battery
+
+[battery]
+disabled = true
+
+# Directory
+
+[directory]
+repo_root_style = "bold purple"
+truncation_length = 8
+truncation_symbol = "…/"
+
+[shell]
+disabled = false
+
+[shlvl]
+disabled = false
+
+# Unicode symbols
+
+[erlang]
+symbol = "℮ "
+
+[git_branch]
+symbol = "⎇ "
+
+[hg_branch]
+symbol = "⎇ "
+
+[nodejs]
+symbol = "⬢(green) "
+
+[pulumi]
+symbol = "🎲 "
