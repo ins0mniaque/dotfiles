@@ -1,0 +1,184 @@
+[font]
+size = 13.0
+
+[[keyboard.bindings]]
+chars = "\u0005"
+key = "Space"
+mods = "Control|Alt|Command"
+
+[[keyboard.bindings]]
+chars = "\u0011"
+key = "Q"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u001A"
+key = "Z"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0018"
+key = "X"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u001B\u0003"
+key = "C"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0013"
+key = "S"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0000"
+key = "Space"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "~"
+key = "`"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "@"
+key = 19
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "["
+key = 33
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "]"
+key = 30
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "{"
+key = 39
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "}"
+key = 42
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = '\'
+key = 50
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B[65;6u"
+key = "A"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[68;6u"
+key = "D"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[69;6u"
+key = "E"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[71;6u"
+key = "G"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[72;6u"
+key = "H"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[73;6u"
+key = "I"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[74;6u"
+key = "J"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[75;6u"
+key = "K"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[76;6u"
+key = "L"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[77;6u"
+key = "M"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[79;6u"
+key = "O"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[80;6u"
+key = "P"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[81;6u"
+key = "Q"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[82;6u"
+key = "R"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[83;6u"
+key = "S"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[84;6u"
+key = "T"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[85;6u"
+key = "U"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[87;6u"
+key = "W"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[88;6u"
+key = "X"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[89;6u"
+key = "Y"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[90;6u"
+key = "Z"
+mods = "Control|Shift"
+
+[shell]
+args = ["-l", "-c", "tmux attach &> /dev/null || tmux"]
+program = "/bin/zsh"
+
+[window]
+dynamic_padding = false
