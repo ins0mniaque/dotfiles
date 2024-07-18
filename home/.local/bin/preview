@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# TODO: Add support for when tput is unavailable (using stty and MODE (Windows)
+width=${FZF_PREVIEW_COLUMNS:-${COLUMNS:-$(tput cols)}}
+height=${FZF_PREVIEW_LINES:-${LINES:-$(tput lines)}}
+margin=0
+
+if [ -z $FZF_PREVIEW_COLUMNS ]; then
+    ((height--))
+else
+    # TODO: Add option for margin and max lines
+    margin=8
+fi
+
+while [ True ]; do
+    if [ "$1" = "--header" -o "$1" = "-h" ]; then
+        # TODO: Add support for when tput is unavailable
+        header=true
+        # TODO: Option for eza (yellow is only used to color the size from ls)
+        # yellow=$(tput setaf 3)
+        dim=$(tput dim)
+        italic=$(tput sitm)
+        normal=$(tput sgr0)
+
+        shift 1
+    elif [ "$1" = "--width" -o "$1" = "-w" ]; then
+        width=$2
+        shift 2
+    elif [ "$1" = "--height" -o "$1" = "-h" ]; then
+        height=$2
+        shift 2
+    else
+        break
+    fi
+done
+
+if [ "$header" = true ]; then
+    height=$((height - 2))
+fi
+
+for file in "$@"; do
+    mime=$(file --brief --mime-type --mime-encoding "$file")
+
+    if [ "$header" = true ]; then
+        # TODO: Option for eza
+        if [ "${mime:0:15}" == "inode/directory" ]; then
+            # TODO: ls version
+            # name="📁 $(ls -lahd --color=always "$file" | awk -F " " -v dir="$(dirname "$file")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 " " yellow $5 normal'} )  $(set -- "$file"/*; echo $#) files"
+            name="📁 $(eza -lad --color=always --no-permissions --no-user --no-time "$file" | awk -F " " -v dir="$(dirname "$file")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2'} )  $(set -- "$file"/*; echo $#) files"
+        else
+            # name="📄 $(ls -lah --color=always "$file" | awk -F " " -v dir="$(dirname "$file")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 "  " yellow $5 normal'} )"
+            name="📄 $(eza -la --color=always --no-permissions --no-user --no-time "$file" | awk -F " " -v dir="$(dirname "$file")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2 "  " $1 "B"'} )"
+        fi
+        colorless=$(echo $name | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g')
+        remain=$((width - ${#colorless} - margin))
+        if [ $remain -le 0 ]; then
+            info=""
+        else
+            info="  $(file --brief "$file")"
+
+            if [ ${#info} -ge $remain ]; then
+                half=$(((remain - 3) / 2))
+                info=${info:0:$half}…${info:$((-half + remain % 2 - 1))}
+            else
+                info=$(printf '%*s' "$((remain - 2 - ${#info}))")$info
+            fi
+        fi
+
+        echo "$name$italic$dim$info$normal"
+        printf "$dim%*s$normal\n" "$width" '' | tr ' ' '―'
+    fi
+
+    if [ "${mime:0:15}" == "inode/directory" ]; then
+        eza --all --long --git --color=always "$file"
+    elif [ "${mime:0:6}" == "image/" ]; then
+        chafa --size $width'x'$height "$file"
+    elif [ "${mime: -14}" == "charset=binary" ]; then
+        hexyl --length=4KiB "$file"
+    elif [ "${file: -3}" == ".md" ]; then
+        glow --local --style dark "$file" | bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500
+    elif [ "${file: -5}" == ".html" ]; then
+        # TODO: This is a bit slow, should be an option --render
+        # pandoc --from html --to gfm "$file" | glow --local --style dark - | bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500
+        # w3m "$file"
+        bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500 "$file"
+    else
+        bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500 "$file"
+    fi
+done
