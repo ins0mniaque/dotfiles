@@ -1,92 +1,111 @@
 # XDG Base Directory Specification
 # https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
 #
-# Track software support: https://wiki.archlinux.org/title/XDG_Base_Directory
+# POSIX-compliant shells
+# • Link ~/.profile to this file
+# bash
+# • Link ~/.bashrc to this file
+# zsh
+# • Link ~/.zshenv to this file
+# • Add the following lines to $XDG_CONFIG_HOME/zsh/.zshrc:
+#       # Configure zsh autocompletion cache to XDG specification
+#       autoload -U compinit
+#       compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
+#       zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
 
-# TODO: Panic if XDG not set
+# Configure XDG base directories
+
+XDG_CACHE_HOME=${XDG_CACHE_HOME:=~/.cache}
+XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=~/.config}
+XDG_DATA_HOME=${XDG_DATA_HOME:=~/.local/share}
+XDG_STATE_HOME=${XDG_STATE_HOME:=~/.local/state}
+
+[ -z "$XDG_RUNTIME_DIR" ] && [ -d "/run/user/${UID:=$(id -u)}" ] && XDG_RUNTIME_DIR="/run/user/$UID"
+[ -z "$XDG_RUNTIME_DIR" ] && XDG_RUNTIME_TMPDIR=${TMPDIR-/tmp} && XDG_RUNTIME_DIR=${XDG_RUNTIME_TMPDIR%/}/runtime-user-$UID
+[ -d "$XDG_RUNTIME_DIR" ] || mkdir -m 0700 -p "$XDG_RUNTIME_DIR"
+
+export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME XDG_RUNTIME_DIR
 
 # Configure local bin/lib to XDG specification
 
 export PATH="$PATH:$HOME/.local/bin"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
 
-# Configure less to XDG specification
-export LESSKEY="$XDG_CONFIG_HOME/less/keys"
-export LESSHISTFILE="$XDG_STATE_HOME/less/history"
+# Configure applications to XDG specification
 
-# Configure terminfo to XDG specification
-export TERMINFO_DIRS="$TERMINFO_DIRS:$XDG_DATA_HOME/terminfo"
+    # less
+    export LESSKEY="$XDG_CONFIG_HOME/less/keys"
+    export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 
-# Java
-export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+    # terminfo
+    export TERMINFO_DIRS="$TERMINFO_DIRS:$XDG_DATA_HOME/terminfo"
 
-# go
-export GOPATH="$XDG_DATA_HOME/go"
+    # Java
+    export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 
-# openssl
-export RANDFILE="$XDG_DATA_HOME/openssl/rnd"
+    # go
+    export GOPATH="$XDG_DATA_HOME/go"
 
-# docker
-export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+    # openssl
+    export RANDFILE="$XDG_DATA_HOME/openssl/rnd"
 
-# nuget
-export NUGET_PACKAGES="$XDG_DATA_HOME/nuget/packages"
+    # docker
+    export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 
-# rust
-export CARGO_HOME="$XDG_DATA_HOME/cargo"
-export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
-export PATH="$CARGO_HOME/bin:$PATH"
+    # nuget
+    export NUGET_PACKAGES="$XDG_DATA_HOME/nuget/packages"
 
-# ripgrep
-export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
+    # rust
+    export CARGO_HOME="$XDG_DATA_HOME/cargo"
+    export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+    export PATH="$CARGO_HOME/bin:$PATH"
 
-# screen
-# export SCREENRC="$XDG_CONFIG_HOME/screen/screenrc"
+    # ripgrep
+    export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
 
-# readline
-# export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
+# Configure bash to XDG specification
 
-# export ATOM_HOME="$XDG_DATA_HOME/atom"
-# export ACKRC="$XDG_CONFIG_HOME/ack/ackrc"
-# export AWS_SHARED_CREDENTIALS_FILE="$XDG_CONFIG_HOME/aws/credentials"
-# export AWS_CONFIG_FILE="$XDG_CONFIG_HOME/aws/config"
-# export CARGO_HOME="$XDG_DATA_HOME/cargo"
-# export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
-# export IPYTHONDIR="$XDG_CONFIG_HOME/jupyter"
-# export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
-# export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
-# export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
-# export PSQLRC="$XDG_CONFIG_HOME/pg/psqlrc"
-# export PSQL_HISTORY="$XDG_CACHE_HOME/pg/psql_history"
-# export PGPASSFILE="$XDG_CONFIG_HOME/pg/pgpass"
-# export PGSERVICEFILE="$XDG_CONFIG_HOME/pg/pg_service.conf"
-# export SCREENRC="$XDG_CONFIG_HOME/screen/screenrc"
-# export TMUX_TMPDIR="$XDG_RUNTIME_DIR"
-# export WGETRC="$XDG_CONFIG_HOME/wgetrc"
-# export ANDROID_SDK_HOME="$XDG_CONFIG_HOME/android"
-# export WAKATIME_HOME="$XDG_CONFIG_HOME/wakatime"
-# export R_ENVIRON_USER="${XDG_CONFIG_HOME:-$HOME/.config}/R/Renviron"
+if [ -n "$BASH_VERSION" ]; then
 
+    BASH_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}/bash
+    BASH_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}/bash
 
-# Configure vim/gvim/neovim to XDG specification
-# export GVIMINIT='let $MYGVIMRC = !has("nvim") ? "$XDG_CONFIG_HOME/vim/gvimrc" : "$XDG_CONFIG_HOME/nvim/init.gvim" | so $MYGVIMRC'
-# export VIMINIT='let $MYVIMRC = !has("nvim") ? "$XDG_CONFIG_HOME/vim/vimrc" : "$XDG_CONFIG_HOME/nvim/init.vim" | so $MYVIMRC'
+    [ ! -d "$BASH_STATE_HOME" ] && mkdir -p "$BASH_STATE_HOME"
 
-# TODO: Embed the following configuration in VIMINIT
-#
-# set runtimepath^=$XDG_CONFIG_HOME/vim
-# set runtimepath+=$XDG_DATA_HOME/vim
-# set runtimepath+=$XDG_CONFIG_HOME/vim/after
-#
-# set packpath^=$XDG_DATA_HOME/vim,$XDG_CONFIG_HOME/vim
-# set packpath+=$XDG_CONFIG_HOME/vim/after,$XDG_DATA_HOME/vim/after
-#
-# let g:netrw_home = $XDG_DATA_HOME."/vim"
-# call mkdir($XDG_DATA_HOME."/vim/spell", 'p')
-# set viewdir=$XDG_DATA_HOME/vim/view | call mkdir(&viewdir, 'p')
-#
-# set backupdir=$XDG_CACHE_HOME/vim/backup | call mkdir(&backupdir, 'p')
-# set directory=$XDG_CACHE_HOME/vim/swap   | call mkdir(&directory, 'p')
-# set undodir=$XDG_CACHE_HOME/vim/undo     | call mkdir(&undodir,   'p')
-#
-# if !has('nvim') | set viminfofile=$XDG_STATE_HOME/vim/viminfo | endif
+    export HISTFILE="$BASH_STATE_HOME"/history
+
+    # Source .profile
+    [ "${BASH_SOURCE##*/}" = ".profile" ] && [ -f "$BASH_CONFIG_HOME"/profile ] && . "$BASH_CONFIG_HOME"/profile
+
+    # Source .bashrc
+    [ "${BASH_SOURCE##*/}" = ".bashrc" ] && [ -f "$BASH_CONFIG_HOME"/bashrc ] && . "$BASH_CONFIG_HOME"/bashrc
+
+    unset BASH_CONFIG_HOME
+    unset BASH_STATE_HOME
+
+fi
+
+# Configure zsh to XDG specification
+
+if [ -n "$ZSH_VERSION" ]; then
+
+    ZDOTDIR=${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}
+    ZCACHEDIR=${ZCACHEDIR:-$XDG_CACHE_HOME/zsh}
+    ZDATADIR=${ZDATADIR:-$XDG_DATA_HOME/zsh}
+    ZSTATEDIR=${ZSTATEDIR:-$XDG_STATE_HOME/zsh}
+    HISTFILE="$ZSTATEDIR"/history
+
+    [ ! -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION" ] && mkdir -p "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
+    [ ! -d "$ZDATADIR"  ] && mkdir -p "$ZDATADIR"
+    [ ! -d "$ZSTATEDIR" ] && mkdir -p "$ZSTATEDIR"
+
+    export ZDOTDIR ZCACHEDIR ZDATADIR ZSTATEDIR HISTFILE
+
+    fpath=($fpath $ZDOTDIR/functions)
+
+    ZSH_SOURCE="${(%):-%N}"
+
+    # Source .zshenv
+    [ "${ZSH_SOURCE##*/}" = ".zshenv" ] && [ -f "$ZDOTDIR"/.zshenv ] && . "$ZDOTDIR"/.zshenv
+
+fi

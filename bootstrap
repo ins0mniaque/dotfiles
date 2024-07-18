@@ -7,7 +7,7 @@ for arg in "$@"
 do
     case "$arg" in
         -f | --force )   FORCE=true; shift ;;
-        -d | --dry-run ) DRY=true; shift ;;
+        -d | --dry-run ) DRY=true;   shift ;;
     esac
 done
 
@@ -25,6 +25,10 @@ fi;
 
 if [ "$DRY" != true ]; then
     rsync -avh --no-perms --exclude ".DS_Store" home/. ~;
+
+    ln -s ~/.config/xdg/configure ~/.profile
+    ln -s ~/.config/xdg/configure ~/.bashrc
+    ln -s ~/.config/xdg/configure ~/.zshenv
 else
     rsync --dry-run --itemize-changes -avh --no-perms --exclude ".DS_Store" home/. ~;
 fi;
