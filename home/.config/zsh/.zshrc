@@ -3,11 +3,6 @@ autoload -U compinit
 compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
 zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
 
-fpath=($fpath $ZDOTDIR/func)
-
-# Configure applications to XDG specification
-source $HOME/.config/xdg/configure
-
 # Configure keyboard
 source $ZDOTDIR/plugins/zsh-modern-keybindings/zsh-modern-keybindings.zsh
 
@@ -267,5 +262,8 @@ export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
 
 # Aliases
-alias ll='eza -al --group-directories-first'
-alias ls='eza -alF --color=always --sort=size | grep -v /'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ls='eza --all'
+alias ll='eza --all --long --git --group-directories-first'
