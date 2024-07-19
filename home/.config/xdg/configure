@@ -70,7 +70,8 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
     export PATH="$CARGO_HOME/bin:$PATH"
 
     # Sage
-    export DOT_SAGE="$XDG_CONFIG_HOME"/sage
+    export DOT_SAGE="$XDG_DATA_HOME"/sage
+    export SAGE_STARTUP_FILE="$XDG_CONFIG_HOME"/sage/init.sage
 
     # terminfo
     export TERMINFO="$XDG_DATA_HOME"/terminfo
