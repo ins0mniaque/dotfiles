@@ -5,6 +5,7 @@ vim.g.maplocalleader = ' '
 -- Options
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.expandtab = true
+vim.opt.ignorecase = true
 vim.opt.keymodel = { 'startsel', 'stopsel' }
 vim.opt.laststatus = 2
 vim.opt.list = true
@@ -14,13 +15,20 @@ vim.opt.mousemodel = 'popup_setpos'
 vim.opt.number = true
 vim.opt.selectmode = { 'mouse', 'key', 'cmd' }
 vim.opt.selection = 'exclusive'
+vim.opt.signcolumn = 'yes'
 vim.opt.showmode = false
 vim.opt.showtabline = 2
+vim.opt.smartcase = true
 vim.opt.smartindent = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
 vim.opt.termguicolors = true
+vim.opt.timeoutlen = 300
 vim.opt.undofile = true
+vim.opt.updatetime = 250
 vim.opt.virtualedit = 'block'
 vim.opt.whichwrap:append('<>[]')
+vim.opt.wrap = false
 
 vim.diagnostic.config
 {
@@ -31,12 +39,11 @@ vim.diagnostic.config
     update_in_insert = true
 }
 
+-- Keyboard mappings
+local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
+
 local function map(lhs, rhs, opts)
-    vim.keymap.set('n', lhs, rhs, opts)
-    vim.keymap.set('i', lhs, rhs, opts)
-    vim.keymap.set('x', lhs, rhs, opts)
-    vim.keymap.set('s', lhs, rhs, opts)
-    vim.keymap.set('c', lhs, rhs, opts)
+    vim.keymap.set({ 'n', 'i', 'x', 's', 'c' }, lhs, rhs, opts)
 
     if type(rhs) == 'string' then
         rhs = '<C-c>' .. rhs
@@ -45,13 +52,12 @@ local function map(lhs, rhs, opts)
     vim.keymap.set('o', lhs, rhs, opts)
 end
 
--- Keyboard mappings
 map('<C-n>', vim.cmd.tabnew, { desc = 'New tab' })
 map('<C-t>', vim.cmd.tabnew, { desc = 'New tab' })
 map('<C-o>', function() require('telescope.builtin').find_files() end, { desc = 'Open...' })
 map('<C-s>', vim.cmd.update, { desc = 'Save' })
-map('<C-w>', vim.cmd.quit, { desc = 'Close' })
-map('<C-q>', vim.cmd.quitall, { desc = 'Quit' })
+map('<C-w>', '<Cmd>confirm quit<CR>', { desc = 'Close' })
+map('<C-q>', '<Cmd>confirm quitall<CR>', { desc = 'Quit' })
 map('<C-z>', '<C-O>u', { desc = 'Undo' })
 map('<C-y>', '<C-O><C-r>', { desc = 'Redo' })
 map('<C-c>', '<C-O>y', { desc = 'Copy' })
@@ -63,6 +69,8 @@ map('<C-h>', '<Cmd>SearchBoxReplace confirm=menu<CR>', { desc = 'Replace...' })
 map('<C-j>', function() require('telescope.builtin').live_grep() end, { desc = 'Find in files...' })
 map('<C-r>', function() require('nvim-treesitter-refactor.smart_rename').smart_rename() end, { desc = 'Rename...' })
 map('<C-k>f', function() require('conform').format { async = true, lsp_fallback = true } end, { desc = 'Format Buffer' })
+map('<C-_>', function() require('Comment.api').toggle.linewise.current() end, { desc = 'Toggle Comments' })
+vim.keymap.set({ 's', 'x' }, '<C-_>', function() vim.api.nvim_feedkeys(esc, 'nx', false) require('Comment.api').toggle.linewise(vim.fn.visualmode()) end, { desc = 'Toggle Comments' })
 map('<F12>', function() require('nvim-treesitter-refactor.navigation').goto_definition_lsp_fallback() end, { desc = 'Go to Definition' })
 map('<F24>', function() require('telescope.builtin').lsp_references() end, { desc = 'Find all references...' })
 map('<C-g>d', function() require('nvim-treesitter-refactor.navigation').goto_definition_lsp_fallback() end, { desc = 'Go to Definition' })
@@ -111,7 +119,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Configure lazy.nvim
-require("lazy.view.config").keys.close = "<esc>"
+require("lazy.view.config").keys.close = "<Esc>"
 
 -- Setup lazy.nvim
 require('lazy').setup
@@ -267,8 +275,26 @@ require('lazy').setup
             }
         },
 
+        -- Auto-pairs completion
+        { 'windwp/nvim-autopairs', event = "InsertEnter", opts = { } },
+
+        -- Rainbow delimiters
+        {
+            "HiPhish/rainbow-delimiters.nvim",
+            opts = { },
+            config = function(_, opts)
+                require('rainbow-delimiters.setup').setup(opts)
+            end
+        },
+
+        -- Comments
+        { 'numToStr/Comment.nvim', opts = { } },
+
         -- Highlight todo comments
         { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { } },
+
+        -- Colorize color representations
+        { 'NvChad/nvim-colorizer.lua', opts = { } },
 
         -- Treesitter (Highlight, edit, and navigate code)
         {
