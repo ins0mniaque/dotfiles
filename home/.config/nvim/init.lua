@@ -78,6 +78,7 @@ map('<C-g>r', function() require('telescope.builtin').lsp_references() end, { de
 map('<C-g>l', '<Esc><Esc>:', { desc = 'Go to Line...' })
 map('<C-p>', function() require('telescope.builtin').keymaps() end, { desc = 'Command Palette...' })
 map('<C-b>', '<Cmd>NvimTreeToggle<CR>', { desc = 'Toggle File Explorer' })
+map('<C-k>o', '<Cmd>Outline<CR>', { desc = 'Toggle Code Outline' })
 map('<C-d>', vim.diagnostic.setloclist, { desc = 'Toggle Diagnostics' })
 
 local function map_lsp(client, buffer)
@@ -122,6 +123,12 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy.view.config").keys.close = "<Esc>"
 
 -- Setup lazy.nvim
+local tools = { }
+local function tool(name)
+    tools[name] = true
+    return name
+end
+
 require('lazy').setup
 {
     checker = { enabled = true, notify = false },
@@ -211,6 +218,12 @@ require('lazy').setup
                 'nvim-tree/nvim-web-devicons',
                 'adelarsq/vim-emoji-icon-theme'
             },
+            opts = { }
+        },
+
+        -- Code outline
+        {
+            "hedyhli/outline.nvim",
             opts = { }
         },
 
@@ -323,9 +336,34 @@ require('lazy').setup
             {
                 formatters_by_ft =
                 {
-                    lua = { 'stylua' }
+                    lua = { tool('stylua') },
+                    sh = { tool("shfmt") },
+                    bash = { tool("shfmt") },
+                    ["*"] = { tool("codespell") },
+                    ["_"] = { "trim_whitespace" }
                 }
             }
+        },
+
+        -- Linting
+        {
+            "mfussenegger/nvim-lint",
+            event = { 'BufReadPre', 'BufNewFile' },
+            config = function()
+                local lint = require('lint')
+
+                lint.linters_by_ft =
+                {
+                    sh = { tool("shellcheck") },
+                    bash = { tool("shellcheck") }
+                }
+
+                vim.api.nvim_create_autocmd({ "BufWritePost" },
+                {
+                    group = vim.api.nvim_create_augroup('Lint', { }),
+                    callback = lint.try_lint
+                })
+            end
         },
 
         -- Autocompletion
@@ -472,17 +510,12 @@ require('lazy').setup
                     lua_ls =
                     {
                         settings = { Lua = { completion = { callSnippet = 'Replace' } } },
-                        tools = { 'stylua' }
                     }
                 }
 
                 local ensure_installed = vim.tbl_keys(servers or { })
 
-                for _, options in pairs(servers) do
-                    if options and options.tools then
-                        vim.list_extend(ensure_installed, options.tools)
-                    end
-                end
+                vim.list_extend(ensure_installed, vim.tbl_keys(tools or { }))
 
                 require('mason').setup()
                 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
