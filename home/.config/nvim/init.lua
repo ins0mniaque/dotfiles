@@ -53,11 +53,11 @@ local function map(lhs, rhs, opts)
 end
 
 map('<C-n>', vim.cmd.tabnew, { desc = 'New tab' })
-map('<C-t>', vim.cmd.tabnew, { desc = 'New tab' })
 map('<C-o>', function() require('telescope.builtin').find_files() end, { desc = 'Open...' })
 map('<C-s>', vim.cmd.update, { desc = 'Save' })
 map('<C-w>', '<Cmd>confirm quit<CR>', { desc = 'Close' })
 map('<C-q>', '<Cmd>confirm quitall<CR>', { desc = 'Quit' })
+
 map('<C-z>', '<C-O>u', { desc = 'Undo' })
 map('<C-y>', '<C-O><C-r>', { desc = 'Redo' })
 map('<C-c>', '<C-O>y', { desc = 'Copy' })
@@ -67,19 +67,29 @@ map('<C-a>', '<C-\\><C-N><C-\\><C-N>gggH<C-O>G', { desc = 'Select All' })
 map('<C-f>', '<Cmd>SearchBoxIncSearch<CR>', { desc = 'Find...' })
 map('<C-h>', '<Cmd>SearchBoxReplace confirm=menu<CR>', { desc = 'Replace...' })
 map('<C-j>', function() require('telescope.builtin').live_grep() end, { desc = 'Find in files...' })
+
 map('<C-r>', function() require('nvim-treesitter-refactor.smart_rename').smart_rename() end, { desc = 'Rename...' })
 map('<C-k>f', function() require('conform').format { async = true, lsp_fallback = true } end, { desc = 'Format Buffer' })
 map('<C-_>', function() require('Comment.api').toggle.linewise.current() end, { desc = 'Toggle Comments' })
 vim.keymap.set({ 's', 'x' }, '<C-_>', function() vim.api.nvim_feedkeys(esc, 'nx', false) require('Comment.api').toggle.linewise(vim.fn.visualmode()) end, { desc = 'Toggle Comments' })
+
 map('<F12>', function() require('nvim-treesitter-refactor.navigation').goto_definition_lsp_fallback() end, { desc = 'Go to Definition' })
 map('<F24>', function() require('telescope.builtin').lsp_references() end, { desc = 'Find all references...' })
 map('<C-g>d', function() require('nvim-treesitter-refactor.navigation').goto_definition_lsp_fallback() end, { desc = 'Go to Definition' })
 map('<C-g>r', function() require('telescope.builtin').lsp_references() end, { desc = 'Find all references...' })
 map('<C-g>l', '<Esc><Esc>:', { desc = 'Go to Line...' })
+
 map('<C-p>', function() require('telescope.builtin').keymaps() end, { desc = 'Command Palette...' })
 map('<C-b>', '<Cmd>NvimTreeToggle<CR>', { desc = 'Toggle File Explorer' })
 map('<C-k>o', '<Cmd>Outline<CR>', { desc = 'Toggle Code Outline' })
 map('<C-d>', vim.diagnostic.setloclist, { desc = 'Toggle Diagnostics' })
+map('<C-k>d', function() require("dapui").toggle() end, { desc = 'Toggle Debugger' })
+
+map('<C-t>r', function() require("neotest").run.run() end, { desc = 'Run Current Test' })
+map('<C-t>R', function() require("neotest").run.run(vim.fn.expand("%")) end, { desc = 'Run All Tests' })
+map('<C-t>d', function() require("neotest").run.run({strategy = "dap"}) end, { desc = 'Debug Current Test' })
+map('<C-t>s', function() require("neotest").run.stop() end, { desc = 'Stop Current Test' })
+map('<C-t>a', function() require("neotest").run.attach() end, { desc = 'Attach Current Test' })
 
 local function map_lsp(client, buffer)
     map("<F12>", require('telescope.builtin').lsp_definitions, { buffer = buffer, desc = 'LSP: Go to Definition' })
@@ -195,7 +205,7 @@ require('lazy').setup
                 'adelarsq/vim-emoji-icon-theme'
             },
             init = function() vim.g.barbar_auto_setup = false end,
-            opts = { sidebar_filetypes = { NvimTree = true } }
+            opts = { sidebar_filetypes = { NvimTree = true, dapui_scopes = true } }
         },
 
         -- Status line
@@ -363,6 +373,85 @@ require('lazy').setup
                     group = vim.api.nvim_create_augroup('Lint', { }),
                     callback = lint.try_lint
                 })
+            end
+        },
+
+        -- Debugging
+        {
+            "mfussenegger/nvim-dap",
+            opts = { tools = { tool("bash-debug-adapter") } },
+            config = function()
+                local dap = require('dap')
+
+                dap.adapters.bashdb =
+                {
+                    type = 'executable';
+                    command = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/bash-debug-adapter';
+                    name = 'bashdb';
+                }
+
+                dap.configurations.sh =
+                {
+                    {
+                        type = 'bashdb';
+                        request = 'launch';
+                        name = "Launch file";
+                        showDebugOutput = true;
+                        pathBashdb = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb';
+                        pathBashdbLib = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir';
+                        trace = true;
+                        file = "${file}";
+                        program = "${file}";
+                        cwd = '${workspaceFolder}';
+                        pathCat = "cat";
+                        pathBash = "/bin/bash";
+                        pathMkfifo = "mkfifo";
+                        pathPkill = "pkill";
+                        args = {};
+                        env = {};
+                        terminalKind = "integrated";
+                    }
+                }
+            end
+        },
+        {
+            "rcarriga/nvim-dap-ui",
+            dependencies =
+            {
+                "mfussenegger/nvim-dap",
+                "nvim-neotest/nvim-nio"
+            },
+            opts = { }
+        },
+        {
+            'theHamsta/nvim-dap-virtual-text',
+            dependencies =
+            {
+                "mfussenegger/nvim-dap",
+                "nvim-treesitter/nvim-treesitter"
+            },
+            opts = { }
+        },
+
+        -- Testing
+        {
+            "nvim-neotest/neotest",
+            dependencies =
+            {
+                "nvim-neotest/nvim-nio",
+                "rcasia/neotest-bash",
+                "nvim-lua/plenary.nvim",
+                "antoinemadec/FixCursorHold.nvim",
+                "nvim-treesitter/nvim-treesitter"
+            },
+            config = function()
+                require('neotest').setup
+                {
+                    adapters =
+                    {
+                        require("neotest-bash")
+                    }
+                }
             end
         },
 
