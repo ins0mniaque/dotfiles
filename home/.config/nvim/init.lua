@@ -62,6 +62,7 @@ map('<C-f>', '<Cmd>SearchBoxIncSearch<CR>', { desc = 'Find...' })
 map('<C-h>', '<Cmd>SearchBoxReplace confirm=menu<CR>', { desc = 'Replace...' })
 map('<C-j>', function() require('telescope.builtin').live_grep() end, { desc = 'Find in files...' })
 map('<C-r>', function() require('nvim-treesitter-refactor.smart_rename').smart_rename() end, { desc = 'Rename...' })
+map('<C-k>f', function() require('conform').format { async = true, lsp_fallback = true } end, { desc = 'Format Buffer' })
 map('<F12>', function() require('nvim-treesitter-refactor.navigation').goto_definition_lsp_fallback() end, { desc = 'Go to Definition' })
 map('<F24>', function() require('telescope.builtin').lsp_references() end, { desc = 'Find all references...' })
 map('<C-g>d', function() require('nvim-treesitter-refactor.navigation').goto_definition_lsp_fallback() end, { desc = 'Go to Definition' })
@@ -81,7 +82,7 @@ local function map_lsp(client, buffer)
     map('<C-g>s', require('telescope.builtin').lsp_document_symbols, { buffer = buffer, desc = 'LSP: Find in Document Symbols...' })
     map('<C-g>S', require('telescope.builtin').lsp_dynamic_workspace_symbols, { buffer = buffer, desc = 'LSP: Find in Workspace Symbols...' })
     map('<C-r>', vim.lsp.buf.rename, { buffer = buffer, desc = 'LSP: Rename' })
-    map('<C-k>', vim.lsp.buf.code_action, { buffer = buffer, desc = 'LSP: Code Action' })
+    map('<C-k>a', vim.lsp.buf.code_action, { buffer = buffer, desc = 'LSP: Code Action' })
     map('<C-g>D', vim.lsp.buf.declaration, { buffer = buffer, desc = 'LSP: Go to Declaration' })
     map('<C-d>', "<Cmd>Trouble diagnostics toggle<CR>", { buffer = buffer, desc = 'Toggle Diagnostics' })
 
@@ -288,6 +289,18 @@ require('lazy').setup
         { 'nvim-treesitter/nvim-treesitter-context', dependencies = { 'nvim-treesitter/nvim-treesitter' } },
         { 'nvim-treesitter/nvim-treesitter-textobjects', dependencies = { 'nvim-treesitter/nvim-treesitter' } },
         { 'nvim-treesitter/nvim-treesitter-refactor', dependencies = { 'nvim-treesitter/nvim-treesitter' } },
+
+        -- Formatting
+        {
+            'stevearc/conform.nvim',
+            opts =
+            {
+                formatters_by_ft =
+                {
+                    lua = { 'stylua' }
+                }
+            }
+        },
 
         -- Autocompletion
         {
