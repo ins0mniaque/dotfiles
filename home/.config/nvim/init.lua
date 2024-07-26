@@ -3,13 +3,24 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Options
+function _G.foldtext()
+    local line = vim.fn.getline(vim.v.foldstart)
+    local lines = vim.v.foldend - vim.v.foldstart + 1
+    local percentage = math.floor(lines / vim.fn.line('$') * 100 + 0.5)
+
+    return line .. "…    [ " .. lines .. " lines / " .. percentage .. "% ]"
+end
+
 vim.opt.clipboard = "unnamedplus"
 vim.opt.expandtab = true
 vim.opt.fillchars = "eob: ,fold: ,foldopen:▼,foldsep: ,foldclose:▶"
 vim.opt.foldcolumn = "1"
+vim.opt.foldenable = true
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
-vim.opt.foldenable = true
+vim.opt.foldmethod = "expr"
+vim.opt.foldtext = 'v:lua.foldtext()'
 vim.opt.ignorecase = true
 vim.opt.keymodel = { "startsel", "stopsel" }
 vim.opt.laststatus = 2
@@ -367,22 +378,6 @@ require("lazy").setup
             config = function(_, opts)
                 require("rainbow-delimiters.setup").setup(opts)
             end
-        },
-
-        -- Folding
-        {
-            "kevinhwang91/nvim-ufo",
-            dependencies =
-            {
-                "kevinhwang91/promise-async",
-                "neovim/nvim-lspconfig"
-            },
-            opts =
-            {
-                provider_selector = function(bufnr, filetype, buftype)
-                    return { "treesitter", "indent" }
-                end
-            }
         },
 
         -- Highlight todo comments
