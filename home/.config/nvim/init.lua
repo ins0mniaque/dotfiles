@@ -142,6 +142,8 @@ map("<M-LeftRelease>", "", { desc = "End block selection" })
 
 -- Context menu
 vim.cmd.aunmenu("PopUp.How-to\\ disable\\ mouse")
+vim.cmd.amenu("PopUp.Command\\ Palette\\.\\.\\. <Cmd>lua require(\"telescope.builtin\").keymaps()<CR>")
+vim.cmd.amenu("PopUp.-separator- :")
 vim.cmd.amenu("PopUp.Go\\ to\\ Definition <Cmd>lua require(\"nvim-treesitter-refactor.navigation\").goto_definition_lsp_fallback()<CR>")
 vim.cmd.amenu("PopUp.Find\\ all\\ References <Cmd>lua require(\"telescope.builtin\").lsp_references()<CR>")
 vim.cmd.amenu("PopUp.Rename <Cmd>lua vim.lsp.buf.rename()<CR>")
@@ -415,7 +417,7 @@ require("lazy").setup
                 auto_install = true,
                 ensure_installed = { "bash", "c", "diff", "html", "lua", "luadoc", "markdown", "markdown_inline", "query", "vim", "vimdoc" },
                 highlight = { enable = true, additional_vim_regex_highlighting = { "ruby" } },
-                indent = { enable = true, disable = { "ruby" } },
+                indent = { enable = true, disable = { "ruby" } }
             },
             config = function(_, opts)
                 require("nvim-treesitter.install").prefer_git = true
@@ -474,31 +476,31 @@ require("lazy").setup
 
                 dap.adapters.bashdb =
                 {
-                    type = "executable";
-                    command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter";
-                    name = "bashdb";
+                    type = "executable",
+                    command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter",
+                    name = "bashdb"
                 }
 
                 dap.configurations.sh =
                 {
                     {
-                        type = "bashdb";
-                        request = "launch";
-                        name = "Launch file";
-                        showDebugOutput = true;
-                        pathBashdb = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb";
-                        pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir";
-                        trace = true;
-                        file = "${file}";
-                        program = "${file}";
-                        cwd = "${workspaceFolder}";
-                        pathCat = "cat";
-                        pathBash = "/bin/bash";
-                        pathMkfifo = "mkfifo";
-                        pathPkill = "pkill";
-                        args = {};
-                        env = {};
-                        terminalKind = "integrated";
+                        type = "bashdb",
+                        request = "launch",
+                        name = "Launch file",
+                        showDebugOutput = true,
+                        pathBashdb = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
+                        pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir",
+                        trace = true,
+                        file = "${file}",
+                        program = "${file}",
+                        cwd = "${workspaceFolder}",
+                        pathCat = "cat",
+                        pathBash = "/bin/bash",
+                        pathMkfifo = "mkfifo",
+                        pathPkill = "pkill",
+                        args = { },
+                        env = { },
+                        terminalKind = "integrated"
                     }
                 }
             end
@@ -594,7 +596,7 @@ require("lazy").setup
                     {
                         { name = "lazydev", group_index = 0 },
                         { name = "nvim_lsp" },
-                        { name = "buffer" },
+                        { name = "buffer" }
                     },
                 }
 
@@ -637,7 +639,7 @@ require("lazy").setup
                     ft = "lua",
                     opts = { library = { { path = "luvit-meta/library", words = { "vim%.uv" } } } }
                 },
-                { "Bilal2453/luvit-meta", lazy = true },
+                { "Bilal2453/luvit-meta", lazy = true }
             },
             config = function()
                 vim.api.nvim_create_autocmd("LspAttach",
@@ -653,14 +655,14 @@ require("lazy").setup
                             {
                                 group = highlight_group,
                                 buffer = event.buf,
-                                callback = vim.lsp.buf.document_highlight,
+                                callback = vim.lsp.buf.document_highlight
                             })
 
                             vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" },
                             {
                                 group = highlight_group,
                                 buffer = event.buf,
-                                callback = vim.lsp.buf.clear_references,
+                                callback = vim.lsp.buf.clear_references
                             })
 
                             vim.api.nvim_create_autocmd("LspDetach",
@@ -669,7 +671,7 @@ require("lazy").setup
                                 callback = function(_)
                                     vim.lsp.buf.clear_references()
                                     vim.api.nvim_clear_autocmds { group = highlight_group, buffer = event.buf }
-                                end,
+                                end
                             })
                         end
 
@@ -680,19 +682,13 @@ require("lazy").setup
                 -- Configure capabilities
                 local capabilities = vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), require("cmp_nvim_lsp").default_capabilities())
 
-                capabilities.textDocument.foldingRange =
-                {
-                    dynamicRegistration = false,
-                    lineFoldingOnly = true
-                }
-
                 -- Configure servers (see `:help lspconfig-all` for a list of all the pre-configured LSPs)
                 local servers =
                 {
                     -- Lua
                     lua_ls =
                     {
-                        settings = { Lua = { completion = { callSnippet = "Replace" } } },
+                        settings = { Lua = { completion = { callSnippet = "Replace" } } }
                     }
                 }
 
