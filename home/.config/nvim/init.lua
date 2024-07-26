@@ -70,7 +70,7 @@ local function map(lhs, rhs, opts)
 end
 
 map("<C-n>", vim.cmd.tabnew, { desc = "New tab" })
-map("<C-o>", function() require("telescope.builtin").find_files() end, { desc = "Open..." })
+map("<C-o>", function() require("telescope").extensions.file_browser.file_browser() end, { desc = "Open..." })
 map("<C-s>", vim.cmd.update, { desc = "Save" })
 map("<C-w>", "<Cmd>confirm quit<CR>", { desc = "Close" })
 map("<C-q>", "<Cmd>confirm quitall<CR>", { desc = "Quit" })
@@ -234,7 +234,7 @@ require("lazy").setup
                      { type = "text", val = "Quick links", opts = { hl = "SpecialComment", position = "center" } },
                      { type = "padding", val = 1 },
                      dashboard.button("n", "⭐ New file", "<Cmd>tabnew<CR>"),
-                     dashboard.button("o", "📂 Open file...", "<Cmd>lua require(\"telescope.builtin\").find_files()<CR>"),
+                     dashboard.button("o", "📂 Open file...", "<Cmd>lua require(\"telescope\").extensions.file_browser.file_browser()<CR>"),
                      dashboard.button("f", "🔍 Find in files...", "<Cmd>lua require(\"telescope.builtin\").live_grep()<CR>"),
                      dashboard.button("c", "⚙️  Configuration", "<Cmd>cd ~/.config/nvim/<CR>"),
                      dashboard.button("t", "🔨 Tools", "<Cmd>Mason<CR>"),
@@ -256,7 +256,11 @@ require("lazy").setup
                 "adelarsq/vim-emoji-icon-theme"
             },
             init = function() vim.g.barbar_auto_setup = false end,
-            opts = { sidebar_filetypes = { NvimTree = true, Outline = true, dapui_scopes = true } }
+            opts =
+            {
+                sidebar_filetypes = { NvimTree = true, Outline = true, dapui_scopes = true },
+                icons = { button = '✖' }
+            }
         },
 
         -- Status column
@@ -333,20 +337,22 @@ require("lazy").setup
                     build = "make",
                     cond = function() return vim.fn.executable "make" == 1 end,
                 },
-                "nvim-telescope/telescope-ui-select.nvim"
+                "nvim-telescope/telescope-ui-select.nvim",
+                "nvim-telescope/telescope-file-browser.nvim"
             },
             config = function()
                 require("telescope").setup
                 {
-                    defaults = { mappings = { i = { ["<esc>"] = require("telescope.actions").close } } },
+                    defaults = { mappings = { i = { ["<Esc>"] = require("telescope.actions").close } } },
                     extensions =
                     {
-                        ["ui-select"] = { require("telescope.themes").get_dropdown() },
-                    },
+                        ["ui-select"] = { require("telescope.themes").get_dropdown() }
+                    }
                 }
 
                 pcall(require("telescope").load_extension, "fzf")
                 pcall(require("telescope").load_extension, "ui-select")
+                pcall(require("telescope").load_extension, "file_browser")
             end
         },
 
@@ -460,6 +466,16 @@ require("lazy").setup
             opts = { tools = { tool("bash-debug-adapter") } },
             config = function()
                 local dap = require("dap")
+
+                vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#990000' })
+                vim.api.nvim_set_hl(0, 'DapLogPoint', { ctermbg = 0, fg = '#1E90FF' })
+                vim.api.nvim_set_hl(0, 'DapStopped', { ctermbg = 0, fg = '#4CBB17' })
+
+                vim.fn.sign_define('DapBreakpoint', { text='⚫', texthl='DapBreakpoint' })
+                vim.fn.sign_define('DapBreakpointCondition', { text='⛔', texthl='DapBreakpoint' })
+                vim.fn.sign_define('DapBreakpointRejected', { text='✖', texthl='DapBreakpoint' })
+                vim.fn.sign_define('DapLogPoint', { text='⚫', texthl='DapLogPoint' })
+                vim.fn.sign_define('DapStopped', { text='⚫', texthl='DapStopped' })
 
                 dap.adapters.bashdb =
                 {
