@@ -120,6 +120,14 @@ map("<M-LeftMouse>", "<4-LeftMouse>", { desc = "Start block selection" })
 map("<M-LeftDrag>", "<LeftDrag>", { desc = "Block selection" })
 map("<M-LeftRelease>", "", { desc = "End block selection" })
 
+-- Context menu
+vim.cmd.aunmenu("PopUp.How-to\\ disable\\ mouse")
+vim.cmd.amenu("PopUp.Go\\ to\\ Definition <Cmd>lua require(\"nvim-treesitter-refactor.navigation\").goto_definition_lsp_fallback()<CR>")
+vim.cmd.amenu("PopUp.Find\\ all\\ References <Cmd>lua require(\"telescope.builtin\").lsp_references()<CR>")
+vim.cmd.amenu("PopUp.Rename <Cmd>lua vim.lsp.buf.rename()<CR>")
+vim.cmd.amenu("PopUp.Code\\ Action <Cmd>lua vim.lsp.buf.code_action()<CR>")
+vim.cmd.amenu("PopUp.LSP\\ Hover <Cmd>lua vim.lsp.buf.hover()<CR>")
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -303,6 +311,9 @@ require("lazy").setup
                 }
             }
         },
+
+        -- Auto-tag completion
+        { "windwp/nvim-ts-autotag", opts = { } },
 
         -- Auto-pairs completion
         { "windwp/nvim-autopairs", event = "InsertEnter", opts = { } },
