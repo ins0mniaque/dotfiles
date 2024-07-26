@@ -45,8 +45,6 @@ vim.diagnostic.config
 }
 
 -- Keyboard mappings
-local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-
 local function map(lhs, rhs, opts)
     vim.keymap.set({ "n", "i", "x", "s", "c" }, lhs, rhs, opts)
 
@@ -73,15 +71,22 @@ map("<C-f>", "<Cmd>SearchBoxIncSearch<CR>", { desc = "Find..." })
 map("<C-h>", "<Cmd>SearchBoxReplace confirm=menu<CR>", { desc = "Replace..." })
 map("<C-j>", function() require("telescope.builtin").live_grep() end, { desc = "Find in files..." })
 
-map("<C-r>", function() require("nvim-treesitter-refactor.smart_rename").smart_rename() end, { desc = "Rename..." })
-map("<C-k>f", function() require("conform").format { async = true, lsp_fallback = true } end, { desc = "Format Buffer" })
-map("<C-_>", function() require("Comment.api").toggle.linewise.current() end, { desc = "Toggle Comments" })
-vim.keymap.set({ "s", "x" }, "<C-_>", function() vim.api.nvim_feedkeys(esc, "nx", false) require("Comment.api").toggle.linewise(vim.fn.visualmode()) end, { desc = "Toggle Comments" })
+vim.keymap.set("i", "<C-_>", "<C-\\><C-N>gcci", { desc = "Toggle Comments", remap = true })
+vim.keymap.set("s", "<C-_>", "<C-g>gcgv", { desc = "Toggle Comments", remap = true })
+vim.keymap.set("x", "<C-_>", "gcgv", { desc = "Toggle Comments", remap = true })
+
+vim.keymap.set({ "s", "x" }, "<Tab>", "<C-O>>gv", { desc = "Indent" })
+vim.keymap.set({ "s", "x" }, "<S-Tab>", "<C-O><gv", { desc = "Unindent" })
+vim.keymap.set("n", "<Tab>", ">>", { desc = "Indent" })
+vim.keymap.set("n", "<S-Tab>", "<<", { desc = "Unindent" })
+vim.keymap.set("i", "<S-Tab>", "<C-d>", { desc = "Unindent" })
 
 map("<F12>", function() require("nvim-treesitter-refactor.navigation").goto_definition_lsp_fallback() end, { desc = "Go to Definition" })
 map("<F24>", function() require("telescope.builtin").lsp_references() end, { desc = "Find all references..." })
 map("<C-g>d", function() require("nvim-treesitter-refactor.navigation").goto_definition_lsp_fallback() end, { desc = "Go to Definition" })
 map("<C-g>r", function() require("telescope.builtin").lsp_references() end, { desc = "Find all references..." })
+map("<C-r>", function() require("nvim-treesitter-refactor.smart_rename").smart_rename() end, { desc = "Rename..." })
+map("<C-k>f", function() require("conform").format { async = true, lsp_fallback = true } end, { desc = "Format Buffer" })
 map("<C-g>l", "<Esc><Esc>:", { desc = "Go to Line..." })
 
 map("<C-p>", function() require("telescope.builtin").keymaps() end, { desc = "Command Palette..." })
@@ -357,9 +362,6 @@ require("lazy").setup
                 end
             }
         },
-
-        -- Comments
-        { "numToStr/Comment.nvim", opts = { } },
 
         -- Highlight todo comments
         { "folke/todo-comments.nvim", event = "VimEnter", dependencies = { "nvim-lua/plenary.nvim" }, opts = { } },
