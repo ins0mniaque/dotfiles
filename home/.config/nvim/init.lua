@@ -113,6 +113,7 @@ map("<C-t>s", function() require("neotest").run.stop() end, { desc = "Stop Curre
 map("<C-t>a", function() require("neotest").run.attach() end, { desc = "Attach Current Test" })
 
 local function map_lsp(client, buffer)
+    map("<F1>", vim.lsp.buf.hover, { buffer = buffer, desc = "LSP: Hover" })
     map("<F12>", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
     map("<F24>", require("telescope.builtin").lsp_references, { buffer = buffer, desc = "LSP: Find all References" })
     map("<C-g>d", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
@@ -555,7 +556,6 @@ require("lazy").setup
                     ["<Esc>"] = command(cmp.abort),
                     ["<Up>"] = command(function() cmp.select_prev_item { behavior = cmp.SelectBehavior.Select } end),
                     ["<Down>"] = command(function() cmp.select_next_item { behavior = cmp.SelectBehavior.Select } end),
-                    ["<Space>"] = command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false } end),
                     ["<Tab>"] = command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false } end),
                     ["<CR>"] = command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false } end),
                     ["<C-Space>"] = command(cmp.complete)
