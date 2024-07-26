@@ -189,8 +189,10 @@ require("lazy").setup
                 "adelarsq/vim-emoji-icon-theme"
             },
             config = function()
+                local dashboard = require("alpha.themes.dashboard")
                 local config = require("alpha.themes.theta").config
                 local header = config.layout[2]
+                local buttons = config.layout[6]
 
                 header.opts.hl = "AlphaHeader"
                 header.val =
@@ -203,6 +205,19 @@ require("lazy").setup
                     "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
                     "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
                     "                                                     "
+                }
+
+                buttons.val =
+                {
+                     { type = "text", val = "Quick links", opts = { hl = "SpecialComment", position = "center" } },
+                     { type = "padding", val = 1 },
+                     dashboard.button("n", "⭐ New file", "<Cmd>tabnew<CR>"),
+                     dashboard.button("o", "📂 Open file...", "<Cmd>lua require(\"telescope.builtin\").find_files()<CR>"),
+                     dashboard.button("f", "🔍 Find in files...", "<Cmd>lua require(\"telescope.builtin\").live_grep()<CR>"),
+                     dashboard.button("c", "⚙️  Configuration", "<Cmd>cd ~/.config/nvim/<CR>"),
+                     dashboard.button("t", "🔨 Tools", "<Cmd>Mason<CR>"),
+                     dashboard.button("u", "🔗 Update plugins", "<Cmd>Lazy sync<CR>"),
+                     dashboard.button("q", "✖  Quit", "<Cmd>confirm quitall<CR>"),
                 }
 
                 require("alpha").setup(config)
