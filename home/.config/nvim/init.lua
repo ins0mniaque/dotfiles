@@ -5,6 +5,11 @@ vim.g.maplocalleader = " "
 -- Options
 vim.opt.clipboard = "unnamedplus"
 vim.opt.expandtab = true
+vim.opt.fillchars = "eob: ,fold: ,foldopen:▼,foldsep: ,foldclose:▶"
+vim.opt.foldcolumn = "1"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
 vim.opt.ignorecase = true
 vim.opt.keymodel = { "startsel", "stopsel" }
 vim.opt.laststatus = 2
@@ -311,6 +316,22 @@ require("lazy").setup
             end
         },
 
+        -- Folding
+        {
+            "kevinhwang91/nvim-ufo",
+            dependencies =
+            {
+                "kevinhwang91/promise-async",
+                "neovim/nvim-lspconfig"
+            },
+            opts =
+            {
+                provider_selector = function(bufnr, filetype, buftype)
+                    return { "treesitter", "indent" }
+                end
+            }
+        },
+
         -- Comments
         { "numToStr/Comment.nvim", opts = { } },
 
@@ -592,6 +613,12 @@ require("lazy").setup
 
                 -- Configure capabilities
                 local capabilities = vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), require("cmp_nvim_lsp").default_capabilities())
+
+                capabilities.textDocument.foldingRange =
+                {
+                    dynamicRegistration = false,
+                    lineFoldingOnly = true
+                }
 
                 -- Configure servers (see `:help lspconfig-all` for a list of all the pre-configured LSPs)
                 local servers =
