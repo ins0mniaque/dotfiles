@@ -23,7 +23,7 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldtext = 'v:lua.foldtext()'
 vim.opt.ignorecase = true
 vim.opt.keymodel = { "startsel", "stopsel" }
-vim.opt.laststatus = 2
+vim.opt.laststatus = 3
 vim.opt.list = true
 vim.opt.listchars = { space = "⋅", tab = "⇥ ", eol = "↴", trail = "―", nbsp = "␣" }
 vim.opt.mouse = "a"
@@ -289,20 +289,7 @@ require("lazy").setup
                 "nvim-tree/nvim-web-devicons",
                 "adelarsq/vim-emoji-icon-theme"
             },
-            opts =
-            {
-                options =
-                {
-                    theme = "sonokai",
-                    ignore_focus =
-                    {
-                        "NvimTree", "Outline",
-                        "dapui_scopes", "dapui_breakpoints",
-                        "dapui_stacks", "dapui_watches",
-                        "dap-repl", "dapui_console"
-                    }
-                }
-            }
+            opts = { options = { theme = "sonokai" } }
         },
 
         -- File explorer
