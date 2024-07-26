@@ -254,7 +254,7 @@ require("lazy").setup
                 "adelarsq/vim-emoji-icon-theme"
             },
             init = function() vim.g.barbar_auto_setup = false end,
-            opts = { sidebar_filetypes = { NvimTree = true, dapui_scopes = true } }
+            opts = { sidebar_filetypes = { NvimTree = true, Outline = true, dapui_scopes = true } }
         },
 
         -- Status column
@@ -287,7 +287,20 @@ require("lazy").setup
                 "nvim-tree/nvim-web-devicons",
                 "adelarsq/vim-emoji-icon-theme"
             },
-            opts = { options = { theme = "sonokai" } }
+            opts =
+            {
+                options =
+                {
+                    theme = "sonokai",
+                    ignore_focus =
+                    {
+                        "NvimTree", "Outline",
+                        "dapui_scopes", "dapui_breakpoints",
+                        "dapui_stacks", "dapui_watches",
+                        "dap-repl", "dapui_console"
+                    }
+                }
+            }
         },
 
         -- File explorer
