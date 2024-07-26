@@ -438,7 +438,9 @@ require("lazy").setup
                 vim.api.nvim_create_autocmd({ "BufWritePost" },
                 {
                     group = vim.api.nvim_create_augroup("Lint", { }),
-                    callback = lint.try_lint
+                    callback = function()
+                        require("lint").try_lint()
+                    end
                 })
             end
         },
