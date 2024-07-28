@@ -82,9 +82,18 @@ local function map(lhs, rhs, opts)
     vim.keymap.set("o", lhs, rhs, opts)
 end
 
+local function browse(prompt, callback)
+    vim.ui.input({ prompt = prompt }, function(arg)
+        if arg then
+            callback(arg)
+        end
+    end)
+end
+
 map("<C-n>", vim.cmd.tabnew, { desc = "New tab" })
 map("<C-o>", function() require("telescope").extensions.file_browser.file_browser() end, { desc = "Open..." })
-map("<C-s>", vim.cmd.update, { desc = "Save" })
+map("<C-s>", function() if vim.fn.expand("%") == "" then browse("Save to: ", vim.cmd.write) else vim.cmd.write() end end, { desc = "Save" })
+map("<C-M-s>", function() browse("Save as: ", vim.cmd.saveas) end, { desc = "Save As..." })
 map("<C-w>", "<Cmd>confirm quit<CR>", { desc = "Close" })
 map("<C-q>", "<Cmd>confirm quitall<CR>", { desc = "Quit" })
 
