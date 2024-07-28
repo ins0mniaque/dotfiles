@@ -604,26 +604,40 @@ require("lazy").setup
             config = function()
                 local cmp = require("cmp")
 
-                local function command(invoke)
+                local function command(invoke, otherwise, condition)
+                    if not condition then
+                        condition = cmp.visible
+                    end
+
                     local function callback(fallback)
-                        if cmp.visible() then
-                            invoke()
-                        else
-                            fallback()
+                        if     condition() then invoke()
+                        elseif otherwise   then otherwise()
+                        else                    fallback()
                         end
                     end
 
                     return cmp.mapping(callback, { "n", "i", "c" })
                 end
 
+                local function select(selector)
+                    return command(function() selector { behavior = cmp.SelectBehavior.Select } end)
+                end
+
+                local function confirm(select, otherwise)
+                    return command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = select } end,
+                                   otherwise,
+                                   function() return cmp.visible() and select or cmp.get_active_entry() end)
+                end
+
                 local mapping =
                 {
-                    ["<Esc>"] = command(cmp.abort),
-                    ["<Up>"] = command(function() cmp.select_prev_item { behavior = cmp.SelectBehavior.Select } end),
-                    ["<Down>"] = command(function() cmp.select_next_item { behavior = cmp.SelectBehavior.Select } end),
-                    ["<Tab>"] = command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false } end),
-                    ["<CR>"] = command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false } end),
-                    ["<C-Space>"] = command(cmp.complete)
+                    ["<Esc>"]     = command(cmp.abort),
+                    ["<Up>"]      = select(cmp.select_prev_item),
+                    ["<Down>"]    = select(cmp.select_next_item),
+                    ["<CR>"]      = confirm(false),
+                    ["<Space>"]   = confirm(false),
+                    ["<Tab>"]     = confirm(true),
+                    ["<C-Space>"] = confirm(true, cmp.complete)
                 }
 
                 cmp.setup
@@ -634,7 +648,7 @@ require("lazy").setup
                             vim.snippet.expand(args.body)
                         end,
                     },
-                    completion = { completeopt = "menu,menuone,noinsert" },
+                    completion = { completeopt = "menu,menuone,noinsert,noselect" },
                     mapping = mapping,
                     sources =
                     {
@@ -663,7 +677,7 @@ require("lazy").setup
                     },
                     matching = { disallow_symbol_nonprefix_matching = false }
                 })
-            end,
+            end
         },
 
         -- LSP Configuration & Plugins
