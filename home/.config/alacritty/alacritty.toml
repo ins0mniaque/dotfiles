@@ -1,5 +1,12 @@
+[shell]
+program = "/bin/zsh"
+args = ["-l", "-c", "tmux attach &> /dev/null || tmux"]
+
 [font]
 size = 13.0
+
+[window]
+dynamic_padding = false
 
 [[keyboard.bindings]]
 chars = "\u0005"
@@ -175,10 +182,3 @@ mods = "Control|Shift"
 chars = "\u001B[90;6u"
 key = "Z"
 mods = "Control|Shift"
-
-[shell]
-args = ["-l", "-c", "tmux attach &> /dev/null || tmux"]
-program = "/bin/zsh"
-
-[window]
-dynamic_padding = false
