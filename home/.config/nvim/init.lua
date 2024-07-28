@@ -312,7 +312,8 @@ require("lazy").setup
             {
                 { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
             },
-            opts = { options = { theme = "sonokai", icons_enabled = vim.g.nerdfont } }
+            opts = { options = { theme = "sonokai", icons_enabled = vim.g.nerdfont },
+                     sections = { lualine_c = { "nvim_treesitter#statusline" } } }
         },
 
         -- File explorer
