@@ -2,25 +2,29 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Nerd Font
+vim.g.nerdfont = true
+
 -- Options
 function _G.foldtext()
     local line = vim.fn.getline(vim.v.foldstart)
     local lines = vim.v.foldend - vim.v.foldstart + 1
-    local percentage = math.floor(lines / vim.fn.line('$') * 100 + 0.5)
+    local percentage = math.floor(lines / vim.fn.line("$") * 100 + 0.5)
 
     return line .. "…    [ " .. lines .. " lines / " .. percentage .. "% ]"
 end
 
 vim.opt.clipboard = "unnamedplus"
 vim.opt.expandtab = true
-vim.opt.fillchars = "eob: ,fold: ,foldopen:▼,foldsep: ,foldclose:▶"
+vim.opt.fillchars = vim.g.nerdfont and "eob: ,fold: ,foldopen:,foldsep: ,foldclose:"
+                                   or  "eob: ,fold: ,foldopen:▼,foldsep: ,foldclose:▶"
 vim.opt.foldcolumn = "1"
 vim.opt.foldenable = true
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldmethod = "expr"
-vim.opt.foldtext = 'v:lua.foldtext()'
+vim.opt.foldtext = "v:lua.foldtext()"
 vim.opt.ignorecase = true
 vim.opt.keymodel = { "startsel", "stopsel" }
 vim.opt.laststatus = 3
@@ -52,7 +56,16 @@ vim.opt.wrap = false
 vim.diagnostic.config
 {
     underline = false,
-    virtual_text = { prefix = "▎ " },
+    virtual_text =
+    {
+        prefix = function(diagnostic)
+              if     diagnostic.severity == vim.diagnostic.severity.ERROR then return vim.g.nerdfont and "" or "ⓧ"
+              elseif diagnostic.severity == vim.diagnostic.severity.WARN  then return vim.g.nerdfont and "" or "⚠️"
+              elseif diagnostic.severity == vim.diagnostic.severity.INFO  then return vim.g.nerdfont and "" or "ⓘ"
+              else                                                             return vim.g.nerdfont and "󰌵" or "💡"
+              end
+        end,
+    },
     signs = true,
     severity_sort = true,
     update_in_insert = true
@@ -178,6 +191,15 @@ require("lazy").setup
 {
     checker = { enabled = true, notify = false },
     install = { colorscheme = { "sonokai" } },
+    ui =
+    {
+        icons = vim.g.nerdfont and { } or
+        {
+            cmd = "⌘", config = "🛠", event = "📅", ft = "📂", init = "⚙",
+            keys = "🗝", plugin = "🔌", runtime = "💻", require = "🌙",
+            source = "📄", start = "🚀", task = "📌", lazy = "💤 "
+        }
+    },
     spec =
     {
         -- Sacrilege
@@ -207,8 +229,7 @@ require("lazy").setup
             dependencies =
             {
                 "nvim-lua/plenary.nvim",
-                "nvim-tree/nvim-web-devicons",
-                "adelarsq/vim-emoji-icon-theme"
+                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
             },
             config = function()
                 local dashboard = require("alpha.themes.dashboard")
@@ -233,13 +254,13 @@ require("lazy").setup
                 {
                      { type = "text", val = "Quick links", opts = { hl = "SpecialComment", position = "center" } },
                      { type = "padding", val = 1 },
-                     dashboard.button("n", "⭐ New file", "<Cmd>tabnew<CR>"),
-                     dashboard.button("o", "📂 Open file...", "<Cmd>lua require(\"telescope\").extensions.file_browser.file_browser()<CR>"),
-                     dashboard.button("f", "🔍 Find in files...", "<Cmd>lua require(\"telescope.builtin\").live_grep()<CR>"),
-                     dashboard.button("c", "⚙️  Configuration", "<Cmd>cd ~/.config/nvim/<CR>"),
-                     dashboard.button("t", "🔨 Tools", "<Cmd>Mason<CR>"),
-                     dashboard.button("u", "🔗 Update plugins", "<Cmd>Lazy sync<CR>"),
-                     dashboard.button("q", "✖  Quit", "<Cmd>confirm quitall<CR>"),
+                     dashboard.button("n", (vim.g.nerdfont and "  " or "⭐ ") .. "New file", "<Cmd>tabnew<CR>"),
+                     dashboard.button("o", (vim.g.nerdfont and "  " or "📂 ") .. "Open file...", "<Cmd>lua require(\"telescope\").extensions.file_browser.file_browser()<CR>"),
+                     dashboard.button("f", (vim.g.nerdfont and "󰈞  " or "🔍 ") .. "Find in files...", "<Cmd>lua require(\"telescope.builtin\").live_grep()<CR>"),
+                     dashboard.button("c", (vim.g.nerdfont and "  " or "⚙️  ") .. "Configuration", "<Cmd>cd ~/.config/nvim/<CR>"),
+                     dashboard.button("t", (vim.g.nerdfont and "  " or "🔨 ") .. "Tools", "<Cmd>Mason<CR>"),
+                     dashboard.button("u", (vim.g.nerdfont and "  " or "🔗 ") .. "Update plugins", "<Cmd>Lazy sync<CR>"),
+                     dashboard.button("q", (vim.g.nerdfont and "󰅚  " or "✖  ") .. "Quit", "<Cmd>confirm quitall<CR>"),
                 }
 
                 require("alpha").setup(config)
@@ -252,14 +273,13 @@ require("lazy").setup
             dependencies =
             {
                 "lewis6991/gitsigns.nvim",
-                "nvim-tree/nvim-web-devicons",
-                "adelarsq/vim-emoji-icon-theme"
+                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
             },
             init = function() vim.g.barbar_auto_setup = false end,
             opts =
             {
                 sidebar_filetypes = { NvimTree = true, Outline = true, dapui_scopes = true },
-                icons = { button = '✖' }
+                icons = { button = not vim.g.nerdfont and "✖" or nil, filetype = { enabled = vim.g.nerdfont } }
             }
         },
 
@@ -290,10 +310,9 @@ require("lazy").setup
             "nvim-lualine/lualine.nvim",
             dependencies =
             {
-                "nvim-tree/nvim-web-devicons",
-                "adelarsq/vim-emoji-icon-theme"
+                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
             },
-            opts = { options = { theme = "sonokai" } }
+            opts = { options = { theme = "sonokai", icons_enabled = vim.g.nerdfont } }
         },
 
         -- File explorer
@@ -302,8 +321,7 @@ require("lazy").setup
             lazy = false,
             dependencies =
             {
-                "nvim-tree/nvim-web-devicons",
-                "adelarsq/vim-emoji-icon-theme"
+                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
             },
             opts = { }
         },
@@ -319,8 +337,7 @@ require("lazy").setup
             "folke/trouble.nvim",
             dependencies =
             {
-                "nvim-tree/nvim-web-devicons",
-                "adelarsq/vim-emoji-icon-theme"
+                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
             },
             opts = { }
         },
@@ -344,10 +361,7 @@ require("lazy").setup
                 require("telescope").setup
                 {
                     defaults = { mappings = { i = { ["<Esc>"] = require("telescope.actions").close } } },
-                    extensions =
-                    {
-                        ["ui-select"] = { require("telescope.themes").get_dropdown() }
-                    }
+                    extensions = { ["ui-select"] = { require("telescope.themes").get_dropdown() } }
                 }
 
                 pcall(require("telescope").load_extension, "fzf")
@@ -378,7 +392,7 @@ require("lazy").setup
         },
 
         -- Automatic tabstop and shiftwidth
-        { 'tpope/vim-sleuth' },
+        { "tpope/vim-sleuth" },
 
         -- Auto-tag completion
         { "windwp/nvim-ts-autotag", opts = { } },
@@ -396,7 +410,24 @@ require("lazy").setup
         },
 
         -- Highlight todo comments
-        { "folke/todo-comments.nvim", event = "VimEnter", dependencies = { "nvim-lua/plenary.nvim" }, opts = { } },
+        {
+            "folke/todo-comments.nvim",
+            event = "VimEnter",
+            dependencies = { "nvim-lua/plenary.nvim" },
+            opts =
+            {
+                keywords = vim.g.nerdfont and { } or
+                {
+                    FIX = { icon = '👾' },
+                    TODO = { icon = '✔' },
+                    HACK = { icon = '🔥' },
+                    WARN = { icon = '⚠︎' },
+                    PERF = { icon = '🕓' },
+                    NOTE = { icon = 'ⓘ' },
+                    TEST = { icon = '⏲' },
+                }
+            }
+        },
 
         -- Colorize color representations
         { "NvChad/nvim-colorizer.lua", opts = { } },
@@ -467,15 +498,15 @@ require("lazy").setup
             config = function()
                 local dap = require("dap")
 
-                vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#990000' })
-                vim.api.nvim_set_hl(0, 'DapLogPoint', { ctermbg = 0, fg = '#1E90FF' })
-                vim.api.nvim_set_hl(0, 'DapStopped', { ctermbg = 0, fg = '#4CBB17' })
+                vim.api.nvim_set_hl(0, "DapBreakpoint", { ctermbg = 0, fg = "#990000" })
+                vim.api.nvim_set_hl(0, "DapLogPoint", { ctermbg = 0, fg = "#1E90FF" })
+                vim.api.nvim_set_hl(0, "DapStopped", { ctermbg = 0, fg = "#4CBB17" })
 
-                vim.fn.sign_define('DapBreakpoint', { text='⚫', texthl='DapBreakpoint' })
-                vim.fn.sign_define('DapBreakpointCondition', { text='⛔', texthl='DapBreakpoint' })
-                vim.fn.sign_define('DapBreakpointRejected', { text='✖', texthl='DapBreakpoint' })
-                vim.fn.sign_define('DapLogPoint', { text='⚫', texthl='DapLogPoint' })
-                vim.fn.sign_define('DapStopped', { text='⚫', texthl='DapStopped' })
+                vim.fn.sign_define("DapBreakpoint", { text = vim.g.nerdfont and "⬤" or "⚫", texthl="DapBreakpoint" })
+                vim.fn.sign_define("DapBreakpointCondition", { text = vim.g.nerdfont and "⬤" or "⛔", texthl="DapBreakpoint" })
+                vim.fn.sign_define("DapBreakpointRejected", { text = vim.g.nerdfont and "" or "✖", texthl="DapBreakpoint" })
+                vim.fn.sign_define("DapLogPoint", { text = vim.g.nerdfont and "" or "⚫", texthl="DapLogPoint" })
+                vim.fn.sign_define("DapStopped", { text = vim.g.nerdfont and "" or "⚫", texthl="DapStopped" })
 
                 dap.adapters.bashdb =
                 {
