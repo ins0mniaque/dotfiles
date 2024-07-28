@@ -137,6 +137,44 @@ map("<C-t>d", function() require("neotest").run.run({strategy = "dap"}) end, { d
 map("<C-t>s", function() require("neotest").run.stop() end, { desc = "Stop Current Test" })
 map("<C-t>a", function() require("neotest").run.attach() end, { desc = "Attach Current Test" })
 
+local function map_cmp(cmp)
+    local function command(invoke, otherwise, condition)
+        if not condition then
+            condition = cmp.visible
+        end
+
+        local function callback(fallback)
+            if     condition() then invoke()
+            elseif otherwise   then otherwise()
+            else                    fallback()
+            end
+        end
+
+        return cmp.mapping(callback, { "n", "i", "c" })
+    end
+
+    local function select(selector)
+        return command(function() selector { behavior = cmp.SelectBehavior.Select } end)
+    end
+
+    local function confirm(select, otherwise)
+        return command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = select } end,
+                       otherwise,
+                       function() return cmp.visible() and select or cmp.get_active_entry() end)
+    end
+
+    return
+    {
+        ["<Esc>"]     = command(cmp.abort),
+        ["<Up>"]      = select(cmp.select_prev_item),
+        ["<Down>"]    = select(cmp.select_next_item),
+        ["<CR>"]      = confirm(false),
+        ["<Space>"]   = confirm(false),
+        ["<Tab>"]     = confirm(true),
+        ["<C-Space>"] = confirm(true, cmp.complete)
+    }
+end
+
 local function map_lsp(client, buffer)
     map("<F1>", vim.lsp.buf.hover, { buffer = buffer, desc = "LSP: Hover" })
     map("<F12>", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
@@ -187,7 +225,14 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Configure lazy.nvim
-require("lazy.view.config").keys.close = "<Esc>"
+vim.api.nvim_create_autocmd("FileType",
+{
+    group = vim.api.nvim_create_augroup("LazyConfig", { }),
+    pattern = "lazy",
+    callback = function()
+        vim.keymap.set("n", "<Esc>", function() vim.api.nvim_win_close(0, false) end, { buffer = true, nowait = true })
+    end
+})
 
 -- Setup lazy.nvim
 local tools = { }
@@ -603,42 +648,7 @@ require("lazy").setup
             },
             config = function()
                 local cmp = require("cmp")
-
-                local function command(invoke, otherwise, condition)
-                    if not condition then
-                        condition = cmp.visible
-                    end
-
-                    local function callback(fallback)
-                        if     condition() then invoke()
-                        elseif otherwise   then otherwise()
-                        else                    fallback()
-                        end
-                    end
-
-                    return cmp.mapping(callback, { "n", "i", "c" })
-                end
-
-                local function select(selector)
-                    return command(function() selector { behavior = cmp.SelectBehavior.Select } end)
-                end
-
-                local function confirm(select, otherwise)
-                    return command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = select } end,
-                                   otherwise,
-                                   function() return cmp.visible() and select or cmp.get_active_entry() end)
-                end
-
-                local mapping =
-                {
-                    ["<Esc>"]     = command(cmp.abort),
-                    ["<Up>"]      = select(cmp.select_prev_item),
-                    ["<Down>"]    = select(cmp.select_next_item),
-                    ["<CR>"]      = confirm(false),
-                    ["<Space>"]   = confirm(false),
-                    ["<Tab>"]     = confirm(true),
-                    ["<C-Space>"] = confirm(true, cmp.complete)
-                }
+                local mapping = map_cmp(cmp)
 
                 cmp.setup
                 {
