@@ -3,7 +3,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Nerd Font
-vim.g.nerdfont = true
+vim.g.nerdfont = os.getenv("NERDFONT") and true or false
 
 -- Options
 function _G.foldtext()
@@ -287,12 +287,10 @@ require("lazy").setup
             },
             config = function()
                 local dashboard = require("alpha.themes.dashboard")
-                local config = require("alpha.themes.theta").config
-                local header = config.layout[2]
-                local buttons = config.layout[6]
+                local theta     = require("alpha.themes.theta")
 
-                header.opts.hl = "AlphaHeader"
-                header.val =
+                theta.header.opts.hl = "AlphaHeader"
+                theta.header.val =
                 {
                     "                                                     ",
                     "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
@@ -304,7 +302,7 @@ require("lazy").setup
                     "                                                     "
                 }
 
-                buttons.val =
+                theta.buttons.val =
                 {
                      { type = "text", val = "Quick links", opts = { hl = "SpecialComment", position = "center" } },
                      { type = "padding", val = 1 },
@@ -317,7 +315,9 @@ require("lazy").setup
                      dashboard.button("q", (vim.g.nerdfont and "󰅚  " or "✖  ") .. "Quit", "<Cmd>confirm quitall<CR>"),
                 }
 
-                require("alpha").setup(config)
+                theta.nvim_web_devicons.enabled = vim.g.nerdfont
+
+                require("alpha").setup(theta.config)
             end
         },
 
