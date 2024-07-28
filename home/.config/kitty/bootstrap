@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+mkdir -p ~/.local/share/terminfo/78
+ln -s /Applications/kitty.app/Contents/Resources/kitty/terminfo/78/xterm-kitty ~/.local/share/terminfo/78/xterm-kitty
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    curl -L https://github.com/DinkDonk/kitty-icon/raw/main/kitty-light.icns --output ~/.config/kitty/kitty.app.icns
+    kitty +runpy 'from kitty.fast_data_types import cocoa_set_app_icon; import sys; cocoa_set_app_icon(*sys.argv[1:]); print("OK")' ~/.config/kitty/kitty.app.icns /Applications/kitty.app
+    rm ~/.config/kitty/kitty.app.icns
+
+    rm /var/folders/*/*/*/com.apple.dock.iconcache; killall Dock
+else
+    curl -L https://github.com/DinkDonk/kitty-icon/raw/main/kitty-light.png --output ~/.config/kitty/kitty.app.png
+fi
