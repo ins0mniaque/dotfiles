@@ -458,9 +458,8 @@ require("lazy").setup
         -- Rainbow delimiters
         {
             "HiPhish/rainbow-delimiters.nvim",
-            opts = { },
-            config = function(_, opts)
-                require("rainbow-delimiters.setup").setup(opts)
+            config = function()
+                require("rainbow-delimiters.setup").setup()
             end
         },
 
@@ -479,13 +478,16 @@ require("lazy").setup
                     WARN = { icon = '⚠︎' },
                     PERF = { icon = '🕓' },
                     NOTE = { icon = 'ⓘ' },
-                    TEST = { icon = '⏲' },
+                    TEST = { icon = '⏲' }
                 }
             }
         },
 
         -- Colorize color representations
         { "NvChad/nvim-colorizer.lua", opts = { } },
+
+        -- Indentation guides
+        { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = { } },
 
         -- Treesitter (Highlight, edit, and navigate code)
         {
@@ -536,11 +538,11 @@ require("lazy").setup
                     bash = { tool("shellcheck") }
                 }
 
-                vim.api.nvim_create_autocmd({ "BufWritePost" },
+                vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" },
                 {
                     group = vim.api.nvim_create_augroup("Lint", { }),
                     callback = function()
-                        require("lint").try_lint()
+                        lint.try_lint()
                     end
                 })
             end
