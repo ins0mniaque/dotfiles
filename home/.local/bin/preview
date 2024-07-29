@@ -5,7 +5,7 @@ width=${FZF_PREVIEW_COLUMNS:-${COLUMNS:-$(tput cols)}}
 height=${FZF_PREVIEW_LINES:-${LINES:-$(tput lines)}}
 margin=0
 
-if [ -z $FZF_PREVIEW_COLUMNS ]; then
+if [ -z "$FZF_PREVIEW_COLUMNS" ]; then
     ((height--))
 else
     # TODO: Add option for margin and max lines
@@ -13,7 +13,7 @@ else
 fi
 
 while [ True ]; do
-    if [ "$1" = "--header" -o "$1" = "-h" ]; then
+    if [ "$1" = "--header" ] || [ "$1" = "-h" ]; then
         # TODO: Add support for when tput is unavailable
         header=true
         # TODO: Option for eza (yellow is only used to color the size from ls)
@@ -23,10 +23,10 @@ while [ True ]; do
         normal=$(tput sgr0)
 
         shift 1
-    elif [ "$1" = "--width" -o "$1" = "-w" ]; then
+    elif [ "$1" = "--width" ] || [ "$1" = "-w" ]; then
         width=$2
         shift 2
-    elif [ "$1" = "--height" -o "$1" = "-h" ]; then
+    elif [ "$1" = "--height" ] || [ "$1" = "-h" ]; then
         height=$2
         shift 2
     else
@@ -51,7 +51,7 @@ for file in "$@"; do
             # name="📄 $(ls -lah --color=always "$file" | awk -F " " -v dir="$(dirname "$file")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 "  " yellow $5 normal'} )"
             name="📄 $(eza -la --color=always --no-permissions --no-user --no-time "$file" | awk -F " " -v dir="$(dirname "$file")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2 "  " $1 "B"'} )"
         fi
-        colorless=$(echo $name | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g')
+        colorless=$(echo "$name" | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g')
         remain=$((width - ${#colorless} - margin))
         if [ $remain -le 0 ]; then
             info=""
@@ -73,17 +73,23 @@ for file in "$@"; do
     if [ "${mime:0:15}" == "inode/directory" ]; then
         eza --all --long --git --color=always "$file"
     elif [ "${mime:0:6}" == "image/" ]; then
-        chafa --format symbols --size $width'x'$height "$file"
+        if [ -n "$FZF_PREVIEW_COLUMNS" ]; then
+            chafa --format symbols --size "$width"x"$height" "$file"
+        elif [ -n "$TMUX" ]; then
+            chafa --passthrough tmux --size "$width"x"$height" "$file"
+        else
+            chafa --size "$width"x"$height" "$file"
+        fi
     elif [ "${mime: -14}" == "charset=binary" ]; then
         hexyl --length=4KiB "$file"
     elif [ "${file: -3}" == ".md" ]; then
-        glow --local --style dark "$file" | bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500
+        glow --local --style dark "$file" | bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500
     elif [ "${file: -5}" == ".html" ]; then
         # TODO: This is a bit slow, should be an option --render
         # pandoc --from html --to gfm "$file" | glow --local --style dark - | bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500
         # w3m "$file"
-        bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500 "$file"
+        bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500 "$file"
     else
-        bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500 "$file"
+        bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500 "$file"
     fi
 done
