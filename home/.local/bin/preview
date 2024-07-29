@@ -73,7 +73,7 @@ for file in "$@"; do
     if [ "${mime:0:15}" == "inode/directory" ]; then
         eza --all --long --git --color=always "$file"
     elif [ "${mime:0:6}" == "image/" ]; then
-        chafa --size $width'x'$height "$file"
+        chafa --format symbols --size $width'x'$height "$file"
     elif [ "${mime: -14}" == "charset=binary" ]; then
         hexyl --length=4KiB "$file"
     elif [ "${file: -3}" == ".md" ]; then
