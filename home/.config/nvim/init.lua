@@ -82,7 +82,7 @@ local function map(lhs, rhs, opts)
     vim.keymap.set("o", lhs, rhs, opts)
 end
 
-local function browse(prompt, callback)
+local function input(prompt, callback)
     vim.ui.input({ prompt = prompt }, function(arg)
         if arg then
             callback(arg)
@@ -92,8 +92,8 @@ end
 
 map("<C-n>", vim.cmd.tabnew, { desc = "New tab" })
 map("<C-o>", function() require("telescope").extensions.file_browser.file_browser() end, { desc = "Open..." })
-map("<C-s>", function() if vim.fn.expand("%") == "" then browse("Save to: ", vim.cmd.write) else vim.cmd.write() end end, { desc = "Save" })
-map("<C-M-s>", function() browse("Save as: ", vim.cmd.saveas) end, { desc = "Save As..." })
+map("<C-s>", function() if vim.fn.expand("%") == "" then input("Save to: ", vim.cmd.write) else vim.cmd.write() end end, { desc = "Save" })
+map("<C-M-s>", function() input("Save as: ", vim.cmd.saveas) end, { desc = "Save As..." })
 map("<C-w>", "<Cmd>confirm quit<CR>", { desc = "Close" })
 map("<C-q>", "<Cmd>confirm quitall<CR>", { desc = "Quit" })
 
@@ -130,6 +130,13 @@ map("<C-b>", "<Cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
 map("<C-k>o", "<Cmd>Outline<CR>", { desc = "Toggle Code Outline" })
 map("<C-d>", vim.diagnostic.setloclist, { desc = "Toggle Diagnostics" })
 map("<C-k>d", function() require("dapui").toggle() end, { desc = "Toggle Debugger" })
+
+map("<F5>", function() require("dap").continue() end, { desc = "Debug: Start/Continue" })
+map("<F11>", function() require("dap").step_into() end, { desc = "Debug: Step Into" })
+map("<F10>", function() require("dap").step_over() end, { desc = "Debug: Step Over" })
+map("<F23>", function() require("dap").step_out() end, { desc = "Debug: Step Out" })
+map("<F9>", function() require("dap").toggle_breakpoint() end, { desc = "Debug: Toggle Breakpoint" })
+map("<F21>", function() input("Breakpoint condition: ", require("dap").set_breakpoint) end, { desc = "Debug: Set Conditional Breakpoint" })
 
 map("<C-t>r", function() require("neotest").run.run() end, { desc = "Run Current Test" })
 map("<C-t>R", function() require("neotest").run.run(vim.fn.expand("%")) end, { desc = "Run All Tests" })
@@ -472,13 +479,13 @@ require("lazy").setup
             {
                 keywords = vim.g.nerdfont and { } or
                 {
-                    FIX = { icon = '👾' },
-                    TODO = { icon = '✔' },
-                    HACK = { icon = '🔥' },
-                    WARN = { icon = '⚠︎' },
-                    PERF = { icon = '🕓' },
-                    NOTE = { icon = 'ⓘ' },
-                    TEST = { icon = '⏲' }
+                    FIX = { icon = "👾" },
+                    TODO = { icon = "✔" },
+                    HACK = { icon = "🔥" },
+                    WARN = { icon = "⚠︎" },
+                    PERF = { icon = "🕓" },
+                    NOTE = { icon = "ⓘ" },
+                    TEST = { icon = "⏲" }
                 }
             }
         },
@@ -551,19 +558,37 @@ require("lazy").setup
         -- Debugging
         {
             "mfussenegger/nvim-dap",
-            opts = { tools = { tool("bash-debug-adapter") } },
+            dependencies =
+            {
+                "williamboman/mason.nvim",
+                "jay-babu/mason-nvim-dap.nvim",
+
+                "rcarriga/nvim-dap-ui",
+                "nvim-neotest/nvim-nio",
+
+                -- Go
+                "leoluz/nvim-dap-go"
+            },
             config = function()
-                local dap = require("dap")
+                require("mason-nvim-dap").setup
+                {
+                    automatic_installation = true,
+                    handlers = { },
+                    ensure_installed = { "bash-debug-adapter", "delve" }
+                }
+
+                local dap   = require("dap")
+                local dapui = require("dapui")
 
                 vim.api.nvim_set_hl(0, "DapBreakpoint", { ctermbg = 0, fg = "#990000" })
                 vim.api.nvim_set_hl(0, "DapLogPoint", { ctermbg = 0, fg = "#1E90FF" })
                 vim.api.nvim_set_hl(0, "DapStopped", { ctermbg = 0, fg = "#4CBB17" })
 
-                vim.fn.sign_define("DapBreakpoint", { text = vim.g.nerdfont and "⬤" or "⚫", texthl="DapBreakpoint" })
-                vim.fn.sign_define("DapBreakpointCondition", { text = vim.g.nerdfont and "⬤" or "⛔", texthl="DapBreakpoint" })
-                vim.fn.sign_define("DapBreakpointRejected", { text = vim.g.nerdfont and "" or "✖", texthl="DapBreakpoint" })
-                vim.fn.sign_define("DapLogPoint", { text = vim.g.nerdfont and "" or "⚫", texthl="DapLogPoint" })
-                vim.fn.sign_define("DapStopped", { text = vim.g.nerdfont and "" or "⚫", texthl="DapStopped" })
+                vim.fn.sign_define("DapBreakpoint", { text = vim.g.nerdfont and "⬤" or "⚫", texthl = "DapBreakpoint" })
+                vim.fn.sign_define("DapBreakpointCondition", { text = vim.g.nerdfont and "⬤" or "⛔", texthl = "DapBreakpoint" })
+                vim.fn.sign_define("DapBreakpointRejected", { text = vim.g.nerdfont and "" or "✖", texthl = "DapBreakpoint" })
+                vim.fn.sign_define("DapLogPoint", { text = vim.g.nerdfont and "" or "⚫", texthl = "DapLogPoint" })
+                vim.fn.sign_define("DapStopped", { text = vim.g.nerdfont and "" or "⚫", texthl = "DapStopped" })
 
                 dap.adapters.bashdb =
                 {
@@ -594,16 +619,33 @@ require("lazy").setup
                         terminalKind = "integrated"
                     }
                 }
+
+                dapui.setup
+                {
+                    icons = vim.g.nerdfont and { } or { expanded = "▾", collapsed = "▸", current_frame = "*" },
+                    controls =
+                    {
+                      icons = vim.g.nerdfont and { } or
+                      {
+                            pause = "⏸",
+                            play = "▶",
+                            step_into = "⏎",
+                            step_over = "⏭",
+                            step_out = "⏮",
+                            step_back = "b",
+                            run_last = "▶▶",
+                            terminate = "⏹",
+                            disconnect = "⏏"
+                        }
+                    }
+                }
+
+                dap.listeners.after.event_initialized["dapui_config"] = dapui.open
+                dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+                dap.listeners.before.event_exited["dapui_config"] = dapui.close
+
+                require("dap-go").setup { delve = { detached = vim.fn.has("win32") == 0 } }
             end
-        },
-        {
-            "rcarriga/nvim-dap-ui",
-            dependencies =
-            {
-                "mfussenegger/nvim-dap",
-                "nvim-neotest/nvim-nio"
-            },
-            opts = { }
         },
         {
             "theHamsta/nvim-dap-virtual-text",
