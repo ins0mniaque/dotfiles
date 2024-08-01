@@ -135,7 +135,10 @@ require("lazy").setup
     spec =
     {
         -- Sacrilege
-        { "ins0mniaque/sacrilege.nvim", lazy = false, priority = 1000, opts = { lsp = true } },
+        { "ins0mniaque/sacrilege.nvim", lazy = false, priority = 1000, opts = { lsp = false } },
+
+        -- Fix CursorHold update time
+        { "antoinemadec/FixCursorHold.nvim", config = function() vim.g.cursorhold_updatetime = 100 end },
 
         -- Theme
         {
@@ -400,7 +403,6 @@ require("lazy").setup
         },
         { "nvim-treesitter/nvim-treesitter-context", dependencies = { "nvim-treesitter/nvim-treesitter" } },
         { "nvim-treesitter/nvim-treesitter-textobjects", dependencies = { "nvim-treesitter/nvim-treesitter" } },
-        { "nvim-treesitter/nvim-treesitter-refactor", dependencies = { "nvim-treesitter/nvim-treesitter" } },
 
         -- Formatting
         {
@@ -551,7 +553,6 @@ require("lazy").setup
                 "nvim-neotest/nvim-nio",
                 "rcasia/neotest-bash",
                 "nvim-lua/plenary.nvim",
-                "antoinemadec/FixCursorHold.nvim",
                 "nvim-treesitter/nvim-treesitter"
             },
             config = function()
