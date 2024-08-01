@@ -20,21 +20,16 @@ vim.opt.fillchars = vim.g.nerdfont and "eob: ,fold: ,foldopen:,foldsep: ,fold
                                    or  "eob: ,fold: ,foldopen:▼,foldsep: ,foldclose:▶"
 vim.opt.foldcolumn = "1"
 vim.opt.foldenable = true
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldmethod = "expr"
 vim.opt.foldtext = "v:lua.foldtext()"
 vim.opt.ignorecase = true
-vim.opt.keymodel = { "startsel", "stopsel" }
 vim.opt.laststatus = 3
 vim.opt.list = true
 vim.opt.listchars = { space = "⋅", tab = "⇥ ", eol = "↴", trail = "―", nbsp = "␣" }
-vim.opt.mouse = "a"
-vim.opt.mousemodel = "popup_setpos"
 vim.opt.number = true
-vim.opt.selectmode = { "mouse", "key", "cmd" }
-vim.opt.selection = "exclusive"
 vim.opt.signcolumn = "yes"
 vim.opt.showmode = false
 vim.opt.showtabline = 2
@@ -46,10 +41,7 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.tabstop = 4
 vim.opt.termguicolors = true
-vim.opt.timeoutlen = 300
 vim.opt.undofile = true
-vim.opt.updatetime = 250
-vim.opt.virtualedit = "block"
 vim.opt.whichwrap:append("<>[]")
 vim.opt.wrap = false
 
@@ -72,150 +64,29 @@ vim.diagnostic.config
 }
 
 -- Keyboard mappings
-local function map(lhs, rhs, opts)
-    vim.keymap.set({ "n", "i", "x", "s", "c" }, lhs, rhs, opts)
+-- TODO: Fix shortcuts getting overwritten by sacrilege.nvim
+vim.keymap.set({ "n", "i", "v", "c" }, "<C-o>", function() require("telescope").extensions.file_browser.file_browser() end, { desc = "Open..." })
+vim.keymap.set({ "n", "i", "v", "c" }, "<C-f>", "<Cmd>SearchBoxIncSearch<CR>", { desc = "Find..." })
+vim.keymap.set({ "n", "i", "v", "c" }, "<C-h>", "<Cmd>SearchBoxReplace confirm=menu<CR>", { desc = "Replace..." })
+vim.keymap.set({ "n", "i", "v", "c" }, "<C-j>", function() require("telescope.builtin").live_grep() end, { desc = "Find in files..." })
 
-    if type(rhs) == "string" then
-        rhs = "<C-c>" .. rhs
-    end
-
-    vim.keymap.set("o", lhs, rhs, opts)
-end
-
-local function input(prompt, callback)
-    vim.ui.input({ prompt = prompt }, function(arg)
-        if arg then
-            callback(arg)
-        end
-    end)
-end
-
-map("<C-n>", vim.cmd.tabnew, { desc = "New tab" })
-map("<C-o>", function() require("telescope").extensions.file_browser.file_browser() end, { desc = "Open..." })
-map("<C-s>", function() if vim.fn.expand("%") == "" then input("Save to: ", vim.cmd.write) else vim.cmd.write() end end, { desc = "Save" })
-map("<C-M-s>", function() input("Save as: ", vim.cmd.saveas) end, { desc = "Save As..." })
-map("<C-w>", "<Cmd>confirm quit<CR>", { desc = "Close" })
-map("<C-q>", "<Cmd>confirm quitall<CR>", { desc = "Quit" })
-
-map("<C-z>", "<C-O>u", { desc = "Undo" })
-map("<C-y>", "<C-O><C-r>", { desc = "Redo" })
-map("<C-c>", "<C-O>y", { desc = "Copy" })
-map("<C-x>", "<C-O>x", { desc = "Cut" })
-map("<C-v>", "<C-O>P", { desc = "Paste" })
-map("<C-a>", "<C-\\><C-N><C-\\><C-N>gggH<C-O>G", { desc = "Select All" })
-map("<C-f>", "<Cmd>SearchBoxIncSearch<CR>", { desc = "Find..." })
-map("<C-h>", "<Cmd>SearchBoxReplace confirm=menu<CR>", { desc = "Replace..." })
-map("<C-j>", function() require("telescope.builtin").live_grep() end, { desc = "Find in files..." })
-
-vim.keymap.set("i", "<C-_>", "<C-\\><C-N>gcci", { desc = "Toggle Comments", remap = true })
-vim.keymap.set("s", "<C-_>", "<C-g>gcgv", { desc = "Toggle Comments", remap = true })
-vim.keymap.set("x", "<C-_>", "gcgv", { desc = "Toggle Comments", remap = true })
-
-vim.keymap.set({ "s", "x" }, "<Tab>", "<C-O>>gv", { desc = "Indent" })
-vim.keymap.set({ "s", "x" }, "<S-Tab>", "<C-O><gv", { desc = "Unindent" })
-vim.keymap.set("n", "<Tab>", ">>", { desc = "Indent" })
-vim.keymap.set("n", "<S-Tab>", "<<", { desc = "Unindent" })
-vim.keymap.set("i", "<S-Tab>", "<C-d>", { desc = "Unindent" })
-
-map("<F12>", function() require("nvim-treesitter-refactor.navigation").goto_definition_lsp_fallback() end, { desc = "Go to Definition" })
-map("<F24>", function() require("telescope.builtin").lsp_references() end, { desc = "Find all references..." })
-map("<C-g>d", function() require("nvim-treesitter-refactor.navigation").goto_definition_lsp_fallback() end, { desc = "Go to Definition" })
-map("<C-g>r", function() require("telescope.builtin").lsp_references() end, { desc = "Find all references..." })
-map("<C-r>", function() require("nvim-treesitter-refactor.smart_rename").smart_rename() end, { desc = "Rename..." })
-map("<C-k>f", function() require("conform").format { async = true, lsp_fallback = true } end, { desc = "Format Buffer" })
-map("<C-g>l", "<Esc><Esc>:", { desc = "Go to Line..." })
-
-map("<C-p>", function() require("telescope.builtin").keymaps() end, { desc = "Command Palette..." })
-map("<C-b>", "<Cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
-map("<C-k>o", "<Cmd>Outline<CR>", { desc = "Toggle Code Outline" })
-map("<C-d>", vim.diagnostic.setloclist, { desc = "Toggle Diagnostics" })
-map("<C-k>d", function() require("dapui").toggle() end, { desc = "Toggle Debugger" })
-
-map("<F5>", function() require("dap").continue() end, { desc = "Debug: Start/Continue" })
-map("<F11>", function() require("dap").step_into() end, { desc = "Debug: Step Into" })
-map("<F10>", function() require("dap").step_over() end, { desc = "Debug: Step Over" })
-map("<F23>", function() require("dap").step_out() end, { desc = "Debug: Step Out" })
-map("<F9>", function() require("dap").toggle_breakpoint() end, { desc = "Debug: Toggle Breakpoint" })
-map("<F21>", function() input("Breakpoint condition: ", require("dap").set_breakpoint) end, { desc = "Debug: Set Conditional Breakpoint" })
-
-map("<C-t>r", function() require("neotest").run.run() end, { desc = "Run Current Test" })
-map("<C-t>R", function() require("neotest").run.run(vim.fn.expand("%")) end, { desc = "Run All Tests" })
-map("<C-t>d", function() require("neotest").run.run({strategy = "dap"}) end, { desc = "Debug Current Test" })
-map("<C-t>s", function() require("neotest").run.stop() end, { desc = "Stop Current Test" })
-map("<C-t>a", function() require("neotest").run.attach() end, { desc = "Attach Current Test" })
-
-local function map_cmp(cmp)
-    local function command(invoke, otherwise, condition)
-        if not condition then
-            condition = cmp.visible
-        end
-
-        local function callback(fallback)
-            if     condition() then invoke()
-            elseif otherwise   then otherwise()
-            else                    fallback()
-            end
-        end
-
-        return cmp.mapping(callback, { "n", "i", "c" })
-    end
-
-    local function select(selector)
-        return command(function() selector { behavior = cmp.SelectBehavior.Select } end)
-    end
-
-    local function confirm(select, otherwise)
-        return command(function() cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = select } end,
-                       otherwise,
-                       function() return cmp.visible() and select or cmp.get_active_entry() end)
-    end
-
-    return
-    {
-        ["<Esc>"]     = command(cmp.abort),
-        ["<Up>"]      = select(cmp.select_prev_item),
-        ["<Down>"]    = select(cmp.select_next_item),
-        ["<CR>"]      = confirm(false),
-        ["<Space>"]   = confirm(false),
-        ["<Tab>"]     = confirm(true),
-        ["<C-Space>"] = confirm(true, cmp.complete)
-    }
-end
+vim.keymap.set({ "n", "i", "v", "c" }, "<M-f>", function() require("conform").format { async = true, lsp_fallback = true } end, { desc = "Format Buffer" })
+vim.keymap.set({ "n", "i", "v", "c" }, "<C-p>", function() require("telescope.builtin").keymaps() end, { desc = "Command Palette..." })
+vim.keymap.set({ "n", "i", "v", "c" }, "<C-b>", "<Cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
+vim.keymap.set({ "n", "i", "v", "c" }, "<M-o>", "<Cmd>Outline<CR>", { desc = "Toggle Code Outline" })
+vim.keymap.set({ "n", "i", "v", "c" }, "<M-d>", function() require("dapui").toggle() end, { desc = "Toggle Debugger" })
 
 local function map_lsp(client, buffer)
-    map("<F1>", vim.lsp.buf.hover, { buffer = buffer, desc = "LSP: Hover" })
-    map("<F12>", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
-    map("<F24>", require("telescope.builtin").lsp_references, { buffer = buffer, desc = "LSP: Find all References" })
-    map("<C-g>d", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
-    map("<C-g>r", require("telescope.builtin").lsp_references, { buffer = buffer, desc = "LSP: Find all References" })
-    map("<C-g>i", require("telescope.builtin").lsp_implementations, { buffer = buffer, desc = "LSP: Go to Implementation" })
-    map("<C-g>t", require("telescope.builtin").lsp_type_definitions, { buffer = buffer, desc = "LSP: Go to Type Definition" })
-    map("<C-g>s", require("telescope.builtin").lsp_document_symbols, { buffer = buffer, desc = "LSP: Find in Document Symbols..." })
-    map("<C-g>S", require("telescope.builtin").lsp_dynamic_workspace_symbols, { buffer = buffer, desc = "LSP: Find in Workspace Symbols..." })
-    map("<C-r>", vim.lsp.buf.rename, { buffer = buffer, desc = "LSP: Rename" })
-    map("<C-k>a", vim.lsp.buf.code_action, { buffer = buffer, desc = "LSP: Code Action" })
-    map("<C-g>D", vim.lsp.buf.declaration, { buffer = buffer, desc = "LSP: Go to Declaration" })
-    map("<C-d>", "<Cmd>Trouble diagnostics toggle<CR>", { buffer = buffer, desc = "Toggle Diagnostics" })
-
-    if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-        map("<C-g>h", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = buffer }) end, { buffer = buffer, desc = "LSP: Toggle Inlay Hints" })
-    end
+    vim.keymap.set({ "n", "i", "v", "c" }, "<F12>", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
+    vim.keymap.set({ "n", "i", "v", "c" }, "<F24>", require("telescope.builtin").lsp_references, { buffer = buffer, desc = "LSP: Find all References" })
+    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>d", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
+    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>r", require("telescope.builtin").lsp_references, { buffer = buffer, desc = "LSP: Find all References" })
+    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>i", require("telescope.builtin").lsp_implementations, { buffer = buffer, desc = "LSP: Go to Implementation" })
+    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>t", require("telescope.builtin").lsp_type_definitions, { buffer = buffer, desc = "LSP: Go to Type Definition" })
+    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>s", require("telescope.builtin").lsp_document_symbols, { buffer = buffer, desc = "LSP: Find in Document Symbols..." })
+    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>S", require("telescope.builtin").lsp_dynamic_workspace_symbols, { buffer = buffer, desc = "LSP: Find in Workspace Symbols..." })
+    vim.keymap.set({ "n", "i", "v", "c" }, "<C-d>", "<Cmd>Trouble diagnostics toggle<CR>", { buffer = buffer, desc = "Toggle Diagnostics" })
 end
-
--- Mouse mappings
-map("<M-LeftMouse>", "<4-LeftMouse>", { desc = "Start block selection" })
-map("<M-LeftDrag>", "<LeftDrag>", { desc = "Block selection" })
-map("<M-LeftRelease>", "", { desc = "End block selection" })
-
--- Context menu
-vim.cmd.aunmenu("PopUp.How-to\\ disable\\ mouse")
-vim.cmd.amenu("PopUp.Command\\ Palette\\.\\.\\. <Cmd>lua require(\"telescope.builtin\").keymaps()<CR>")
-vim.cmd.amenu("PopUp.-separator- :")
-vim.cmd.amenu("PopUp.Go\\ to\\ Definition <Cmd>lua require(\"nvim-treesitter-refactor.navigation\").goto_definition_lsp_fallback()<CR>")
-vim.cmd.amenu("PopUp.Find\\ all\\ References <Cmd>lua require(\"telescope.builtin\").lsp_references()<CR>")
-vim.cmd.amenu("PopUp.Rename <Cmd>lua vim.lsp.buf.rename()<CR>")
-vim.cmd.amenu("PopUp.Code\\ Action <Cmd>lua vim.lsp.buf.code_action()<CR>")
-vim.cmd.amenu("PopUp.LSP\\ Hover <Cmd>lua vim.lsp.buf.hover()<CR>")
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -264,7 +135,7 @@ require("lazy").setup
     spec =
     {
         -- Sacrilege
-        { "ins0mniaque/sacrilege.nvim", lazy = false, priority = 1000, opts = { } },
+        { "ins0mniaque/sacrilege.nvim", lazy = false, priority = 1000, opts = { lsp = true } },
 
         -- Theme
         {
@@ -466,7 +337,7 @@ require("lazy").setup
         {
             "HiPhish/rainbow-delimiters.nvim",
             config = function()
-                require("rainbow-delimiters.setup").setup()
+                require("rainbow-delimiters.setup").setup { }
             end
         },
 
@@ -494,7 +365,15 @@ require("lazy").setup
         { "NvChad/nvim-colorizer.lua", opts = { } },
 
         -- Indentation guides
-        { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = { } },
+        {
+            "lukas-reineke/indent-blankline.nvim",
+            main = "ibl",
+            opts =
+            {
+                scope = { show_start = false, show_end = false },
+                indent = { char = "▏" }
+            }
+        },
 
         -- Treesitter (Highlight, edit, and navigate code)
         {
@@ -505,7 +384,14 @@ require("lazy").setup
                 auto_install = true,
                 ensure_installed = { "bash", "c", "diff", "html", "lua", "luadoc", "markdown", "markdown_inline", "query", "vim", "vimdoc" },
                 highlight = { enable = true, additional_vim_regex_highlighting = { "ruby" } },
-                indent = { enable = true, disable = { "ruby" } }
+                indent = { enable = true, disable = { "ruby" } },
+                refactor =
+                {
+                    navigation = { enable = true },
+                    highlight_definitions = { enable = true },
+                    highlight_current_scope = { enable = true },
+                    smart_rename = { enable = true }
+                }
             },
             config = function(_, opts)
                 require("nvim-treesitter.install").prefer_git = true
@@ -692,17 +578,23 @@ require("lazy").setup
             },
             config = function()
                 local cmp = require("cmp")
-                local mapping = map_cmp(cmp)
+
+                local mapping =
+                {
+                    ['<C-Space>'] = cmp.mapping.complete(),
+                    ['<Esc>']     = cmp.mapping.abort(),
+                    ['<S-CR>']    = cmp.mapping.confirm({ select = true }),
+                    ['<CR>']      = cmp.mapping.confirm({ select = false }),
+                    ["<Space>"]   = cmp.mapping.confirm({ select = false }),
+                    ["<Tab>"]     = cmp.mapping.confirm({ select = true }),
+                    ["<Up>"]      = cmp.mapping.select_prev_item(),
+                    ["<Down>"]    = cmp.mapping.select_next_item()
+                }
 
                 cmp.setup
                 {
-                    snippet =
-                    {
-                        expand = function(args)
-                            vim.snippet.expand(args.body)
-                        end,
-                    },
                     completion = { completeopt = "menu,menuone,noinsert,noselect" },
+                    experimental = { ghost_text = { hl_group = "Comment" } },
                     mapping = mapping,
                     sources =
                     {
@@ -710,6 +602,59 @@ require("lazy").setup
                         { name = "nvim_lsp" },
                         { name = "buffer" }
                     },
+                    formatting =
+                    {
+                        format = function(_, item)
+                            local icons =
+                            {
+                                Array         = " ",
+                                Boolean       = "󰨙 ",
+                                Class         = " ",
+                                Codeium       = "󰘦 ",
+                                Color         = " ",
+                                Control       = " ",
+                                Collapsed     = " ",
+                                Constant      = "󰏿 ",
+                                Constructor   = " ",
+                                Copilot       = " ",
+                                Enum          = " ",
+                                EnumMember    = " ",
+                                Event         = " ",
+                                Field         = " ",
+                                File          = " ",
+                                Folder        = " ",
+                                Function      = "󰊕 ",
+                                Interface     = " ",
+                                Key           = " ",
+                                Keyword       = " ",
+                                Method        = "󰊕 ",
+                                Module        = " ",
+                                Namespace     = "󰦮 ",
+                                Null          = " ",
+                                Number        = "󰎠 ",
+                                Object        = " ",
+                                Operator      = " ",
+                                Package       = " ",
+                                Property      = " ",
+                                Reference     = " ",
+                                Snippet       = " ",
+                                String        = " ",
+                                Struct        = "󰆼 ",
+                                TabNine       = "󰏚 ",
+                                Text          = " ",
+                                TypeParameter = " ",
+                                Unit          = " ",
+                                Value         = " ",
+                                Variable      = "󰀫 "
+                            }
+
+                            if icons[item.kind] then
+                                item.kind = icons[item.kind] .. item.kind
+                            end
+
+                            return item
+                        end
+                    }
                 }
 
                 cmp.setup.cmdline({ "/", "?" },
@@ -756,12 +701,12 @@ require("lazy").setup
             config = function()
                 vim.api.nvim_create_autocmd("LspAttach",
                 {
-                    group = vim.api.nvim_create_augroup("LspAttach", { }),
+                    group = vim.api.nvim_create_augroup("Lsp", { }),
                     callback = function(event)
                         local client = vim.lsp.get_client_by_id(event.data.client_id)
 
                         if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-                            local highlight_group = vim.api.nvim_create_augroup("LspHighlight", { })
+                            local highlight_group = vim.api.nvim_create_augroup("Lsp.Highlight", { })
 
                             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" },
                             {
@@ -779,7 +724,7 @@ require("lazy").setup
 
                             vim.api.nvim_create_autocmd("LspDetach",
                             {
-                                group = vim.api.nvim_create_augroup("LspDetach", { }),
+                                group = vim.api.nvim_create_augroup("Lsp.Detach", { }),
                                 callback = function(_)
                                     vim.lsp.buf.clear_references()
                                     vim.api.nvim_clear_autocmds { group = highlight_group, buffer = event.buf }
