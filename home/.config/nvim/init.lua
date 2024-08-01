@@ -135,7 +135,7 @@ require("lazy").setup
     spec =
     {
         -- Sacrilege
-        { "ins0mniaque/sacrilege.nvim", lazy = false, priority = 1000, opts = { lsp = false } },
+        { "ins0mniaque/sacrilege.nvim", lazy = false, priority = 1000, opts = { } },
 
         -- Fix CursorHold update time
         { "antoinemadec/FixCursorHold.nvim", config = function() vim.g.cursorhold_updatetime = 100 end },
