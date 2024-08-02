@@ -15,6 +15,7 @@ function _G.foldtext()
 end
 
 vim.opt.clipboard = "unnamedplus"
+vim.opt.cmdheight = 0
 vim.opt.expandtab = true
 vim.opt.fillchars = vim.g.nerdfont and "eob: ,fold: ,foldopen:,foldsep: ,foldclose:"
                                    or  "eob: ,fold: ,foldopen:▼,foldsep: ,foldclose:▶"
