@@ -222,6 +222,11 @@ require("lazy").setup
         -- Status column
         {
             "luukvbaal/statuscol.nvim",
+            dependencies =
+            {
+                "lewis6991/gitsigns.nvim",
+                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
+            },
             config = function()
                 local builtin = require("statuscol.builtin")
 
@@ -327,6 +332,8 @@ require("lazy").setup
                 }
             }
         },
+
+        { "lewis6991/gitsigns.nvim", opts = { } },
 
         -- Automatic tabstop and shiftwidth
         { "tpope/vim-sleuth" },
