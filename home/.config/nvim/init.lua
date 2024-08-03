@@ -64,31 +64,6 @@ vim.diagnostic.config
     update_in_insert = true
 }
 
--- Keyboard mappings
--- TODO: Fix shortcuts getting overwritten by sacrilege.nvim
-vim.keymap.set({ "n", "i", "v", "c" }, "<C-o>", function() require("telescope").extensions.file_browser.file_browser() end, { desc = "Open..." })
-vim.keymap.set({ "n", "i", "v", "c" }, "<C-f>", "<Cmd>SearchBoxIncSearch<CR>", { desc = "Find..." })
-vim.keymap.set({ "n", "i", "v", "c" }, "<C-h>", "<Cmd>SearchBoxReplace confirm=menu<CR>", { desc = "Replace..." })
-vim.keymap.set({ "n", "i", "v", "c" }, "<C-j>", function() require("telescope.builtin").live_grep() end, { desc = "Find in files..." })
-
-vim.keymap.set({ "n", "i", "v", "c" }, "<M-f>", function() require("conform").format { async = true, lsp_fallback = true } end, { desc = "Format Buffer" })
-vim.keymap.set({ "n", "i", "v", "c" }, "<C-p>", function() require("telescope.builtin").keymaps() end, { desc = "Command Palette..." })
-vim.keymap.set({ "n", "i", "v", "c" }, "<C-b>", "<Cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
-vim.keymap.set({ "n", "i", "v", "c" }, "<M-o>", "<Cmd>Outline<CR>", { desc = "Toggle Code Outline" })
-vim.keymap.set({ "n", "i", "v", "c" }, "<M-d>", function() require("dapui").toggle() end, { desc = "Toggle Debugger" })
-
-local function map_lsp(client, buffer)
-    vim.keymap.set({ "n", "i", "v", "c" }, "<F12>", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
-    vim.keymap.set({ "n", "i", "v", "c" }, "<F24>", require("telescope.builtin").lsp_references, { buffer = buffer, desc = "LSP: Find all References" })
-    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>d", require("telescope.builtin").lsp_definitions, { buffer = buffer, desc = "LSP: Go to Definition" })
-    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>r", require("telescope.builtin").lsp_references, { buffer = buffer, desc = "LSP: Find all References" })
-    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>i", require("telescope.builtin").lsp_implementations, { buffer = buffer, desc = "LSP: Go to Implementation" })
-    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>t", require("telescope.builtin").lsp_type_definitions, { buffer = buffer, desc = "LSP: Go to Type Definition" })
-    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>s", require("telescope.builtin").lsp_document_symbols, { buffer = buffer, desc = "LSP: Find in Document Symbols..." })
-    vim.keymap.set({ "n", "i", "v", "c" }, "<C-g>S", require("telescope.builtin").lsp_dynamic_workspace_symbols, { buffer = buffer, desc = "LSP: Find in Workspace Symbols..." })
-    vim.keymap.set({ "n", "i", "v", "c" }, "<C-d>", "<Cmd>Trouble diagnostics toggle<CR>", { buffer = buffer, desc = "Toggle Diagnostics" })
-end
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -136,7 +111,49 @@ require("lazy").setup
     spec =
     {
         -- Sacrilege
-        { "ins0mniaque/sacrilege.nvim", lazy = false, priority = 1000, opts = { } },
+        {
+            "ins0mniaque/sacrilege.nvim",
+            opts = 
+            {
+                commands =
+                {
+                    names =
+                    {
+                        file_explorer = "Toggle File Explorer",
+                        code_outline = "Toggle Code Outline",
+                        debugger = "Toggle Debugger"
+                    },
+                    global =
+                    {
+                        command_palette = function() require("telescope.builtin").keymaps() end,
+                        file_explorer = "<Cmd>NvimTreeToggle<CR>",
+                        code_outline = "<Cmd>Outline<CR>",
+                        debugger = function() require("dapui").toggle() end,
+                        open = function() require("telescope").extensions.file_browser.file_browser() end,
+                        find = "<Cmd>SearchBoxIncSearch<CR>",
+                        replace = "<Cmd>SearchBoxReplace confirm=menu<CR>",
+                        find_in_files = function() require("telescope.builtin").live_grep() end,
+                        format = function() require("conform").format { async = true, lsp_fallback = true } end
+                    },
+                    lsp =
+                    {
+                        definition = { function() require("telescope.builtin").lsp_definitions() end, method = vim.lsp.protocol.Methods.textDocument_definition },
+                        references = { function() require("telescope.builtin").lsp_references() end, method = vim.lsp.protocol.Methods.textDocument_references },
+                        implementation = { function() require("telescope.builtin").lsp_implementations() end, method = vim.lsp.protocol.Methods.textDocument_implementation },
+                        type_definition = { function() require("telescope.builtin").lsp_type_definitions() end, method = vim.lsp.protocol.Methods.textDocument_typeDefinition },
+                        document_symbol = { function() require("telescope.builtin").lsp_document_symbols() end, method = vim.lsp.protocol.Methods.textDocument_documentSymbol },
+                        workspace_symbol = { function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end, method = vim.lsp.protocol.Methods.workspace_symbol },
+                        diagnostic = "<Cmd>Trouble diagnostics toggle<CR>"
+                    }
+                },
+                keys =
+                {
+                    file_explorer = "<C-b>",
+                    code_outline = "<M-o>",
+                    debugger = "<M-d>"
+                }
+            }
+        },
 
         -- Fix CursorHold update time
         { "antoinemadec/FixCursorHold.nvim", config = function() vim.g.cursorhold_updatetime = 100 end },
@@ -740,8 +757,6 @@ require("lazy").setup
                                 end
                             })
                         end
-
-                        map_lsp(client, event.buf)
                     end
                 })
 
