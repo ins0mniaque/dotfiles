@@ -143,7 +143,7 @@ require("lazy").setup
                         type_definition = { function() require("telescope.builtin").lsp_type_definitions() end, method = vim.lsp.protocol.Methods.textDocument_typeDefinition },
                         document_symbol = { function() require("telescope.builtin").lsp_document_symbols() end, method = vim.lsp.protocol.Methods.textDocument_documentSymbol },
                         workspace_symbol = { function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end, method = vim.lsp.protocol.Methods.workspace_symbol },
-                        diagnostic = "<Cmd>Trouble diagnostics toggle<CR>"
+                        diagnostics = "<Cmd>Trouble diagnostics toggle<CR>"
                     }
                 },
                 keys =
