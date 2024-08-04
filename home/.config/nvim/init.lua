@@ -125,7 +125,6 @@ require("lazy").setup
                     },
                     global =
                     {
-                        command_palette = function() require("telescope.builtin").keymaps() end,
                         file_explorer = "<Cmd>NvimTreeToggle<CR>",
                         code_outline = "<Cmd>Outline<CR>",
                         debugger = function() require("dapui").toggle() end,
