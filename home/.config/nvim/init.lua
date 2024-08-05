@@ -115,6 +115,26 @@ require("lazy").setup
             "ins0mniaque/sacrilege.nvim",
             opts = 
             {
+                completion =
+                {
+                    default = "cmp",
+                    cmp =
+                    {
+                        visible = function() return require('cmp').visible() end,
+                        abort = function() return require('cmp').abort() end,
+                        trigger = function() return require('cmp').complete() end,
+                        confirm = function(opts) return require('cmp').confirm(opts) end,
+                        select = function(direction)
+                            if direction == -1 then
+                                return require('cmp').select_prev_item()
+                            elseif direction == 1 then
+                                return require('cmp').select_next_item()
+                            end
+
+                            return false
+                        end
+                    }
+                },
                 commands =
                 {
                     names =
@@ -129,8 +149,6 @@ require("lazy").setup
                         code_outline = "<Cmd>Outline<CR>",
                         debugger = function() require("dapui").toggle() end,
                         open = function() require("telescope").extensions.file_browser.file_browser() end,
-                        find = "<Cmd>SearchBoxIncSearch<CR>",
-                        replace = "<Cmd>SearchBoxReplace confirm=menu<CR>",
                         find_in_files = function() require("telescope.builtin").live_grep() end,
                         format = function() require("conform").format { async = true, lsp_fallback = true } end
                     },
@@ -328,27 +346,6 @@ require("lazy").setup
             end
         },
 
-        -- Find and replace
-        {
-            "VonHeikemen/searchbox.nvim",
-            dependencies = { "MunifTanjim/nui.nvim" },
-            opts =
-            {
-                defaults = { show_matches = true },
-                hooks =
-                {
-                    after_mount = function(input)
-                        -- TODO: Fix cursor not moving on prev/next matches
-                        vim.keymap.set("i", "<Up>", "<Plug>(searchbox-prev-match)", { buffer = input.bufnr })
-                        vim.keymap.set("i", "<Down>", "<Plug>(searchbox-next-match)", { buffer = input.bufnr })
-                        vim.keymap.set("i", "<S-Tab>", "<Plug>(searchbox-prev-match)", { buffer = input.bufnr })
-                        vim.keymap.set("i", "<Tab>", "<Plug>(searchbox-next-match)", { buffer = input.bufnr })
-                        vim.keymap.set("i", "<Enter>", "<Plug>(searchbox-next-match)", { buffer = input.bufnr })
-                    end
-                }
-            }
-        },
-
         { "lewis6991/gitsigns.nvim", opts = { } },
 
         -- Automatic tabstop and shiftwidth
@@ -358,7 +355,7 @@ require("lazy").setup
         { "windwp/nvim-ts-autotag", opts = { } },
 
         -- Auto-pairs completion
-        { "windwp/nvim-autopairs", event = "InsertEnter", opts = { } },
+        { "windwp/nvim-autopairs", event = "InsertEnter", opts = { map_cr = false } },
 
         -- Rainbow delimiters
         {
@@ -604,23 +601,9 @@ require("lazy").setup
             config = function()
                 local cmp = require("cmp")
 
-                local mapping =
-                {
-                    ['<C-Space>'] = cmp.mapping.complete(),
-                    ['<Esc>']     = cmp.mapping.abort(),
-                    ['<S-CR>']    = cmp.mapping.confirm({ select = true }),
-                    ['<CR>']      = cmp.mapping.confirm({ select = false }),
-                    ["<Space>"]   = cmp.mapping.confirm({ select = false }),
-                    ["<Tab>"]     = cmp.mapping.confirm({ select = true }),
-                    ["<Up>"]      = cmp.mapping.select_prev_item(),
-                    ["<Down>"]    = cmp.mapping.select_next_item()
-                }
-
                 cmp.setup
                 {
-                    completion = { completeopt = "menu,menuone,noinsert,noselect" },
                     experimental = { ghost_text = { hl_group = "Comment" } },
-                    mapping = mapping,
                     sources =
                     {
                         { name = "lazydev", group_index = 0 },
@@ -684,7 +667,6 @@ require("lazy").setup
 
                 cmp.setup.cmdline({ "/", "?" },
                 {
-                    mapping = mapping,
                     sources =
                     {
                         { name = "buffer" }
@@ -693,7 +675,6 @@ require("lazy").setup
 
                 cmp.setup.cmdline(":",
                 {
-                    mapping = mapping,
                     sources =
                     {
                         { name = "path", group_index = 1 },
