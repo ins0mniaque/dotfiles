@@ -16,6 +16,7 @@ end
 
 vim.opt.clipboard = "unnamedplus"
 vim.opt.cmdheight = 0
+vim.opt.completeopt = "menu,menuone,noinsert,noselect"
 vim.opt.expandtab = true
 vim.opt.fillchars = vim.g.nerdfont and "eob: ,fold: ,foldopen:,foldsep: ,foldclose:"
                                    or  "eob: ,fold: ,foldopen:▼,foldsep: ,foldclose:▶"
@@ -113,16 +114,15 @@ require("lazy").setup
         -- Sacrilege
         {
             "ins0mniaque/sacrilege.nvim",
-            opts = 
+            opts =
             {
                 completion =
                 {
-                    default = "cmp",
+                    trigger = function(what) return require('cmp').complete() end,
                     cmp =
                     {
                         visible = function() return require('cmp').visible() end,
                         abort = function() return require('cmp').abort() end,
-                        trigger = function() return require('cmp').complete() end,
                         confirm = function(opts) return require('cmp').confirm(opts) end,
                         select = function(direction)
                             if direction == -1 then
@@ -150,7 +150,7 @@ require("lazy").setup
                         debugger = function() require("dapui").toggle() end,
                         open = function() require("telescope").extensions.file_browser.file_browser() end,
                         find_in_files = function() require("telescope.builtin").live_grep() end,
-                        format = function() require("conform").format { async = true, lsp_fallback = true } end
+                        format = { function() require("conform").format { async = true, lsp_fallback = true } end, v = false }
                     },
                     lsp =
                     {
@@ -353,9 +353,6 @@ require("lazy").setup
 
         -- Auto-tag completion
         { "windwp/nvim-ts-autotag", opts = { } },
-
-        -- Auto-pairs completion
-        { "windwp/nvim-autopairs", event = "InsertEnter", opts = { map_cr = false } },
 
         -- Rainbow delimiters
         {
@@ -603,6 +600,7 @@ require("lazy").setup
 
                 cmp.setup
                 {
+                    completion = { autocomplete = false, completeopt = table.concat(vim.opt.completeopt:get(), ",") },
                     experimental = { ghost_text = { hl_group = "Comment" } },
                     sources =
                     {
