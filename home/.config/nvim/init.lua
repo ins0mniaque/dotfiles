@@ -135,34 +135,42 @@ require("lazy").setup
                         end
                     }
                 },
-                commands =
-                {
-                    names =
+                commands = function(commands)
+                    local command = require("sacrilege.command")
+                    local editor = require("sacrilege.editor")
+                    local telescope = require("telescope.builtin")
+                    local methods = vim.lsp.protocol.Methods
+
+                    commands.open:override(function() require("telescope").extensions.file_browser.file_browser() end)
+                    commands.find_in_files:override(function() require("telescope.builtin").live_grep() end)
+                    commands.format:override({ function() require("conform").format { async = true, lsp_fallback = true } end, v = false })
+
+                    local function lsp(telescope, method)
+                        return function()
+                            if editor.supports_lsp_method(0, method) then
+                                telescope()
+                                return true
+                            end
+
+                            return false
+                        end
+                    end
+
+                    commands.lsp.definition:override(lsp(telescope.lsp_definitions, methods.textDocument_definition))
+                    commands.lsp.references:override(lsp(telescope.lsp_references, methods.textDocument_references))
+                    commands.lsp.implementation:override(lsp(telescope.lsp_implementations, methods.textDocument_implementation))
+                    commands.lsp.type_definition:override(lsp(telescope.lsp_type_definitions, methods.textDocument_typeDefinition))
+                    commands.lsp.document_symbol:override(lsp(telescope.lsp_document_symbols, methods.textDocument_documentSymbol))
+                    commands.lsp.workspace_symbol:override(lsp(telescope.lsp_dynamic_workspace_symbols, methods.workspace_symbol))
+                    commands.diagnostics:override("<Cmd>Trouble diagnostics toggle<CR>")
+
+                    return
                     {
-                        file_explorer = "Toggle File Explorer",
-                        code_outline = "Toggle Code Outline",
-                        debugger = "Toggle Debugger"
-                    },
-                    global =
-                    {
-                        file_explorer = "<Cmd>NvimTreeToggle<CR>",
-                        code_outline = "<Cmd>Outline<CR>",
-                        debugger = function() require("dapui").toggle() end,
-                        open = function() require("telescope").extensions.file_browser.file_browser() end,
-                        find_in_files = function() require("telescope.builtin").live_grep() end,
-                        format = { function() require("conform").format { async = true, lsp_fallback = true } end, v = false }
-                    },
-                    lsp =
-                    {
-                        definition = { function() require("telescope.builtin").lsp_definitions() end, method = vim.lsp.protocol.Methods.textDocument_definition },
-                        references = { function() require("telescope.builtin").lsp_references() end, method = vim.lsp.protocol.Methods.textDocument_references },
-                        implementation = { function() require("telescope.builtin").lsp_implementations() end, method = vim.lsp.protocol.Methods.textDocument_implementation },
-                        type_definition = { function() require("telescope.builtin").lsp_type_definitions() end, method = vim.lsp.protocol.Methods.textDocument_typeDefinition },
-                        document_symbol = { function() require("telescope.builtin").lsp_document_symbols() end, method = vim.lsp.protocol.Methods.textDocument_documentSymbol },
-                        workspace_symbol = { function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end, method = vim.lsp.protocol.Methods.workspace_symbol },
-                        diagnostics = "<Cmd>Trouble diagnostics toggle<CR>"
+                        file_explorer = command.new("Toggle File Explorer", "<Cmd>NvimTreeToggle<CR>"),
+                        code_outline = command.new("Toggle Code Outline", "<Cmd>Outline<CR>"),
+                        debugger = command.new("Toggle Debugger", function() require("dapui").toggle() end),
                     }
-                },
+                end,
                 keys =
                 {
                     file_explorer = "<C-b>",
