@@ -116,52 +116,11 @@ require("lazy").setup
             "ins0mniaque/sacrilege.nvim",
             opts =
             {
-                completion =
-                {
-                    trigger = function(what) return require('cmp').complete() end,
-                    cmp =
-                    {
-                        visible = function() return require('cmp').visible() end,
-                        abort = function() return require('cmp').abort() end,
-                        confirm = function(opts) return require('cmp').confirm(opts) end,
-                        select = function(direction)
-                            if direction == -1 then
-                                return require('cmp').select_prev_item()
-                            elseif direction == 1 then
-                                return require('cmp').select_next_item()
-                            end
-
-                            return false
-                        end
-                    }
-                },
+                presets = { "default", "telescope", "nvim-cmp" },
                 commands = function(commands)
                     local command = require("sacrilege.command")
-                    local editor = require("sacrilege.editor")
-                    local telescope = require("telescope.builtin")
-                    local methods = vim.lsp.protocol.Methods
 
-                    commands.open:override(function() require("telescope").extensions.file_browser.file_browser() end)
-                    commands.find_in_files:override(function() require("telescope.builtin").live_grep() end)
-                    commands.format:override({ function() require("conform").format { async = true, lsp_fallback = true } end, v = false })
-
-                    local function lsp(telescope, method)
-                        return function()
-                            if editor.supports_lsp_method(0, method) then
-                                telescope()
-                                return true
-                            end
-
-                            return false
-                        end
-                    end
-
-                    commands.lsp.definition:override(lsp(telescope.lsp_definitions, methods.textDocument_definition))
-                    commands.lsp.references:override(lsp(telescope.lsp_references, methods.textDocument_references))
-                    commands.lsp.implementation:override(lsp(telescope.lsp_implementations, methods.textDocument_implementation))
-                    commands.lsp.type_definition:override(lsp(telescope.lsp_type_definitions, methods.textDocument_typeDefinition))
-                    commands.lsp.document_symbol:override(lsp(telescope.lsp_document_symbols, methods.textDocument_documentSymbol))
-                    commands.lsp.workspace_symbol:override(lsp(telescope.lsp_dynamic_workspace_symbols, methods.workspace_symbol))
+                    commands.format:override(function() require("conform").format({ async = true, lsp_fallback = true }) end):visual(false)
                     commands.diagnostics:override("<Cmd>Trouble diagnostics toggle<CR>")
 
                     return
