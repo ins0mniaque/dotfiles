@@ -116,26 +116,12 @@ require("lazy").setup
             "ins0mniaque/sacrilege.nvim",
             opts =
             {
-                presets = { "default", "telescope", "nvim-cmp" },
+                language = "pseudo",
+                presets = { "default", "dap", "dap-ui", "neotest", "telescope", "nvim-cmp", "nvim-tree", "outline", "secrets" },
                 commands = function(commands)
-                    local command = require("sacrilege.command")
-
                     commands.format:override(function() require("conform").format({ async = true, lsp_fallback = true }) end):visual(false)
                     commands.diagnostics:override("<Cmd>Trouble diagnostics toggle<CR>")
-
-                    return
-                    {
-                        file_explorer = command.new("Toggle File Explorer", "<Cmd>NvimTreeToggle<CR>"),
-                        code_outline = command.new("Toggle Code Outline", "<Cmd>Outline<CR>"),
-                        debugger = command.new("Toggle Debugger", function() require("dapui").toggle() end),
-                    }
-                end,
-                keys =
-                {
-                    file_explorer = "<C-b>",
-                    code_outline = "<M-o>",
-                    debugger = "<M-d>"
-                }
+                end
             }
         },
 
@@ -537,6 +523,7 @@ require("lazy").setup
             {
                 "nvim-neotest/nvim-nio",
                 "rcasia/neotest-bash",
+                "nvim-neotest/neotest-plenary",
                 "nvim-lua/plenary.nvim",
                 "nvim-treesitter/nvim-treesitter"
             },
@@ -545,7 +532,8 @@ require("lazy").setup
                 {
                     adapters =
                     {
-                        require("neotest-bash")
+                        require("neotest-bash"),
+                        require("neotest-plenary")
                     }
                 }
             end
