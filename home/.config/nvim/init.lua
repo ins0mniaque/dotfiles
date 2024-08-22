@@ -702,7 +702,15 @@ require("lazy").setup
                     -- Lua
                     lua_ls =
                     {
-                        settings = { Lua = { completion = { callSnippet = "Replace" } } }
+                        settings =
+                        {
+                            Lua =
+                            {
+                                runtime = { version = "LuaJIT" },
+                                workspace = { library = vim.api.nvim_get_runtime_file("lua", true) },
+                                completion = { callSnippet = "Replace" }
+                            }
+                        }
                     }
                 }
 
