@@ -258,7 +258,13 @@ require("lazy").setup
         -- Code outline
         {
             "hedyhli/outline.nvim",
-            opts = { }
+            opts =
+            {
+                keymaps =
+                {
+                    goto_location = { "<CR>", "<2-LeftMouse>" }
+                }
+            }
         },
 
         -- Diagnostics
