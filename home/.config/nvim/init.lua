@@ -117,7 +117,7 @@ require("lazy").setup
             opts =
             {
                 language = "pseudo",
-                presets = { "default", "dap", "dap-ui", "neotest", "telescope", "nvim-cmp", "nvim-tree", "outline", "secrets" },
+                presets = { "default", "dap", "dap-ui", "neotest", "telescope", "nvim-cmp", "barbar", "nvim-tree", "outline", "secrets" },
                 commands = function(commands)
                     commands.format:override(function() require("conform").format({ async = true, lsp_fallback = true }) end):visual(false)
                     commands.diagnostics:override("<Cmd>Trouble diagnostics toggle<CR>")
@@ -293,15 +293,28 @@ require("lazy").setup
                 "nvim-telescope/telescope-file-browser.nvim"
             },
             config = function()
-                require("telescope").setup
+                local telescope = require("telescope")
+                local actions   = require("telescope.actions")
+
+                telescope.setup
                 {
-                    defaults = { mappings = { i = { ["<Esc>"] = require("telescope.actions").close } } },
+                    defaults =
+                    {
+                        mappings =
+                        {
+                            i =
+                            {
+                                ["<Esc>"] = actions.close,
+                                ["<C-S>"] = actions.smart_send_to_qflist + actions.open_qflist
+                            }
+                        }
+                    },
                     extensions = { ["ui-select"] = { require("telescope.themes").get_dropdown() } }
                 }
 
-                pcall(require("telescope").load_extension, "fzf")
-                pcall(require("telescope").load_extension, "ui-select")
-                pcall(require("telescope").load_extension, "file_browser")
+                pcall(telescope.load_extension, "fzf")
+                pcall(telescope.load_extension, "ui-select")
+                pcall(telescope.load_extension, "file_browser")
             end
         },
 
