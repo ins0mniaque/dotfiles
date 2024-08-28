@@ -116,12 +116,7 @@ require("lazy").setup
             "ins0mniaque/sacrilege.nvim",
             opts =
             {
-                language = "pseudo",
-                presets = { "default", "dap", "dap-ui", "neotest", "telescope", "nvim-cmp", "barbar", "nvim-tree", "outline", "secrets" },
-                commands = function(commands)
-                    commands.format:override(function() require("conform").format({ async = true, lsp_fallback = true }) end):visual(false)
-                    commands.diagnostics:override("<Cmd>Trouble diagnostics toggle<CR>")
-                end
+                presets = { "default", "secrets" }
             }
         },
 
