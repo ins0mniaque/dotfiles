@@ -200,8 +200,16 @@ require("lazy").setup
             init = function() vim.g.barbar_auto_setup = false end,
             opts =
             {
-                sidebar_filetypes = { ["neo-tree"] = true, NvimTree = true, Outline = true, dapui_scopes = true },
-                icons = { button = not vim.g.nerdfont and "✖" or nil, filetype = { enabled = vim.g.nerdfont } }
+                sidebar_filetypes =
+                {
+                    ['neo-tree'] = { event = 'BufWipeout' },
+                    dapui_scopes = true
+                },
+                icons =
+                {
+                    button = not vim.g.nerdfont and "✖" or nil,
+                    filetype = { enabled = vim.g.nerdfont }
+                }
             }
         },
 
