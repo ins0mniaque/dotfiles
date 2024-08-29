@@ -2,6 +2,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Terminal Graphics
+vim.g.graphics = os.getenv("GRAPHICS") and true or false
+
 -- Nerd Font
 vim.g.nerdfont = os.getenv("NERDFONT") and true or false
 
@@ -116,6 +119,7 @@ require("lazy").setup
             "ins0mniaque/sacrilege.nvim",
             opts =
             {
+                language = "pseudo",
                 presets = { "default", "secrets" }
             }
         },
@@ -196,7 +200,7 @@ require("lazy").setup
             init = function() vim.g.barbar_auto_setup = false end,
             opts =
             {
-                sidebar_filetypes = { NvimTree = true, Outline = true, dapui_scopes = true },
+                sidebar_filetypes = { ["neo-tree"] = true, NvimTree = true, Outline = true, dapui_scopes = true },
                 icons = { button = not vim.g.nerdfont and "✖" or nil, filetype = { enabled = vim.g.nerdfont } }
             }
         },
@@ -239,25 +243,36 @@ require("lazy").setup
                      sections = { lualine_c = { "nvim_treesitter#statusline" } } }
         },
 
-        -- File explorer
+        -- File explorer / Code outline
         {
-            "nvim-tree/nvim-tree.lua",
-            lazy = false,
+            "nvim-neo-tree/neo-tree.nvim",
             dependencies =
             {
-                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
+                "nvim-lua/plenary.nvim",
+                "MunifTanjim/nui.nvim",
+                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont },
+                { "3rd/image.nvim", enabled = vim.g.graphics }
             },
-            opts = { }
-        },
-
-        -- Code outline
-        {
-            "hedyhli/outline.nvim",
             opts =
             {
-                keymaps =
+                add_blank_line_at_top = true,
+                sources =
                 {
-                    goto_location = { "<CR>", "<2-LeftMouse>" }
+                    "filesystem",
+                    "buffers",
+                    "git_status",
+                    "document_symbols"
+                },
+                source_selector =
+                {
+                    winbar = true,
+                    sources =
+                    {
+                        { source = "filesystem" },
+                        { source = "buffers" },
+                        { source = "git_status" },
+                        { source = "document_symbols" }
+                    }
                 }
             }
         },
