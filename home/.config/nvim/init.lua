@@ -226,6 +226,7 @@ require("lazy").setup
 
                 require("statuscol").setup
                 {
+                    ft_ignore = { "neo-tree" },
                     segments =
                     {
                         { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
@@ -263,7 +264,6 @@ require("lazy").setup
             },
             opts =
             {
-                add_blank_line_at_top = true,
                 sources =
                 {
                     "filesystem",
