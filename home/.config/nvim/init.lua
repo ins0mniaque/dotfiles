@@ -202,7 +202,7 @@ require("lazy").setup
             {
                 sidebar_filetypes =
                 {
-                    ['neo-tree'] = { event = 'BufWipeout' },
+                    ["neo-tree"] = { event = "BufWipeout" },
                     dapui_scopes = true
                 },
                 icons =
