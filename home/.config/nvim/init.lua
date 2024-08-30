@@ -2,6 +2,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Terminal Graphics
 vim.g.graphics = os.getenv("GRAPHICS") and true or false
 
@@ -117,11 +121,7 @@ require("lazy").setup
         -- Sacrilege
         {
             "ins0mniaque/sacrilege.nvim",
-            opts =
-            {
-                language = "pseudo",
-                presets = { "default", "secrets" }
-            }
+            opts = { }
         },
 
         -- Fix CursorHold update time
@@ -252,35 +252,36 @@ require("lazy").setup
                      sections = { lualine_c = { "nvim_treesitter#statusline" } } }
         },
 
-        -- File explorer / Code outline
+        -- File explorer
         {
-            "nvim-neo-tree/neo-tree.nvim",
+            "nvim-tree/nvim-tree.lua",
+            lazy = false,
             dependencies =
             {
-                "nvim-lua/plenary.nvim",
-                "MunifTanjim/nui.nvim",
-                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont },
-                { "3rd/image.nvim", enabled = vim.g.graphics }
+                { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
             },
             opts =
             {
-                sources =
+                diagnostics = { enable = true, show_on_dirs = true },
+                renderer =
                 {
-                    "filesystem",
-                    "buffers",
-                    "git_status",
-                    "document_symbols"
-                },
-                source_selector =
-                {
-                    winbar = true,
-                    sources =
+                    icons =
                     {
-                        { source = "filesystem" },
-                        { source = "buffers" },
-                        { source = "git_status" },
-                        { source = "document_symbols" }
+                        git_placement = "right_align",
+                        bookmarks_placement = "before"
                     }
+                }
+            }
+        },
+
+        -- Code outline
+        {
+            "hedyhli/outline.nvim",
+            opts =
+            {
+                keymaps =
+                {
+                    goto_location = { "<CR>", "<2-LeftMouse>" }
                 }
             }
         },
@@ -336,6 +337,35 @@ require("lazy").setup
             end
         },
 
+        -- Find and Replace
+        {
+            'MagicDuck/grug-far.nvim',
+            opts =
+            {
+                keymaps =
+                {
+                    replace = { n = "<C-R>", i = "<C-R>" },
+                    qflist = { n = "<C-M-S>", i = "<C-M-S>" },
+                    syncLocations = { n = "<C-S>", i = "<C-S>" },
+                    syncLine = { n = "<C-L>", i = "<C-L>" },
+                    close = { n = "<Esc>", i = "<Esc>" },
+                    historyOpen = { n = "<C-H>", i = "<C-H>" },
+                    historyAdd = { n = "<C-S-H>", i = "<C-S-H>" },
+                    refresh = { n = "<F5>", i = "<F5>" },
+                    openLocation = { n = "<C-O>", i = "<C-O>" },
+                    openNextLocation = { n = "<F3>", i = "<F3>" },
+                    openPrevLocation = { n = "<F15>", i = "<F15>" },
+                    gotoLocation = { n = "<C-G>", i = "<C-G>" },
+                    pickHistoryEntry = { n = "<C-M-H>", i = "<C-M-H>" },
+                    abort = { n = "<C-A>", i = "<C-A>" },
+                    help = { n = "<C-?>", i = "<C-?>" },
+                    toggleShowCommand = { n = "<F8>", i = "<F8>" },
+                    swapEngine = { n = "<F12>", i = "<F12>" },
+                }
+            }
+        },
+
+        -- Git decorations
         { "lewis6991/gitsigns.nvim", opts = { } },
 
         -- Automatic tabstop and shiftwidth
