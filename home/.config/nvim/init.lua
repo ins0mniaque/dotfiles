@@ -714,7 +714,7 @@ require("lazy").setup
                 { "williamboman/mason.nvim", opts = { } },
                 "williamboman/mason-lspconfig.nvim",
                 "WhoIsSethDaniel/mason-tool-installer.nvim",
-                { "j-hui/fidget.nvim", opts = { } },
+                { "j-hui/fidget.nvim", opts = { notification = { override_vim_notify = true } } },
 
                 -- Lua
                 {
