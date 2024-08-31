@@ -333,7 +333,8 @@ require("lazy").setup
                     cond = function() return vim.fn.executable "make" == 1 end,
                 },
                 "nvim-telescope/telescope-ui-select.nvim",
-                "nvim-telescope/telescope-file-browser.nvim"
+                "nvim-telescope/telescope-file-browser.nvim",
+                "debugloop/telescope-undo.nvim"
             },
             config = function()
                 local telescope = require("telescope")
@@ -358,6 +359,7 @@ require("lazy").setup
                 pcall(telescope.load_extension, "fzf")
                 pcall(telescope.load_extension, "ui-select")
                 pcall(telescope.load_extension, "file_browser")
+                pcall(telescope.load_extension, "undo")
             end
         },
 
