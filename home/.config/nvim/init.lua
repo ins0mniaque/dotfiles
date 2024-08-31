@@ -202,14 +202,25 @@ require("lazy").setup
             {
                 sidebar_filetypes =
                 {
-                    ["neo-tree"] = { event = "BufWipeout" },
-                    dapui_scopes = true
+                    NvimTree = true,
+                    Outline = true,
+                    dapui_scopes = true,
+                    ["neotest-summary"] = true
                 },
                 icons =
                 {
                     button = not vim.g.nerdfont and "✖" or nil,
                     filetype = { enabled = vim.g.nerdfont }
                 }
+            }
+        },
+
+        -- Breadcrumbs
+        {
+            "Bekaboo/dropbar.nvim",
+            dependencies =
+            {
+                "nvim-telescope/telescope-fzf-native.nvim"
             }
         },
 
@@ -226,7 +237,6 @@ require("lazy").setup
 
                 require("statuscol").setup
                 {
-                    ft_ignore = { "neo-tree" },
                     segments =
                     {
                         { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
@@ -248,8 +258,22 @@ require("lazy").setup
             {
                 { "nvim-tree/nvim-web-devicons", enabled = vim.g.nerdfont }
             },
-            opts = { options = { theme = "sonokai", icons_enabled = vim.g.nerdfont },
-                     sections = { lualine_c = { "nvim_treesitter#statusline" } } }
+            opts =
+            {
+                options = { theme = "sonokai", icons_enabled = vim.g.nerdfont },
+                sections =
+                {
+                    lualine_c =
+                    {
+                        {
+                            'filename',
+                            file_status = true,
+                            path = 3,
+                            symbols = { modified = "📝", readonly = "🔒️" }
+                        }
+                    }
+                }
+            }
         },
 
         -- File explorer
@@ -339,7 +363,7 @@ require("lazy").setup
 
         -- Find and Replace
         {
-            'MagicDuck/grug-far.nvim',
+            "MagicDuck/grug-far.nvim",
             opts =
             {
                 keymaps =
