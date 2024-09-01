@@ -145,6 +145,9 @@ require("lazy").setup
             opts = { input = { mappings = { i = { ["<Esc>"] = "Close" } } } }
         },
 
+        -- Task runner
+        { "stevearc/overseer.nvim", opts = { } },
+
         -- Start screen
         {
             "goolord/alpha-nvim",
@@ -271,7 +274,8 @@ require("lazy").setup
                             path = 3,
                             symbols = { modified = "📝", readonly = "🔒️" }
                         }
-                    }
+                    },
+                    lualine_x = { "overseer", "encoding", "fileformat", "filetype" }
                 }
             }
         },
@@ -627,6 +631,10 @@ require("lazy").setup
                     {
                         require("neotest-bash"),
                         require("neotest-plenary")
+                    },
+                    consumers =
+                    {
+                        overseer = require("neotest.consumers.overseer")
                     }
                 }
             end
