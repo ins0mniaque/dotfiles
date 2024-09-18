@@ -9,11 +9,15 @@
 	d = diff
 	ds = diff --staged
 	dl = log -p
+	undo = reset --soft HEAD^
 	browse = !open `git config remote.origin.url`
 
 [core]
 	autocrlf = input
 	pager = delta
+
+[push]
+	autoSetupRemote = true
 
 [interactive]
 	diffFilter = delta --color-only
