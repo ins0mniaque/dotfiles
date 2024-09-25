@@ -753,9 +753,9 @@ require("lazy").setup
             {
                 strategies =
                 {
-                    chat = { adapter = "ollama", model = "deepseek-coder:6.7b" },
-                    inline = { adapter = "ollama", model = "deepseek-coder:6.7b" },
-                    agent = { adapter = "ollama", model = "deepseek-coder:6.7b" }
+                    chat = { adapter = "ollama", model = "codestral" },
+                    inline = { adapter = "ollama", model = "codestral" },
+                    agent = { adapter = "ollama", model = "codestral" }
                 }
             }
         },
