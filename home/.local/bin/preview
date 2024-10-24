@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# TODO: Add support for when tput is unavailable (using stty and MODE (Windows)
+# TODO: Add support for when tput is unavailable (using stty and MODE (Windows))
 width=${FZF_PREVIEW_COLUMNS:-${COLUMNS:-$(tput cols)}}
 height=${FZF_PREVIEW_LINES:-${LINES:-$(tput lines)}}
 margin=0
