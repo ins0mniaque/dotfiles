@@ -6,6 +6,7 @@
     "parallels-desktop.git.path": "/usr/bin/git",
     "parallels-desktop.brew.path": "/opt/homebrew/bin/brew",
     "parallels-desktop.prlctl.path": "/usr/local/bin/prlctl",
+    "terminal.integrated.defaultProfile.osx": "zsh",
     "telemetry.telemetryLevel": "off",
     "dotnetAcquisitionExtension.enableTelemetry": false,
     "continue.telemetryEnabled": false
