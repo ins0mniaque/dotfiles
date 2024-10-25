@@ -1,4 +1,3 @@
-tap "git-chglog/git-chglog"
 tap "homebrew/bundle"
 brew "act"
 brew "openssl@3"
@@ -24,6 +23,7 @@ brew "eza"
 brew "fd"
 brew "fish"
 brew "fzf"
+brew "git-cliff"
 brew "git-delta"
 brew "git-lfs"
 brew "glow"
@@ -43,6 +43,7 @@ brew "llama.cpp"
 brew "llm"
 brew "lua"
 brew "luarocks"
+brew "mas"
 brew "micro"
 brew "mosh"
 brew "navi"
@@ -65,16 +66,65 @@ brew "wakeonlan"
 brew "wget"
 brew "whisper-cpp"
 brew "xh"
-brew "git-chglog/git-chglog/git-chglog"
 cask "alacritty"
+cask "alfred"
+cask "altserver"
 cask "android-platform-tools"
 cask "apparency"
+cask "bettertouchtool"
+cask "blender"
+cask "calibre"
+cask "dotnet-sdk"
+cask "epic-games"
+cask "geekbench"
+cask "geekbench-ai"
+cask "godot"
+cask "godot-mono"
+cask "google-chrome"
+cask "ios-app-signer"
+cask "jan"
 cask "kitty"
+cask "lm-studio"
+cask "logi-options+"
+cask "material-maker"
+cask "mochi-diffusion"
+cask "msty"
+cask "obsidian"
+cask "openemu@experimental"
+cask "parallels"
 cask "popclip"
 cask "powershell"
 cask "sage"
+cask "steam"
+cask "transmit"
+cask "visual-studio-code"
+cask "vlc"
 cask "whisky"
 cask "zed"
+mas "AdGuard for Safari", id: 1440147259
+mas "Deliveries", id: 290986013
+mas "Developer", id: 640199958
+mas "Disk Speed Test", id: 425264550
+mas "Draw Things", id: 6444050820
+mas "DualSenseM", id: 1598693570
+mas "Enchanted", id: 6474268307
+mas "GarageBand", id: 682658836
+mas "HomeCam", id: 1292995895
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
+mas "KeyPad", id: 1491684442
+mas "Microsoft Remote Desktop", id: 1295203466
+mas "Noir", id: 1592917505
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Peek", id: 1554235898
+mas "Pixelmator Pro", id: 1289583905
+mas "Playgrounds", id: 1496833156
+mas "Reeder", id: 1529448980
+mas "Slack", id: 803453959
+mas "The Unarchiver", id: 425424353
+mas "WireGuard", id: 1451685025
+mas "Xcode", id: 497799835
 vscode "bmalehorn.vscode-fish"
 vscode "chouzz.vscode-better-align"
 vscode "continue.continue"
