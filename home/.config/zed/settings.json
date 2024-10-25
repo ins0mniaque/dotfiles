@@ -7,18 +7,40 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "theme": "Zedokai",
+  "ui_font_size": 16,
+  "buffer_font_size": 13,
+  "show_whitespaces": "all",
   "assistant": {
     "default_model": {
       "provider": "ollama",
-      "model": "llama3.1:8b"
+      "model": "codestral:latest"
     },
     "version": "2"
+  },
+  "languages": {
+    "JavaScript": {
+      "format_on_save": "off"
+    }
   },
   "telemetry": {
     "metrics": false,
     "diagnostics": false
   },
-  "ui_font_size": 16,
-  "buffer_font_size": 13,
-  "show_whitespaces": "all"
+  "auto_install_extensions": {
+    "csharp": true,
+    "docker-compose": true,
+    "dockerfile": true,
+    "fish": true,
+    "html": true,
+    "lua": true,
+    "markdown-oxide": true,
+    "sql": true,
+    "swift": true,
+    "tmux": true,
+    "toml": true,
+    "xml": true,
+    "zedokai": true,
+    "zig": true
+  }
 }
