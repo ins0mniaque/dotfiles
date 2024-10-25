@@ -1,0 +1,97 @@
+{
+  "appSwitcherFeatures" : 6,
+  "windowSwitcherDimFocused" : false,
+  "focusOnKeyUp" : false,
+  "windowKeyAssignments" : [
+
+  ],
+  "showWindowSwitcher" : true,
+  "windowSwitcherFeatures" : 57,
+  "specialKey" : "equal",
+  "ignoredApps" : [
+
+  ],
+  "zeroAsLastFocusedWindow" : false,
+  "minimizeKey" : "minus",
+  "switcherScreenPlacement" : 1,
+  "showAppSwitcher" : true,
+  "appKeyAssignments" : [
+
+  ],
+  "triggerKeys" : [
+    4
+  ],
+  "windowSwitcherAppearance" : "comfortable",
+  "appSwitcherUseNumbersForWindows" : false,
+  "hideOnlyFocusedAppOnMinus" : false,
+  "windowTriggerKeys" : [
+    1,
+    5
+  ],
+  "keyTapThreshold" : 0.14,
+  "windowOnlySwitchOSDDelay" : 0,
+  "windowSwitchOSDDelay" : 350,
+  "activateAllWindows" : true,
+  "windowKeyPatterns" : [
+    {
+      "id" : "com.sublimetext.4",
+      "pattern" : ".* — [^\\w\\d]*(.)"
+    },
+    {
+      "id" : "com.sublimetext.3",
+      "pattern" : ".* — [^\\w\\d]*(.)"
+    },
+    {
+      "id" : "com.sublimetext.2",
+      "pattern" : ".* — [^\\w\\d]*(.)"
+    },
+    {
+      "id" : "com.sublimetext.",
+      "pattern" : ".* — [^\\w\\d]*(.)"
+    },
+    {
+      "id" : "com.visualstudio.code.oss",
+      "pattern" : ".* — [^\\w\\d]*(.)"
+    },
+    {
+      "pattern" : ".* — [^\\w\\d]*(.)",
+      "id" : "com.visualstudio.code"
+    },
+    {
+      "pattern" : ".* — [^\\w\\d]*(.)",
+      "id" : "com.microsoft.VSCodiumInsiders"
+    },
+    {
+      "id" : "com.microsoft.VSCode",
+      "pattern" : ".* — [^\\w\\d]*(.)"
+    },
+    {
+      "id" : "com.microsoft.VSCodeInsiders",
+      "pattern" : ".* — [^\\w\\d]*(.)"
+    },
+    {
+      "pattern" : ".* — [^\\w\\d]*(.)",
+      "id" : "com.microsoft.VSCod"
+    },
+    {
+      "id" : "com.todesktop.",
+      "pattern" : ".* — [^\\w\\d]*(.)"
+    }
+  ],
+  "minimizeOnlyFocusedWindowOnMinus" : true,
+  "appSort" : "name",
+  "enableCycleHotkey" : true,
+  "enableHideOnFocusHotkey" : false,
+  "alwaysHideOthers" : false,
+  "allowWindowSwitcher" : false,
+  "whenAlreadyFocusedAction" : 2,
+  "enableAssignHotkey" : true,
+  "enableStaticCycle" : false,
+  "fnWindowSwitching" : false,
+  "notificationsPermissionsGranted" : false,
+  "appSortReverse" : false,
+  "ignoredKeys" : [
+
+  ],
+  "hideStaticSettings" : false
+}
