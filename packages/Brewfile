@@ -95,6 +95,7 @@ cask "parallels"
 cask "popclip"
 cask "powershell"
 cask "sage"
+cask "soulver-cli"
 cask "steam"
 cask "transmit"
 cask "visual-studio-code"
@@ -113,6 +114,7 @@ mas "HomeCam", id: 1292995895
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "KeyPad", id: 1491684442
+mas "Kiwix", id: 997079563
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Noir", id: 1592917505
 mas "Numbers", id: 409203825
@@ -120,6 +122,7 @@ mas "Pages", id: 409201541
 mas "Peek", id: 1554235898
 mas "Pixelmator Pro", id: 1289583905
 mas "Playgrounds", id: 1496833156
+mas "rcmd", id: 1596283165
 mas "Reeder", id: 1529448980
 mas "Slack", id: 803453959
 mas "The Unarchiver", id: 425424353
@@ -128,6 +131,8 @@ mas "Xcode", id: 497799835
 vscode "bmalehorn.vscode-fish"
 vscode "chouzz.vscode-better-align"
 vscode "continue.continue"
+vscode "davidanson.vscode-markdownlint"
+vscode "dbaeumer.vscode-eslint"
 vscode "github.github-vscode-theme"
 vscode "golang.go"
 vscode "mark-wiemer.vscode-autohotkey-plus-plus"
@@ -140,10 +145,18 @@ vscode "ms-dotnettools.vscodeintellicode-csharp"
 vscode "ms-python.debugpy"
 vscode "ms-python.python"
 vscode "ms-python.vscode-pylance"
+vscode "ms-vscode.cmake-tools"
+vscode "ms-vscode.cpptools"
+vscode "ms-vscode.cpptools-extension-pack"
+vscode "ms-vscode.cpptools-themes"
 vscode "ms-vscode.powershell"
 vscode "ms-vscode.test-adapter-converter"
 vscode "parallelsdesktop.parallels-desktop"
-vscode "shd101wyy.markdown-preview-enhanced"
+vscode "rust-lang.rust-analyzer"
 vscode "sswg.swift-lang"
+vscode "sumneko.lua"
 vscode "tamasfe.even-better-toml"
+vscode "twxs.cmake"
 vscode "vadimcn.vscode-lldb"
+vscode "yzhang.markdown-all-in-one"
+vscode "ziglang.vscode-zig"
