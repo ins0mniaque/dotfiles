@@ -1,0 +1,65 @@
+{
+  "alfredtheme" : {
+    "result" : {
+      "textSpacing" : 7,
+      "subtext" : {
+        "size" : 12,
+        "colorSelected" : "#E9E9E9A7",
+        "font" : "System",
+        "color" : "#E9E9E97F"
+      },
+      "shortcut" : {
+        "size" : 15,
+        "colorSelected" : "#FFFFFF9E",
+        "font" : "System",
+        "color" : "#FFFFFF7E"
+      },
+      "backgroundSelected" : "#0000001F",
+      "text" : {
+        "size" : 21,
+        "colorSelected" : "#EAEAEAFF",
+        "font" : "System",
+        "color" : "#EAEAEAE6"
+      },
+      "iconPaddingHorizontal" : 6,
+      "roundness" : 0,
+      "paddingVertical" : 4,
+      "iconSize" : 44
+    },
+    "search" : {
+      "backgroundSelected" : "#00000055",
+      "paddingHorizontal" : 8,
+      "spacing" : 5,
+      "text" : {
+        "size" : 24,
+        "colorSelected" : "#FFFFFFFF",
+        "font" : "System",
+        "color" : "#EAEAEAFF"
+      },
+      "background" : "#FFFFFF00",
+      "roundness" : 0,
+      "paddingVertical" : 5
+    },
+    "window" : {
+      "color" : "#202020B3",
+      "paddingHorizontal" : 0,
+      "width" : 573,
+      "borderPadding" : 0,
+      "borderColor" : "#000000FF",
+      "blur" : 0,
+      "roundness" : 8,
+      "paddingVertical" : 5
+    },
+    "credit" : "ins0mniaque",
+    "visualEffectMode" : 2,
+    "separator" : {
+      "color" : "#CD00FFFF",
+      "thickness" : 0
+    },
+    "scrollbar" : {
+      "color" : "#00000033",
+      "thickness" : 3
+    },
+    "name" : "macOS Dark"
+  }
+}
