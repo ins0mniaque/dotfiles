@@ -1,50 +1,19 @@
 {
   "models": [
     {
-      "title": "codestral",
+      "title": "ollama",
       "provider": "ollama",
-      "model": "codestral"
-    },
-    {
-      "title": "command-r",
-      "provider": "ollama",
-      "model": "command-r"
-    },
-    {
-      "title": "deepseek-coder:6.7b",
-      "provider": "ollama",
-      "model": "deepseek-coder:6.7b"
-    },
-    {
-      "title": "deepseek-coder:33b",
-      "provider": "ollama",
-      "model": "deepseek-coder:33b"
-    },
-    {
-      "title": "llama3.1:8b",
-      "provider": "ollama",
-      "model": "llama3.1:8b"
-    },
-    {
-      "title": "llama3.1:70b",
-      "provider": "ollama",
-      "model": "llama3.1:70b"
-    },
-    {
-      "title": "phi3",
-      "provider": "ollama",
-      "model": "phi3"
-    },
-    {
-      "title": "phind-codellama:34b-v2",
-      "provider": "ollama",
-      "model": "phind-codellama:34b-v2"
+      "model": "AUTODETECT"
     }
   ],
   "tabAutocompleteModel": {
-    "title": "codestral",
+    "title": "ollama - starcoder2:3b",
     "provider": "ollama",
-    "model": "codestral"
+    "model": "starcoder2:3b"
+  },
+  "embeddingsProvider": {
+    "provider": "ollama",
+    "model": "nomic-embed-text"
   },
   "customCommands": [
     {
