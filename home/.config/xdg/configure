@@ -35,6 +35,7 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
 
     # Android
     export ANDROID_USER_HOME="$XDG_DATA_HOME"/android
+    alias adb='HOME="$XDG_DATA_HOME"/android adb'
 
     # Docker
     export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
@@ -51,6 +52,11 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
 
     # .NET
     export DOTNET_CLI_HOME="$XDG_DATA_HOME"/dotnet
+
+    # npm
+    export NPM_CONFIG_INIT_MODULE="$XDG_CONFIG_HOME"/npm/config/npm-init.js
+    export NPM_CONFIG_CACHE="$XDG_CACHE_HOME"/npm
+    export NPM_CONFIG_TMP="$XDG_RUNTIME_DIR"/npm
 
     # NuGet
     export NUGET_PACKAGES="$XDG_DATA_HOME"/nuget/packages
@@ -80,9 +86,15 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
     # w3m
     export W3M_DIR="$XDG_DATA_HOME"/w3m
 
+    # wget
+    alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
+
 # Configure bash to XDG specification
 
 if [ -n "$BASH_VERSION" ]; then
+
+    # Disable macOS Save/Restore Shell State
+    export SHELL_SESSIONS_DISABLE=1
 
     BASH_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}/bash
     BASH_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}/bash
@@ -105,6 +117,9 @@ fi
 # Configure zsh to XDG specification
 
 if [ -n "$ZSH_VERSION" ]; then
+
+    # Disable macOS Save/Restore Shell State
+    export SHELL_SESSIONS_DISABLE=1
 
     ZDOTDIR=${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}
     ZCACHEDIR=${ZCACHEDIR:-$XDG_CACHE_HOME/zsh}
