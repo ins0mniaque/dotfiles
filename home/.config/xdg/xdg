@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # XDG Base Directory Specification
 # https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
 #
@@ -12,6 +14,35 @@
 #       autoload -U compinit
 #       compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
 #       zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
+# macOS
+# • Add the following to ~/Library/LaunchAgents/xdg.plist (replacing $0 with the absolute path to this file):
+#       <?xml version="1.0" encoding="UTF-8"?>
+#       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+#       <plist version="1.0">
+#       <dict>
+#         <key>Label</key>
+#         <string>xdg</string>
+#         <key>ProgramArguments</key>
+#         <array>
+#           <string>$0</string>
+#           <string>launchctl<string>
+#         </array>
+#         <key>RunAtLoad</key>
+#         <true/>
+#       </dict>
+#       </plist>
+
+# Configure environment access
+
+if [[ "$1" == "launchctl" ]]; then
+    setenv() {
+        launchctl setenv "$1" "$2"
+    }
+else
+    setenv() {
+        export "$1"="$2"
+    }
+fi
 
 # Configure XDG base directories
 
@@ -24,67 +55,71 @@ XDG_STATE_HOME=${XDG_STATE_HOME:=~/.local/state}
 [ -z "$XDG_RUNTIME_DIR" ] && XDG_RUNTIME_TMPDIR=${TMPDIR-/tmp} && XDG_RUNTIME_DIR=${XDG_RUNTIME_TMPDIR%/}/runtime-user-$UID
 [ -d "$XDG_RUNTIME_DIR" ] || mkdir -m 0700 -p "$XDG_RUNTIME_DIR"
 
-export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME XDG_RUNTIME_DIR
+setenv XDG_CONFIG_HOME $XDG_CONFIG_HOME
+setenv XDG_CACHE_HOME  $XDG_CACHE_HOME
+setenv XDG_DATA_HOME   $XDG_DATA_HOME
+setenv XDG_STATE_HOME  $XDG_STATE_HOME
+setenv XDG_RUNTIME_DIR $XDG_RUNTIME_DIR
 
 # Configure local bin/lib to XDG specification
 
-export PATH="$PATH:$HOME/.local/bin"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
+setenv PATH "$PATH:$HOME/.local/bin"
+setenv LD_LIBRARY_PATH "$LD_LIBRARY_PATH:$HOME/.local/lib"
 
 # Configure applications to XDG specification
 
     # Android
-    export ANDROID_USER_HOME="$XDG_DATA_HOME"/android
+    setenv ANDROID_USER_HOME "$XDG_DATA_HOME"/android
     alias adb='HOME="$XDG_DATA_HOME"/android adb'
 
     # Docker
-    export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
+    setenv DOCKER_CONFIG "$XDG_CONFIG_HOME"/docker
 
     # Go
-    export GOPATH="$XDG_DATA_HOME"/go
+    setenv GOPATH "$XDG_DATA_HOME"/go
 
     # Java
-    export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+    setenv _JAVA_OPTIONS -Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 
     # less
-    export LESSKEY="$XDG_CONFIG_HOME"/less/keys
-    export LESSHISTFILE="$XDG_STATE_HOME"/less/history
+    setenv LESSKEY "$XDG_CONFIG_HOME"/less/keys
+    setenv LESSHISTFILE "$XDG_STATE_HOME"/less/history
 
     # .NET
-    export DOTNET_CLI_HOME="$XDG_DATA_HOME"/dotnet
+    setenv DOTNET_CLI_HOME "$XDG_DATA_HOME"/dotnet
 
     # npm
-    export NPM_CONFIG_INIT_MODULE="$XDG_CONFIG_HOME"/npm/config/npm-init.js
-    export NPM_CONFIG_CACHE="$XDG_CACHE_HOME"/npm
-    export NPM_CONFIG_TMP="$XDG_RUNTIME_DIR"/npm
+    setenv NPM_CONFIG_INIT_MODULE "$XDG_CONFIG_HOME"/npm/config/npm-init.js
+    setenv NPM_CONFIG_CACHE "$XDG_CACHE_HOME"/npm
+    setenv NPM_CONFIG_TMP "$XDG_RUNTIME_DIR"/npm
 
     # NuGet
-    export NUGET_PACKAGES="$XDG_DATA_HOME"/nuget/packages
+    setenv NUGET_PACKAGES "$XDG_DATA_HOME"/nuget/packages
 
     # OmniSharp
-    export OMNISHARPHOME="$XDG_CONFIG_HOME"/omnisharp
+    setenv OMNISHARPHOME "$XDG_CONFIG_HOME"/omnisharp
 
     # OpenSSL
-    export RANDFILE="$XDG_DATA_HOME"/openssl/rnd
+    setenv RANDFILE "$XDG_DATA_HOME"/openssl/rnd
 
     # ripgrep
-    export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME"/ripgrep/config
+    setenv RIPGREP_CONFIG_PATH "$XDG_CONFIG_HOME"/ripgrep/config
 
     # Rust
-    export CARGO_HOME="$XDG_DATA_HOME"/cargo
-    export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
-    export PATH="$CARGO_HOME/bin:$PATH"
+    setenv CARGO_HOME "$XDG_DATA_HOME"/cargo
+    setenv RUSTUP_HOME "$XDG_DATA_HOME"/rustup
+    setenv PATH "$CARGO_HOME/bin:$PATH"
 
     # Sage
-    export DOT_SAGE="$XDG_DATA_HOME"/sage
-    export SAGE_STARTUP_FILE="$XDG_CONFIG_HOME"/sage/init.sage
+    setenv DOT_SAGE "$XDG_DATA_HOME"/sage
+    setenv SAGE_STARTUP_FILE "$XDG_CONFIG_HOME"/sage/init.sage
 
     # terminfo
-    export TERMINFO="$XDG_DATA_HOME"/terminfo
-    export TERMINFO_DIRS="$TERMINFO_DIRS":"$XDG_DATA_HOME"/terminfo
+    setenv TERMINFO "$XDG_DATA_HOME"/terminfo
+    setenv TERMINFO_DIRS "$TERMINFO_DIRS":"$XDG_DATA_HOME"/terminfo
 
     # w3m
-    export W3M_DIR="$XDG_DATA_HOME"/w3m
+    setenv W3M_DIR "$XDG_DATA_HOME"/w3m
 
     # wget
     alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"

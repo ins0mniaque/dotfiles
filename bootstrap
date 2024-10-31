@@ -26,9 +26,31 @@ fi;
 if [ "$DRY" != true ]; then
     rsync -avh --no-perms --exclude ".DS_Store" home/. ~;
 
-    ln -s ~/.config/xdg/configure ~/.profile
-    ln -s ~/.config/xdg/configure ~/.bashrc
-    ln -s ~/.config/xdg/configure ~/.zshenv
+    ln -s ~/.config/xdg/xdg ~/.profile
+    ln -s ~/.config/xdg/xdg ~/.bashrc
+    ln -s ~/.config/xdg/xdg ~/.zshenv
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        mkdir -p ~/Library/LaunchAgents
+
+        {
+            echo '<?xml version="1.0" encoding="UTF-8"?>'
+            echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
+            echo '<plist version="1.0">'
+            echo '<dict>'
+            echo '  <key>Label</key>'
+            echo '  <string>xdg</string>'
+            echo '  <key>ProgramArguments</key>'
+            echo '  <array>'
+            echo '    <string>'"$HOME"'/.config/xdg/xdg</string>'
+            echo '    <string>launchctl</string>'
+            echo '  </array>'
+            echo '  <key>RunAtLoad</key>'
+            echo '  <true/>'
+            echo '</dict>'
+            echo '</plist>'
+        } >> ~/Library/LaunchAgents/xdg.plist
+    fi
 else
     rsync --dry-run --itemize-changes -avh --no-perms --exclude ".DS_Store" home/. ~;
 fi;
