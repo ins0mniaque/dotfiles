@@ -6,11 +6,28 @@
       "model": "AUTODETECT"
     }
   ],
-  "tabAutocompleteModel": {
-    "title": "ollama - starcoder2:3b",
-    "provider": "ollama",
-    "model": "starcoder2:3b"
-  },
+  "tabAutocompleteModel": [
+    {
+      "title": "ollama - starcoder2:3b",
+      "provider": "ollama",
+      "model": "starcoder2:3b"
+    },
+    {
+      "title": "ollama - granite-code:3b",
+      "provider": "ollama",
+      "model": "granite-code:3b"
+    },
+    {
+      "title": "ollama - stable-code:3b-code-q4_0",
+      "provider": "ollama",
+      "model": "stable-code:3b-code-q4_0"
+    },
+    {
+      "title": "ollama - hhao/qwen2.5-coder-tools:1.5b",
+      "provider": "ollama",
+      "model": "hhao/qwen2.5-coder-tools:1.5b"
+    }
+  ],
   "embeddingsProvider": {
     "provider": "ollama",
     "model": "nomic-embed-text"
