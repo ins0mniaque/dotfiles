@@ -9,5 +9,7 @@
     "terminal.integrated.defaultProfile.osx": "zsh",
     "telemetry.telemetryLevel": "off",
     "dotnetAcquisitionExtension.enableTelemetry": false,
-    "continue.telemetryEnabled": false
+    "continue.telemetryEnabled": false,
+    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
+    "lldb.launch.expressions": "native"
 }
