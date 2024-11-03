@@ -125,7 +125,7 @@ setenv LD_LIBRARY_PATH "$LD_LIBRARY_PATH:$HOME/.local/lib"
     alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
 
     # zoxide
-    setenv _ZO_DATA_DIR "$XDG_DATA_HOME"
+    setenv _ZO_DATA_DIR "$XDG_DATA_HOME"/zoxide
 
 # Configure bash to XDG specification
 
