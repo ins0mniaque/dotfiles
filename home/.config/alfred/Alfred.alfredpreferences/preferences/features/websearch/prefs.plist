@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>customSites</key>
+	<dict>
+		<key>4246F665-93A8-4764-83E1-71F191B72B4E</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>gh</string>
+			<key>text</key>
+			<string>Search GitHub for '{query}'</string>
+			<key>url</key>
+			<string>https://github.com/search?q={query}&amp;type=repositories</string>
+		</dict>
+		<key>FD4DC11A-DAED-4EB4-839D-0C2AA8546896</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>mtg</string>
+			<key>text</key>
+			<string>Search Scryfall for '{query}'</string>
+			<key>url</key>
+			<string>https://scryfall.com/search?q={query}</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
