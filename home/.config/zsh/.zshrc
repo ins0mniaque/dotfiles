@@ -6,8 +6,8 @@ zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
 # Configure keyboard
 source $ZDOTDIR/plugins/zsh-modern-keybindings/zsh-modern-keybindings.zsh
 
-# Configure Jump
-eval "$(jump shell)"
+# Configure zoxide
+eval "$(zoxide init zsh --cmd j)"
 
 # Configure less
 export LESS="FRX --mouse"
@@ -85,8 +85,7 @@ function set_fzf_default_opts() {
   zstyle ':fzf-tab:*' fzf-flags --preview-window "~2,right,$popup_width,border-left" 
   #--prompt='❯ ' --pointer='❯' --marker='⚫'
   zstyle ':fzf-tab:complete:*:*' popup-pad $(( popup_width + 2 )) 240
-  zstyle ':fzf-tab:complete:*' fzf-bindings 'tab:toggle+down,shift-tab:toggle+up'
-  zstyle ':fzf-tab:*' continuous-trigger '#'
+  zstyle ':fzf-tab:*' continuous-trigger tab
 
   #zstyle ':fzf-tab:*' fzf-flags --preview-window "~1,right,$popup_width,border-left" --bind 'alt-l:toggle-preview'
   #zstyle ':fzf-tab:complete:*:*' popup-pad $(( popup_width + 2 )) 120

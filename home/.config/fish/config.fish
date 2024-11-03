@@ -14,8 +14,8 @@ fish_add_path $GOROOT/bin
 fish_add_path ~/.tools/arm64
 fish_add_path ~/.tools/x64
 
-# Configure Jump
-jump shell fish | source
+# Configure zoxide
+zoxide init fish --cmd j | source
 
 # Configure fzf
 set -g -x FZF_DEFAULT_COMMAND 'fd --type f --color=always'

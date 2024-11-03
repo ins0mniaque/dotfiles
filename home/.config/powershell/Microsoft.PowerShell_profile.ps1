@@ -33,8 +33,8 @@ $Env:Path += ";$Env:GOPATH/bin;$Env:GOROOT/bin"
 # Add tools
 $Env:Path += ";$HOME/.tools/arm64;$HOME/.tools/x64"
 
-# Configure Jump
-Invoke-Expression (&jump shell pwsh | Out-String)
+# Configure zoxide
+Invoke-Expression (& { (zoxide init powershell --cmd j | Out-String) })
 
 # Configure fzf
 $Env:FZF_DEFAULT_COMMAND = "fd --type f"
