@@ -52,6 +52,7 @@ brew "mosh"
 brew "navi"
 brew "neovim"
 brew "node"
+brew "nushell"
 brew "ollama"
 brew "pandoc"
 brew "pgcli"
@@ -109,7 +110,7 @@ cask "vlc"
 cask "whisky"
 cask "zed"
 mas "Actions", id: 1586435171
-mas "AdGuard for Safari", id: 1440147259
+mas "Baking Soda", id: 1601151613
 mas "Deliveries", id: 290986013
 mas "Developer", id: 640199958
 mas "Disk Speed Test", id: 425264550
@@ -133,6 +134,8 @@ mas "rcmd", id: 1596283165
 mas "Reeder", id: 1529448980
 mas "Slack", id: 803453959
 mas "The Unarchiver", id: 425424353
+mas "Vinegar", id: 1591303229
+mas "Wipr", id: 1320666476
 mas "WireGuard", id: 1451685025
 mas "Xcode", id: 497799835
 vscode "bmalehorn.vscode-fish"
@@ -167,6 +170,7 @@ vscode "saoudrizwan.claude-dev"
 vscode "sswg.swift-lang"
 vscode "sumneko.lua"
 vscode "tamasfe.even-better-toml"
+vscode "thenuprojectcontributors.vscode-nushell-lang"
 vscode "twxs.cmake"
 vscode "vadimcn.vscode-lldb"
 vscode "yzhang.markdown-all-in-one"
