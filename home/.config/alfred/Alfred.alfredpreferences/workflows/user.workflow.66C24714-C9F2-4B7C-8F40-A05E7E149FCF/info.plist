@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.ins0mniaque.alfred-zoxide</string>
+	<key>connections</key>
+	<dict>
+		<key>06B09CC4-667A-4041-8E57-B89912E3E931</key>
+		<array/>
+		<key>1049A4F8-86E7-40DD-87FE-677CE600603F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>06B09CC4-667A-4041-8E57-B89912E3E931</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>26DA2609-8A71-4F58-B9BF-DFD55318CC6D</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>778AE989-079D-431A-BE6A-776BCB3F4D0F</string>
+				<key>modifiers</key>
+				<integer>131072</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>26DA2609-8A71-4F58-B9BF-DFD55318CC6D</key>
+		<array/>
+		<key>778AE989-079D-431A-BE6A-776BCB3F4D0F</key>
+		<array/>
+	</dict>
+	<key>createdby</key>
+	<string>ins0mniaque</string>
+	<key>description</key>
+	<string>A simple Alfred workflow to search and navigate to directories that are saved in Zoxide.</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Zoxide</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>path</key>
+				<string>{query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.revealfile</string>
+			<key>uid</key>
+			<string>06B09CC4-667A-4041-8E57-B89912E3E931</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>j</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Loading...</string>
+				<key>script</key>
+				<string>ZO_DATA_DIR=~/.local/share/zoxide
+
+max_display_path_length=64
+ellipsis="..."
+
+results=$(_ZO_DATA_DIR=$ZO_DATA_DIR zoxide query $1 -l)
+
+# Read each line of the multiline string into an array
+IFS=$'\n' read -d '' -ra items &lt;&lt;&lt;"$results"
+
+echo "&lt;?xml version='1.0'?&gt;"
+echo "&lt;items&gt;"
+if [ -z "$items" ]; then
+	echo "&lt;item arg='${1}' valid='no'&gt;&lt;title&gt;No directories found.&lt;/title&gt;&lt;/item&gt;"
+else
+	# Loop through each item of the array
+	for item in "${items[@]}"; do
+		title="$(basename "$item")"
+		full_path="${item}"
+
+		# Trim the path if it's too long
+		if ((${#full_path} &gt; $max_display_path_length)); then
+			trimmed_path="${ellipsis}${full_path:${#full_path}-$max_display_path_length}"
+		else
+			trimmed_path="$item"
+		fi
+
+		echo "&lt;item arg='${full_path}' valid='yes' autocomplete='${title}' type='file'&gt;"
+		echo "&lt;title&gt;${title}&lt;/title&gt;"
+		echo "&lt;subtitle&gt;Open \"${trimmed_path}\" in Finder&lt;/subtitle&gt;"
+		echo "&lt;subtitle mod='cmd'&gt;Open \"${trimmed_path}\" in Terminal&lt;/subtitle&gt;"
+		echo "&lt;subtitle mod='shift'&gt;Copy \"${trimmed_path}\" to clipboard&lt;/subtitle&gt;"
+		echo "&lt;type&gt;file&lt;/type&gt;"
+		echo "&lt;/item&gt;"
+	done
+fi
+echo "&lt;/items&gt;"
+</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Select a directory</string>
+				<key>title</key>
+				<string>Key in search keyword(s)</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>1049A4F8-86E7-40DD-87FE-677CE600603F</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>zoxide {query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.terminalcommand</string>
+			<key>uid</key>
+			<string>26DA2609-8A71-4F58-B9BF-DFD55318CC6D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<true/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>778AE989-079D-431A-BE6A-776BCB3F4D0F</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string># Alfred Zoxide
+
+A simple Alfred workflow to search and navigate to directories that are saved in [Zoxide](https://github.com/ajeetdsouza/zoxide).
+
+## Installation
+1. Install library [Zoxide](https://github.com/ajeetdsouza/zoxide), see Dependencies section for more details.
+2. Install alfred-zoxide workflow.
+
+## Usage
+In Alfred, type `j` followed by search `query`. 
+
+With the selected result, you can enter to open directory in Finder, 
+or press `⌘`(Cmd) to open directory in Terminal, 
+or `⇧`(Shift) to copy to clipboard.
+
+## Dependencies
+Zoxide is required to be installed on your system.
+
+To install zoxide, use a package manager:
+
+- `cargo install zoxide --locked`
+- `brew install zoxide`
+- `conda install -c conda-forge zoxide`
+- `port install zoxide`
+- ```
+asdf plugin add zoxide https://github.com/nyrst/asdf-zoxide.git
+asdf install zoxide latest
+```
+
+Or, run this command in your terminal:
+
+```sh
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+```</string>
+	<key>uidata</key>
+	<dict>
+		<key>06B09CC4-667A-4041-8E57-B89912E3E931</key>
+		<dict>
+			<key>xpos</key>
+			<real>270</real>
+			<key>ypos</key>
+			<real>50</real>
+		</dict>
+		<key>1049A4F8-86E7-40DD-87FE-677CE600603F</key>
+		<dict>
+			<key>xpos</key>
+			<real>45</real>
+			<key>ypos</key>
+			<real>50</real>
+		</dict>
+		<key>26DA2609-8A71-4F58-B9BF-DFD55318CC6D</key>
+		<dict>
+			<key>xpos</key>
+			<real>270</real>
+			<key>ypos</key>
+			<real>170</real>
+		</dict>
+		<key>778AE989-079D-431A-BE6A-776BCB3F4D0F</key>
+		<dict>
+			<key>xpos</key>
+			<real>270</real>
+			<key>ypos</key>
+			<real>290</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>version</key>
+	<string>1.0</string>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
