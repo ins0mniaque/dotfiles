@@ -85,7 +85,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>j</string>
+				<string>{var:zoxide_cmd}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -97,12 +97,7 @@
 				<key>runningsubtext</key>
 				<string>Loading...</string>
 				<key>script</key>
-				<string>ZO_DATA_DIR=~/.local/share/zoxide
-
-max_display_path_length=64
-ellipsis="..."
-
-results=$(_ZO_DATA_DIR=$ZO_DATA_DIR zoxide query $1 -l)
+				<string>results=$(_ZO_DATA_DIR=$zoxide_data_dir $zoxide_path query $1 -l)
 
 # Read each line of the multiline string into an array
 IFS=$'\n' read -d '' -ra items &lt;&lt;&lt;"$results"
@@ -110,7 +105,7 @@ IFS=$'\n' read -d '' -ra items &lt;&lt;&lt;"$results"
 echo "&lt;?xml version='1.0'?&gt;"
 echo "&lt;items&gt;"
 if [ -z "$items" ]; then
-	echo "&lt;item arg='${1}' valid='no'&gt;&lt;title&gt;No directories found.&lt;/title&gt;&lt;/item&gt;"
+	echo "&lt;item arg='${1}' valid='no'&gt;&lt;title&gt;No directories found&lt;/title&gt;&lt;/item&gt;"
 else
 	# Loop through each item of the array
 	for item in "${items[@]}"; do
@@ -118,8 +113,8 @@ else
 		full_path="${item}"
 
 		# Trim the path if it's too long
-		if ((${#full_path} &gt; $max_display_path_length)); then
-			trimmed_path="${ellipsis}${full_path:${#full_path}-$max_display_path_length}"
+		if ((${#full_path} &gt; ${zoxide_max_path_length})); then
+			trimmed_path="${zoxide_ellipsis}${full_path:${#full_path}-${zoxide_max_path_length}}"
 		else
 			trimmed_path="$item"
 		fi
@@ -161,7 +156,7 @@ echo "&lt;/items&gt;"
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>zoxide {query}</string>
+				<string>{var:zoxide_cmd} {query}</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.terminalcommand</string>
@@ -257,7 +252,117 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
-	<array/>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>z</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string>Zoxide Command</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>zoxide_cmd</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>zoxide</string>
+				<key>filtermode</key>
+				<integer>2</integer>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string>Zoxide Path</string>
+			<key>type</key>
+			<string>filepicker</string>
+			<key>variable</key>
+			<string>zoxide_path</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>filtermode</key>
+				<integer>1</integer>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string>Zoxide Database Directory</string>
+			<key>type</key>
+			<string>filepicker</string>
+			<key>variable</key>
+			<string>zoxide_data_dir</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>defaultvalue</key>
+				<integer>64</integer>
+				<key>markercount</key>
+				<integer>17</integer>
+				<key>maxvalue</key>
+				<integer>256</integer>
+				<key>minvalue</key>
+				<integer>0</integer>
+				<key>onlystoponmarkers</key>
+				<false/>
+				<key>showmarkers</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string>Maximum Path Length</string>
+			<key>type</key>
+			<string>slider</string>
+			<key>variable</key>
+			<string>zoxide_max_path_length</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>...</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string>Ellipsis</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>zoxide_ellipsis</string>
+		</dict>
+	</array>
 	<key>version</key>
 	<string>1.0</string>
 	<key>webaddress</key>
