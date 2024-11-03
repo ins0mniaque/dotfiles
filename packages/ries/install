@@ -1,0 +1,13 @@
+#!/bin/sh
+
+curl -o ries.zip -L https://github.com/ins0mniaque/ries/archive/main.zip
+unzip ries.zip
+
+cd ries-main
+./build.sh
+cd ..
+
+cp ries-main/ries ~/.local/bin/ries
+
+rm -r ries-main
+rm ries.zip
