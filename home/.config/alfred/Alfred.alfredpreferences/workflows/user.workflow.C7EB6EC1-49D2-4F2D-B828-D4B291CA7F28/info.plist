@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>app.soulver-cli.alfredworkflow</string>
+	<string>numbat.ins0mniaque.alfredworkflow</string>
 	<key>connections</key>
 	<dict>
 		<key>E46100EC-5A93-43D8-9CAC-38DD04709082</key>
@@ -41,13 +41,13 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>Soulver</string>
+	<string>ins0mniaque</string>
 	<key>description</key>
-	<string>Soulver calculations inside Alfred’s window</string>
+	<string>Numbat calculations inside Alfred’s window</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Soulver</string>
+	<string>Numbat</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -85,7 +85,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>{var:soulver_keyword}</string>
+				<string>{var:numbat_keyword}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -97,32 +97,26 @@
 				<key>runningsubtext</key>
 				<string>Crunching numbers…</string>
 				<key>script</key>
-				<string>readonly result=$(echo "${1}" | soulver)
+				<string>result=$(numbat -e "${1}" 2&gt;&amp;1)
+error=$?
 
-# Empty result
-if [[ -z "${result}" ]]
-then
-  printf '{ "items": [{
-    "title": "Invalid Expression",
-    "subtitle": "Double-check your query and that soulver is installed",
-    "valid": false,
-    "icon": { "path": "images/alert.png" }
-  }]}'
+result=$(echo "${result}" | sed 's/&amp;/\&amp;amp;/g; s/&lt;/\&amp;lt;/g; s/&gt;/\&amp;gt;/g; s/"/\&amp;quot;/g; s/'"'"'/\&amp;#39;/g')
 
-  exit 1
+echo "&lt;?xml version='1.0'?&gt;"
+echo "&lt;items&gt;"
+if [ $error -eq 0 ]; then
+	echo "&lt;item arg='${result}' valid='yes' autocomplete='${result}'&gt;"
+	echo "&lt;title&gt;${result}&lt;/title&gt;"
+	echo "&lt;subtitle&gt;↩ Copy result      ⌥↩ Paste to frontmost app      ⇥ Autocomplete for reuse&lt;/subtitle&gt;"
+	echo "&lt;/item&gt;"
+else
+	echo "&lt;item arg='${1}' valid='no'&gt;"
+	echo "&lt;title&gt;$(echo "${result}" | head -n1)&lt;/title&gt;"
+	echo "&lt;subtitle&gt;$(echo "${result}" | tail -n3 | head -n1 | cut -d'^' -f2- | cut -c2-)&lt;/subtitle&gt;"
+	echo "&lt;icon&gt;images/alert.png&lt;/icon&gt;"
+	echo "&lt;/item&gt;"
 fi
-
-# Show answer
-/usr/bin/osascript -l JavaScript -e 'function run(argv) {
-  return JSON.stringify({
-    items: [{
-      title: argv[0],
-      subtitle: "Copy result · ⌥↩ Paste to frontmost app · ⇥ Autocomplete for reuse",
-      arg: argv[0],
-      autocomplete: argv[0]
-    }]
-  })
-}' "${result}"</string>
+echo "&lt;/items&gt;"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -130,9 +124,9 @@ fi
 				<key>subtext</key>
 				<string>See calculation results directly in Alfred</string>
 				<key>title</key>
-				<string>Calculate with Soulver</string>
+				<string>Calculate with Numbat</string>
 				<key>type</key>
-				<integer>11</integer>
+				<integer>0</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -174,7 +168,7 @@ fi
 				<key>text</key>
 				<string>Result ({query}) copied to clipboard</string>
 				<key>title</key>
-				<string>Soulver for Alfred</string>
+				<string>Numbat for Alfred</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
@@ -187,15 +181,11 @@ fi
 	<key>readme</key>
 	<string>## Setup
 
-Install [soulver-cli](https://formulae.brew.sh/cask/soulver-cli) through [homebrew](https://brew.sh/) and set the keyword you wish to use in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
+Install [Numbat](https://github.com/sharkdp/numbat) and set the keyword you wish to use in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
 
 ## Usage
 
-Perform different calculations through Soulver via the `soulver` keyword.
-
-![Alfred search for soulver 12m ft](images/about/distance.png)
-
-![Alfred search for soulver 12 hours seconds](images/about/time.png)
+Perform different calculations through Numbat via the `c` keyword.
 
 * &lt;kbd&gt;↩&lt;/kbd&gt; Copy result to the clipboard.
 * &lt;kbd&gt;⌥&lt;/kbd&gt;&lt;kbd&gt;↩&lt;/kbd&gt; Paste result to frontmost app.
@@ -237,7 +227,7 @@ Perform different calculations through Soulver via the `soulver` keyword.
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>soulver</string>
+				<string>c</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>
@@ -248,16 +238,16 @@ Perform different calculations through Soulver via the `soulver` keyword.
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Soulver Keyword</string>
+			<string>Numbat Keyword</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
-			<string>soulver_keyword</string>
+			<string>numbat_keyword</string>
 		</dict>
 	</array>
 	<key>version</key>
-	<string>2.0</string>
+	<string>1.0</string>
 	<key>webaddress</key>
-	<string>https://github.com/soulverteam/Soulver-CLI</string>
+	<string></string>
 </dict>
 </plist>
