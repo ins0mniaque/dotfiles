@@ -9,6 +9,7 @@
 	d = diff
 	ds = diff --staged
 	dl = log -p
+	discard = !git reset HEAD --hard && git clean -df
 	undo = reset --soft HEAD^
 	browse = !open `git config remote.origin.url`
 
