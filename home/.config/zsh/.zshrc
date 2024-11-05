@@ -1,3 +1,11 @@
+# Configure default programs
+export EDITOR=nvim
+export VISUAL=nvim
+export BROWSER=open
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export PAGER=less
+export LESS="FRX --mouse"
+
 # Configure zsh autocompletion cache to XDG specification
 autoload -U compinit
 compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
@@ -8,9 +16,6 @@ source $ZDOTDIR/plugins/zsh-modern-keybindings/zsh-modern-keybindings.zsh
 
 # Configure zoxide
 eval "$(zoxide init zsh --cmd j)"
-
-# Configure less
-export LESS="FRX --mouse"
 
 # Configure fzf
 RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "

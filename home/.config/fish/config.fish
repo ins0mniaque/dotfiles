@@ -1,3 +1,11 @@
+# Configure default programs
+set -g -x EDITOR nvim
+set -g -x VISUAL nvim
+set -g -x BROWSER open
+set -g -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
+set -g -x PAGER less
+set -g -x LESS "FRX --mouse"
+
 # Add .NET Core SDK tools
 fish_add_path ~/.dotnet/tools
 

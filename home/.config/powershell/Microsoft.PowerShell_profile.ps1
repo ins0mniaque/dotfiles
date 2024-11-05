@@ -1,3 +1,11 @@
+# Configure default programs
+$Env:EDITOR = "nvim"
+$Env:VISUAL = "nvim"
+$Env:BROWSER = "open"
+$Env:MANPAGER = "sh -c 'col -bx | bat -l man -p'"
+$Env:PAGER = "less"
+$Env:LESS = "FRX --mouse"
+
 # Autocompletion
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd

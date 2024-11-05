@@ -1,19 +1,23 @@
+# Configure default programs
+export EDITOR=nvim
+export VISUAL=nvim
+export BROWSER=open
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export PAGER=less
+export LESS="FRX --mouse"
+
 # Setup zoxide
-# ------------
 eval "$(zoxide init bash --cmd j)"
 
 # Setup fzf
-# ---------
 if [[ ! "$PATH" == */opt/homebrew/opt/fzf/bin* ]]; then
   export PATH="${PATH:+${PATH}:}/opt/homebrew/opt/fzf/bin"
 fi
 
 # Auto-completion
-# ---------------
 [[ $- == *i* ]] && source "/opt/homebrew/opt/fzf/shell/completion.bash" 2> /dev/null
 
 # Key bindings
-# ------------
 source "/opt/homebrew/opt/fzf/shell/key-bindings.bash"
 
 # Configure .NET telemetry
