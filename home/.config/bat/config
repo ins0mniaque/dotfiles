@@ -1,2 +1,6 @@
 --theme="Monokai Extended"
+--style="numbers,changes,header,grid"
 --italic-text=always
+--map-syntax "*profile:Bourne Again Shell (bash)"
+--map-syntax "*bashrc:Bourne Again Shell (bash)"
+--map-syntax "*inputrc:Bourne Again Shell (bash)"
