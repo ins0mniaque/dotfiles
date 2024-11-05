@@ -83,7 +83,7 @@ for file in "$@"; do
     elif [ "${mime: -14}" == "charset=binary" ]; then
         hexyl --length=4KiB "$file"
     elif [ "${file: -3}" == ".md" ]; then
-        glow --local --style dark "$file" | bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500
+        glow --style dark "$file" | bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500
     elif [ "${file: -5}" == ".html" ]; then
         # TODO: This is a bit slow, should be an option --render
         # pandoc --from html --to gfm "$file" | glow --local --style dark - | bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500
