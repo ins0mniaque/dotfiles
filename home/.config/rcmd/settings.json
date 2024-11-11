@@ -1,37 +1,12 @@
 {
-  "appSwitcherFeatures" : 6,
-  "windowSwitcherDimFocused" : false,
-  "focusOnKeyUp" : false,
-  "windowKeyAssignments" : [
-
-  ],
-  "showWindowSwitcher" : true,
   "windowSwitcherFeatures" : 57,
-  "specialKey" : "equal",
-  "ignoredApps" : [
-
-  ],
-  "zeroAsLastFocusedWindow" : false,
-  "minimizeKey" : "minus",
-  "switcherScreenPlacement" : 1,
-  "showAppSwitcher" : true,
-  "appKeyAssignments" : [
-
-  ],
-  "triggerKeys" : [
-    4
-  ],
   "windowSwitcherAppearance" : "comfortable",
+  "fnWindowSwitching" : false,
+  "windowSwitcherDimFocused" : false,
   "appSwitcherUseNumbersForWindows" : false,
-  "hideOnlyFocusedAppOnMinus" : false,
-  "windowTriggerKeys" : [
-    1,
-    5
+  "ignoredKeys" : [
+
   ],
-  "keyTapThreshold" : 0.14,
-  "windowOnlySwitchOSDDelay" : 0,
-  "windowSwitchOSDDelay" : 350,
-  "activateAllWindows" : true,
   "windowKeyPatterns" : [
     {
       "id" : "com.sublimetext.4",
@@ -46,8 +21,8 @@
       "pattern" : ".* — [^\\w\\d]*(.)"
     },
     {
-      "id" : "com.sublimetext.",
-      "pattern" : ".* — [^\\w\\d]*(.)"
+      "pattern" : ".* — [^\\w\\d]*(.)",
+      "id" : "com.sublimetext."
     },
     {
       "id" : "com.visualstudio.code.oss",
@@ -58,8 +33,8 @@
       "id" : "com.visualstudio.code"
     },
     {
-      "pattern" : ".* — [^\\w\\d]*(.)",
-      "id" : "com.microsoft.VSCodiumInsiders"
+      "id" : "com.microsoft.VSCodiumInsiders",
+      "pattern" : ".* — [^\\w\\d]*(.)"
     },
     {
       "id" : "com.microsoft.VSCode",
@@ -70,28 +45,64 @@
       "pattern" : ".* — [^\\w\\d]*(.)"
     },
     {
-      "pattern" : ".* — [^\\w\\d]*(.)",
-      "id" : "com.microsoft.VSCod"
+      "id" : "com.microsoft.VSCod",
+      "pattern" : ".* — [^\\w\\d]*(.)"
     },
     {
       "id" : "com.todesktop.",
       "pattern" : ".* — [^\\w\\d]*(.)"
     }
   ],
-  "minimizeOnlyFocusedWindowOnMinus" : true,
   "appSort" : "name",
-  "enableCycleHotkey" : true,
-  "enableHideOnFocusHotkey" : false,
-  "alwaysHideOthers" : false,
-  "allowWindowSwitcher" : false,
-  "whenAlreadyFocusedAction" : 2,
+  "focusOnKeyUp" : false,
+  "minimizeKey" : "minus",
   "enableAssignHotkey" : true,
-  "enableStaticCycle" : false,
-  "fnWindowSwitching" : false,
+  "activateAllWindows" : true,
   "notificationsPermissionsGranted" : false,
-  "appSortReverse" : false,
-  "ignoredKeys" : [
+  "triggerKeys" : [
+    4
+  ],
+  "alwaysHideOthers" : false,
+  "appSwitcherFeatures" : 6,
+  "switcherScreenPlacement" : 1,
+  "allowWindowSwitcher" : false,
+  "appKeyAssignments" : [
+    {
+      "app" : {
+        "originalName" : "Messages",
+        "switchCount" : 0,
+        "useCount" : 65,
+        "identifier" : "com.apple.MobileSMS:635",
+        "path" : "/System/Applications/Messages.app"
+      },
+      "key" : "t",
+      "whenAlreadyFocusedAction" : 2,
+      "index" : 2
+    }
+  ],
+  "windowSwitchOSDDelay" : 350,
+  "hideOnlyFocusedAppOnMinus" : false,
+  "ignoredApps" : [
 
   ],
-  "hideStaticSettings" : false
+  "enableHideOnFocusHotkey" : false,
+  "keyTapThreshold" : 0.14,
+  "whenAlreadyFocusedAction" : 2,
+  "windowOnlySwitchOSDDelay" : 0,
+  "zeroAsLastFocusedWindow" : false,
+  "windowTriggerKeys" : [
+    1,
+    5
+  ],
+  "minimizeOnlyFocusedWindowOnMinus" : true,
+  "enableCycleHotkey" : true,
+  "appSortReverse" : false,
+  "enableStaticCycle" : false,
+  "showWindowSwitcher" : true,
+  "showAppSwitcher" : true,
+  "hideStaticSettings" : false,
+  "windowKeyAssignments" : [
+
+  ],
+  "specialKey" : "equal"
 }
