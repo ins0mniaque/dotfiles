@@ -3,7 +3,7 @@
   "BTTPresetInfoURL" : "",
   "BTTPresetName" : "Trackpad",
   "BTTPresetColor" : "255.000000, 147.416814, 0.000000, 255.000000",
-  "BTTPresetUUID" : "AC52F0AF-673A-4429-B82E-6FB20D28B381",
+  "BTTPresetUUID" : "2DE15CEE-240A-498A-9D97-706AC271D3D3",
   "BTTPresetContent" : [
     {
       "BTTAppBundleIdentifier" : "BT.G",
@@ -780,14 +780,6 @@
             }
           ]
         }
-      ]
-    },
-    {
-      "BTTAppBundleIdentifier" : "com.apple.finder",
-      "BTTAppName" : "Finder",
-      "BTTAppAutoInvertIcon" : 1,
-      "BTTTriggers" : [
-
       ]
     },
     {
