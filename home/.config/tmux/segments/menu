@@ -21,14 +21,14 @@ SECOND="menu -O -T 'Second menu' -x $X -y $Y \
     g h i \
     k l m"
 
-# #[align=centre]
-tmux $@ menu -O -T "Main menu" -x $X -y $Y \
-    "Panes"   p c \
-    "Windows" w "$SECOND" \
-    "" \
-    "Detach from tmux" d detach-client \
-    "" \
-    "Toggle ASCII mode" C-a "run-shell \"$CURRENT_DIR/ascii\"" \
-    "Toggle WAN segment" C-w "run-shell \"$CURRENT_DIR/wan --toggle\"" \
-    "" \
-    "Help" h "run-shell \"$CURRENT_DIR/help\""
+tmux set -ag command-alias $1=" \
+    menu -O -T 'Main menu' -x $X -y $Y \
+    'Panes'   p c \
+    'Windows' w \"$SECOND\" \
+    '' \
+    'Detach from tmux' d detach-client \
+    '' \
+    'Toggle ASCII mode' C-a 'run-shell \"$CURRENT_DIR/ascii\"' \
+    'Toggle WAN segment' C-w 'run-shell \"$CURRENT_DIR/wan --toggle\"' \
+    '' \
+    'Help' h 'run-shell \"$CURRENT_DIR/help\"'"
