@@ -6,6 +6,7 @@
 	ls = log --graph --pretty=format:'%C(cyan)%h%Creset %s %C(yellow)(%cr) %C(dim white)<%an>%Creset%C(red)%d%Creset '
 	ll = log --graph --stat --pretty=format:'%C(cyan)%h%Creset %s %C(yellow)(%cr) %C(dim white)<%an>%Creset%C(red)%d%Creset '
 	ld = log -p
+	lf = !git ls | grep
 	d = diff
 	ds = diff --staged
 	dl = log -p
