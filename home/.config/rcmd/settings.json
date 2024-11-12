@@ -1,12 +1,29 @@
 {
-  "windowSwitcherFeatures" : 57,
-  "windowSwitcherAppearance" : "comfortable",
-  "fnWindowSwitching" : false,
+  "showWindowSwitcher" : true,
+  "allowWindowSwitcher" : false,
+  "enableStaticCycle" : false,
   "windowSwitcherDimFocused" : false,
+  "windowOnlySwitchOSDDelay" : 0,
+  "windowSwitchOSDDelay" : 350,
   "appSwitcherUseNumbersForWindows" : false,
+  "focusOnKeyUp" : false,
+  "alwaysHideOthers" : false,
   "ignoredKeys" : [
 
   ],
+  "fnWindowSwitching" : false,
+  "switcherScreenPlacement" : 1,
+  "windowSwitcherAppearance" : "comfortable",
+  "hideOnlyFocusedAppOnMinus" : false,
+  "minimizeOnlyFocusedWindowOnMinus" : true,
+  "windowKeyAssignments" : [
+
+  ],
+  "windowTriggerKeys" : [
+    1,
+    5
+  ],
+  "notificationsPermissionsGranted" : false,
   "windowKeyPatterns" : [
     {
       "id" : "com.sublimetext.4",
@@ -25,12 +42,12 @@
       "id" : "com.sublimetext."
     },
     {
-      "id" : "com.visualstudio.code.oss",
-      "pattern" : ".* — [^\\w\\d]*(.)"
+      "pattern" : ".* — [^\\w\\d]*(.)",
+      "id" : "com.visualstudio.code.oss"
     },
     {
-      "pattern" : ".* — [^\\w\\d]*(.)",
-      "id" : "com.visualstudio.code"
+      "id" : "com.visualstudio.code",
+      "pattern" : ".* — [^\\w\\d]*(.)"
     },
     {
       "id" : "com.microsoft.VSCodiumInsiders",
@@ -41,68 +58,135 @@
       "pattern" : ".* — [^\\w\\d]*(.)"
     },
     {
-      "id" : "com.microsoft.VSCodeInsiders",
-      "pattern" : ".* — [^\\w\\d]*(.)"
+      "pattern" : ".* — [^\\w\\d]*(.)",
+      "id" : "com.microsoft.VSCodeInsiders"
     },
     {
-      "id" : "com.microsoft.VSCod",
-      "pattern" : ".* — [^\\w\\d]*(.)"
+      "pattern" : ".* — [^\\w\\d]*(.)",
+      "id" : "com.microsoft.VSCod"
     },
     {
-      "id" : "com.todesktop.",
-      "pattern" : ".* — [^\\w\\d]*(.)"
+      "pattern" : ".* — [^\\w\\d]*(.)",
+      "id" : "com.todesktop."
     }
   ],
-  "appSort" : "name",
-  "focusOnKeyUp" : false,
-  "minimizeKey" : "minus",
-  "enableAssignHotkey" : true,
-  "activateAllWindows" : true,
-  "notificationsPermissionsGranted" : false,
-  "triggerKeys" : [
-    4
-  ],
-  "alwaysHideOthers" : false,
-  "appSwitcherFeatures" : 6,
-  "switcherScreenPlacement" : 1,
-  "allowWindowSwitcher" : false,
   "appKeyAssignments" : [
     {
-      "app" : {
-        "originalName" : "Messages",
-        "switchCount" : 0,
-        "useCount" : 65,
-        "identifier" : "com.apple.MobileSMS:635",
-        "path" : "/System/Applications/Messages.app"
-      },
       "key" : "t",
       "whenAlreadyFocusedAction" : 2,
-      "index" : 2
+      "index" : 2,
+      "app" : {
+        "useCount" : 65,
+        "switchCount" : 0,
+        "identifier" : "com.apple.MobileSMS:635",
+        "originalName" : "Messages",
+        "path" : "/System/Applications/Messages.app"
+      }
+    },
+    {
+      "index" : 0,
+      "app" : {
+        "identifier" : "com.apple.finder:55992",
+        "path" : "/System/Library/CoreServices/Finder.app",
+        "switchCount" : 0,
+        "useCount" : 90,
+        "originalName" : "Finder"
+      },
+      "key" : "f",
+      "whenAlreadyFocusedAction" : 2
+    },
+    {
+      "index" : 0,
+      "whenAlreadyFocusedAction" : 2,
+      "key" : "k",
+      "app" : {
+        "identifier" : "net.kovidgoyal.kitty:26044",
+        "path" : "/Applications/kitty.app",
+        "useCount" : 2585,
+        "switchCount" : 0,
+        "originalName" : "kitty"
+      }
+    },
+    {
+      "app" : {
+        "originalName" : "Mail",
+        "useCount" : 270,
+        "path" : "/System/Applications/Mail.app",
+        "identifier" : "com.apple.mail:638",
+        "switchCount" : 0
+      },
+      "key" : "m",
+      "index" : 0,
+      "whenAlreadyFocusedAction" : 2
+    },
+    {
+      "index" : 0,
+      "whenAlreadyFocusedAction" : 2,
+      "key" : "o",
+      "app" : {
+        "path" : "/Applications/Obsidian.app",
+        "useCount" : 841,
+        "switchCount" : 0,
+        "originalName" : "Obsidian",
+        "identifier" : "md.obsidian:95865"
+      }
+    },
+    {
+      "app" : {
+        "identifier" : "com.reederapp.5.macOS:640",
+        "switchCount" : 0,
+        "path" : "/Applications/Reeder.app",
+        "useCount" : 76,
+        "originalName" : "Reeder"
+      },
+      "index" : 0,
+      "whenAlreadyFocusedAction" : 2,
+      "key" : "r"
+    },
+    {
+      "app" : {
+        "identifier" : "com.apple.Safari:66041",
+        "path" : "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app",
+        "useCount" : 2087,
+        "originalName" : "Safari",
+        "switchCount" : 0
+      },
+      "index" : 0,
+      "key" : "s",
+      "whenAlreadyFocusedAction" : 2
+    },
+    {
+      "index" : 0,
+      "whenAlreadyFocusedAction" : 2,
+      "app" : {
+        "identifier" : "com.microsoft.VSCode:39867",
+        "useCount" : 586,
+        "switchCount" : 0,
+        "originalName" : "Visual Studio Code",
+        "path" : "/Applications/Visual Studio Code.app"
+      },
+      "key" : "c"
     }
   ],
-  "windowSwitchOSDDelay" : 350,
-  "hideOnlyFocusedAppOnMinus" : false,
+  "specialKey" : "equal",
+  "windowSwitcherFeatures" : 57,
   "ignoredApps" : [
 
   ],
-  "enableHideOnFocusHotkey" : false,
-  "keyTapThreshold" : 0.14,
-  "whenAlreadyFocusedAction" : 2,
-  "windowOnlySwitchOSDDelay" : 0,
-  "zeroAsLastFocusedWindow" : false,
-  "windowTriggerKeys" : [
-    1,
-    5
-  ],
-  "minimizeOnlyFocusedWindowOnMinus" : true,
-  "enableCycleHotkey" : true,
-  "appSortReverse" : false,
-  "enableStaticCycle" : false,
-  "showWindowSwitcher" : true,
   "showAppSwitcher" : true,
-  "hideStaticSettings" : false,
-  "windowKeyAssignments" : [
-
+  "appSwitcherFeatures" : 6,
+  "zeroAsLastFocusedWindow" : false,
+  "keyTapThreshold" : 0.14,
+  "minimizeKey" : "minus",
+  "triggerKeys" : [
+    4
   ],
-  "specialKey" : "equal"
+  "enableCycleHotkey" : true,
+  "appSort" : "name",
+  "appSortReverse" : false,
+  "activateAllWindows" : true,
+  "enableAssignHotkey" : true,
+  "hideStaticSettings" : true,
+  "whenAlreadyFocusedAction" : 2,
+  "enableHideOnFocusHotkey" : false
 }
