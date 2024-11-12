@@ -1,0 +1,3 @@
+#!/bin/sh
+
+tmux new -s ollama -d 'OLLAMA_FLASH_ATTENTION=1 ollama serve'
