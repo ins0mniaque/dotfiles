@@ -1,0 +1,19 @@
+#!/bin/sh
+
+onexit() {
+    return
+}
+
+trap onexit 1 2 3 15 18 20 ERR
+
+while true; do
+    if [ $# -gt 0 ]; then
+        sh -c "$@"
+    fi
+
+    su $USER -c "exit" 2> /dev/null
+
+    if [ "$?" -eq 0 ]; then
+        exit 0
+    fi
+done
