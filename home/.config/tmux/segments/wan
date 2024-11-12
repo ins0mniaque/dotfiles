@@ -3,19 +3,18 @@
 case "$1" in
     -d | --disable ) tmux set-environment -g  TMUX_SEGMENT_WAN_DISABLED 1
                      tmux refresh-client -S
-                     tmux display "WAN segment disabled" ;;
+                     ;;
     -e | --enable  ) tmux set-environment -gu TMUX_SEGMENT_WAN_DISABLED
                      tmux refresh-client -S
-                     tmux display "WAN segment enabled"  ;;
+                     ;;
     -t | --toggle  ) if [[ -z $TMUX_SEGMENT_WAN_DISABLED ]]; then
                          tmux set-environment -g  TMUX_SEGMENT_WAN_DISABLED 1
                          tmux refresh-client -S
-                         tmux display "WAN segment disabled"
                      else
                          tmux set-environment -gu TMUX_SEGMENT_WAN_DISABLED
                          tmux refresh-client -S
-                         tmux display "WAN segment enabled"
-                     fi ;;
+                     fi
+                     ;;
 
     * )
     if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then WAN_ICON=" 🅆 ";

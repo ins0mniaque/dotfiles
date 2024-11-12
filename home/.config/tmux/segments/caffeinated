@@ -1,9 +1,38 @@
 #!/bin/bash
 
-if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then CAFFEINATED_ICON=" ☕ ";
-else                                        CAFFEINATED_ICON="#[fg=colour255] ♨";
-fi
+case "$1" in
+    -d | --disable ) if pgrep caffeinate > /dev/null; then
+                         pkill caffeinate > /dev/null
+                     fi
 
-if pgrep caffeinate > /dev/null; then
-    echo "$CAFFEINATED_ICON"
-fi
+                     tmux refresh-client -S
+                     ;;
+    -e | --enable  ) if pgrep caffeinate > /dev/null; then
+                         pkill caffeinate > /dev/null
+                     fi
+
+                     caffeinate -dim
+
+                     tmux refresh-client -S
+                     ;;
+    -t | --toggle  ) if pgrep caffeinate > /dev/null; then
+                         pkill caffeinate > /dev/null
+                     else
+                         caffeinate -dim
+                     fi
+
+                     tmux refresh-client -S
+                     ;;
+
+    * )
+    if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then CAFFEINATED_ICON=" ☕";                UNCAFFEINATED_ICON="#[fg=colour220] ⏾";
+    else                                        CAFFEINATED_ICON="#[fg=colour255] ♨"; UNCAFFEINATED_ICON="#[fg=colour220] ⏾";
+    fi
+
+    if pgrep caffeinate > /dev/null; then
+        echo "$CAFFEINATED_ICON"
+    else
+        echo "$UNCAFFEINATED_ICON"
+    fi
+    ;;
+esac
