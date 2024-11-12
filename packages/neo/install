@@ -1,0 +1,18 @@
+#!/bin/sh
+
+curl -o neo.zip -L https://github.com/st3w/neo/archive/main.zip
+unzip neo.zip
+
+cd neo-main
+export LDFLAGS="-L/opt/homebrew/opt/ncurses/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/ncurses/include"
+
+./autogen.sh
+./configure
+make -j3
+cd ..
+
+cp neo-main/src/neo ~/.local/bin/neo
+
+rm -r neo-main
+rm neo.zip
