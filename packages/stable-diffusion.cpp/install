@@ -15,6 +15,6 @@ rm sd-macOS-arm64.zip
     echo ''
     echo 'SCRIPT_DIR=$"$(dirname "${BASH_SOURCE[0]}")"'
     echo 'DYLD_LIBRARY_PATH="$SCRIPT_DIR/stable-diffusion" "$SCRIPT_DIR/stable-diffusion/sd" "$@"'
-} >> ~/.local/bin/sd
+} > ~/.local/bin/sd
 
 chmod +x ~/.local/bin/sd
