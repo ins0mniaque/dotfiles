@@ -2,6 +2,7 @@
 set -g -x EDITOR nvim
 set -g -x VISUAL nvim
 set -g -x BROWSER open
+set -g -x LOCKPRG "lock neo"
 set -g -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 set -g -x PAGER less
 set -g -x LESS "FRX --mouse"

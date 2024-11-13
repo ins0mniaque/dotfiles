@@ -2,6 +2,7 @@
 $Env:EDITOR = "nvim"
 $Env:VISUAL = "nvim"
 $Env:BROWSER = "open"
+$Env:LOCKPRG = "lock neo"
 $Env:MANPAGER = "sh -c 'col -bx | bat -l man -p'"
 $Env:PAGER = "less"
 $Env:LESS = "FRX --mouse"

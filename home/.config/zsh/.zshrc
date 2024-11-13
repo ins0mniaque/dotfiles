@@ -2,6 +2,7 @@
 export EDITOR=nvim
 export VISUAL=nvim
 export BROWSER=open
+export LOCKPRG="lock neo"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export PAGER=less
 export LESS="FRX --mouse"
