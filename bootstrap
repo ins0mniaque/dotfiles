@@ -49,7 +49,7 @@ if [ "$DRY" != true ]; then
             echo '  <true/>'
             echo '</dict>'
             echo '</plist>'
-        } >> ~/Library/LaunchAgents/xdg.plist
+        } > ~/Library/LaunchAgents/xdg.plist
     fi
 else
     rsync --dry-run --itemize-changes -avh --no-perms --exclude ".DS_Store" home/. ~;
