@@ -1,7 +1,12 @@
 // Place your key bindings in this file to override the defaultsauto[]
 [
     {
-        "key": "ctrl+alt+cmd+space",
+        "key": "ctrl+shift+alt+cmd+space",
         "command": "workbench.action.showCommands"
+    },
+    {
+        "key": "cmd+[Slash]",
+        "command": "editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
     }
 ]
