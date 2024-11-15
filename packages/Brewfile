@@ -28,6 +28,7 @@ brew "fclones"
 brew "fd"
 brew "gnutls"
 brew "ffmpeg"
+brew "ncurses"
 brew "fish"
 brew "fzf"
 brew "git-cliff"
@@ -60,10 +61,11 @@ brew "numbat"
 brew "nushell"
 brew "nyancat"
 brew "ollama"
+brew "pam-reattach"
 brew "pandoc"
 brew "pgcli"
 brew "pipx"
-brew "pkg-config"
+brew "pkgconf"
 brew "ripgrep"
 brew "shellcheck"
 brew "shfmt"
@@ -140,9 +142,8 @@ mas "Playgrounds", id: 1496833156
 mas "rcmd", id: 1596283165
 mas "Reeder", id: 1529448980
 mas "Slack", id: 803453959
-mas "The Unarchiver", id: 425424353
 mas "Vinegar", id: 1591303229
-mas "Wipr", id: 1320666476
+mas "Wipr", id: 1662217862
 mas "WireGuard", id: 1451685025
 mas "Xcode", id: 497799835
 vscode "bmalehorn.vscode-fish"
