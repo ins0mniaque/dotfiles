@@ -1,0 +1,152 @@
+#!/bin/sh
+
+version()
+{
+    echo "${0##*/}: Multi-format archive extraction script (version 0.1)"
+}
+
+usage()
+{
+    cat <<EOF
+Usage: ${0##*/} <options>... <archives>...
+
+Options:
+  -d, --dir=<DIR>     change to directory DIR before extracting
+  -l, --list          list information about archive
+  -q, --quiet         suppress output
+  -h, --help          display help and exit
+  -v, --version       display the version number and exit
+EOF
+}
+
+invalid()
+{
+    echo "${0##*/}: Unknown option '$1'"
+    echo "${0##*/}: Try '$0 --help' for more information."
+}
+
+extract()
+{
+    case "$1" in
+        /*) file="$1" ;;
+        *)  file="$PWD/$1" ;;
+    esac
+
+    cd "$2"
+
+    case $file in
+        *.7z|*.wim|*.swm|*.esd|*.apk|*.apm|*.ar|*.a|*.deb|*.lib|*.arj|*.cb7|*.chm|*.chw|*.chi|*.chq|*.msi|*.msp|*.doc|*.xls|*.ppt|*.cramfs|*.dmg|*.ext|*.ext2|*.ext3|*.ext4|*.img|*.fat|*.hfs|*.hfsx|*.hxs|*.hxi|*.hxr|*.hxq|*.hxw|*.lit|*.ihex|*.iso|*.lzh|*.lha|*.mbr|*.mslz|*.mub|*.nsis|*.ntfs|*.mbr|*.rpm|*.ppmd|*.qcow|*.qcow2|*.qcow2c|*.001|*.udf|*.iso|*.scap|*.uefif|*.vdi|*.vhd|*.vmdk|*.xar|*.pkg)
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.zip|*.zipx|*.jar|*.xpi|*.odt|*.ods|*.docx|*.xlsx|*.epub|*.cbz)
+                                unzip ${list:+-l} "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.arc)                  arc ${${list:+l}:-e} "$file" ;;
+        *.bz2|*.bzip2)          bunzip2 ${list:+-t} "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.ace|*.cba)            unace ${${list:+l}:-x} "$file" ;;
+        *.rar|*.r00|*.cbr)      unrar ${${list:+l}:-x} -ad "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.tar|*.cbt)            tar ${${list:+t}:-x}vf "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.cpio)                 cpio -i${${list:+t}:-d} < "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.cso)                  [ -n "$list" ] && echo "${file%.*cso}.iso" ||
+                                ciso 0 "$file" "${file%.*cso}.iso" ;;
+        *.cab|*.exe)            cabextract ${list:+-l} "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.gz|*.gzip)            gunzip ${list:+-l} "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.lz)                   lzip ${${list:+-l}:--d} "$file" ;;
+        *.lzma)                 unlzma ${list:+-l} "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.squashfs)             unsquashfs ${list:+-l} "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.tar.bz2|*.tbz|*.tbz2) tar ${${list:+t}:-x}vjf "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.tar.gz|*.tgz)         tar ${${list:+t}:-x}vzf "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.tar.xz|*.txz)         tar ${${list:+t}:-x}vJf "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.tar.Z|*.taz)          tar ${${list:+t}:-x}vZf "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.tar.zst)              tar ${${list:+t}:-x}vf -I zstd "$file" ;;
+        *.xz)                   unxz ${list:+-l} "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.Z)                    [ -n "$list" ] && echo "${file%.*Z}" ||
+                                uncompress "$file" ||
+                                7z ${${list:+l}:-x} "$file" ;;
+        *.zlib)                 [ -n "$list" ] && echo "${file%.*zlib}" ||
+                                zlib-flate -uncompress < "$file" > "${file%.*zlib}" ;;
+        *.zoo)                  zoo ${${list:+VC}:-x} "$file" ;;
+        *.zpaq)                 zpaq ${${list:+l}:-x} "$file" ;;
+        *.zst)                  zstd ${${list:+-l}:--d} "$file" ;;
+        *)
+        mimetype="$(file --mime-type --brief --dereference $file)"
+
+        case "${mimetype#*/}" in
+            x-7z-compressed|x-7za-compressed) 7z ${${list:+l}:-x} "$file" ;;
+            x-archive|x-debian-package)       7z ${${list:+l}:-x} "$file" ;;
+            x-arj)                            7z ${${list:+l}:-x} "$file" ;;
+            x-bzip2)                          bunzip2 ${list:+-t} "$file" ||
+                                              7z ${${list:+l}:-x} "$file" ;;
+            x-compress|x-gzip|gzip)           gunzip ${list:+-l} "$file" ||
+                                              7z ${${list:+l}:-x} "$file" ;;
+            x-cpio)                           cpio -i${${list:+t}:-d} < "$file" ||
+                                              7z ${${list:+l}:-x} "$file" ;;
+            x-iso9660-image)                  7z ${${list:+l}:-x} "$file" ;;
+            x-lha)                            7z ${${list:+l}:-x} "$file" ;;
+            x-lzip)                           lzip ${${list:+-l}:--d} "$file" ;;
+            x-rar)                            unrar ${${list:+l}:-x} -ad "$file" ||
+                                              7z ${${list:+l}:-x} "$file" ;;
+            x-rpm)                            7z ${${list:+l}:-x} "$file" ;;
+            x-tar)                            tar ${${list:+t}:-x}vf "$file" ||
+                                              7z ${${list:+l}:-x} "$file" ;;
+            x-xz)                             unxz ${list:+-l} "$file" ||
+                                              7z ${${list:+l}:-x} "$file" ;;
+            x-zip|zip)                        unzip ${list:+-l} "$file" ||
+                                              7z ${${list:+l}:-x} "$file" ;;
+            x-zoo)                            zoo ${${list:+VC}:-x} "$file" ;;
+            *)                                7z ${${list:+l}:-x} "$file" ||
+                                              echo "${0##*/}: $file: Unknown archive format: $mimetype" ;;
+        esac
+    esac
+
+    cd - >/dev/null 2>&1
+}
+
+files=()
+list=
+quiet=
+dir="$PWD"
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -l|--list)     list=1;        shift ;;
+        -q|--quiet)    quiet=1;       shift ;;
+        -d|--dir)      dir="$2";      shift; shift ;;
+        -d=*|--dir=*)  dir="${1#*=}"; shift ;;
+        -h|-\?|--help) usage;         exit 1 ;;
+        -v|--version)  version;       exit 1 ;;
+        -*|--*)        invalid "$1";  exit 1 ;;
+        *)             files+=("$1"); shift ;;
+    esac
+done
+
+set -- "${files[@]}"
+
+if [ $# -eq 0 ]; then
+    version; echo ""; usage; exit 1
+fi
+
+for file in $@
+do
+    if [ ! -f "$file" ]; then
+        echo "${0##*/}: Error: $file is not a file."; continue;
+    fi
+
+    if [ -n "$quiet" ]; then
+        extract "$file" "$dir" >/dev/null
+    else
+        extract "$file" "$dir"
+    fi
+done
