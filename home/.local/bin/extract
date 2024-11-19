@@ -81,7 +81,7 @@ extract()
         *.zpaq)                 zpaq ${${list:+l}:-x} "$file" ;;
         *.zst)                  zstd ${${list:+-l}:--d} "$file" ;;
         *)
-        mimetype="$(file --mime-type --brief --dereference $file)"
+        mimetype=$(file --mime-type --brief --dereference "$file")
 
         case "${mimetype#*/}" in
             x-7z-compressed|x-7za-compressed) 7z ${${list:+l}:-x} "$file" ;;
@@ -132,13 +132,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-set -- "${files[@]}"
-
-if [ $# -eq 0 ]; then
+if [ ${#files[@]} -eq 0 ]; then
     version; echo ""; usage; exit 1
 fi
 
-for file in $@
+for file in "${files[@]}"
 do
     if [ ! -f "$file" ]; then
         echo "${0##*/}: Error: $file is not a file."; continue;

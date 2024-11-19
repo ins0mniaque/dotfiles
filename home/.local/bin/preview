@@ -1,95 +1,140 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-# TODO: Add support for when tput is unavailable (using stty and MODE (Windows))
+version()
+{
+    echo "${0##*/}: Multi-format preview script (version 0.1)"
+}
+
+usage()
+{
+    cat <<EOF
+Usage: ${0##*/} <options>... <files>...
+
+Options:
+  -#, --header              show header
+  -m, --margin=<MARGIN>     set header margin to MARGIN columns
+  -w, --width=<WIDTH>       set terminal width to WIDTH columns
+  -h, --height=<HEIGHT>     set terminal height to HEIGHT lines
+  -l, --length=<LENGTH>     limit output to LENGTH lines
+  -?, --help                display help and exit
+  -v, --version             display the version number and exit
+EOF
+}
+
+invalid()
+{
+    echo "${0##*/}: Unknown option '$1'"
+    echo "${0##*/}: Try '$0 --help' for more information."
+}
+
+# TODO: Support $length
+preview()
+{
+    mimetype=$(file --mime-type --mime-encoding --brief --dereference "$1")
+
+    if [ -n "$header" ]; then
+        header "$1" "$mimetype"
+    fi
+
+    if [ "${mimetype:0:15}" == "inode/directory" ]; then
+        # TODO: Fallback to ls
+        eza --all --long --git --color=always "$1"
+    elif [ "${mimetype:0:6}" == "image/" ]; then
+        preview_image "$1"
+    elif [ "${mimetype:0:6}" == "video/" ]; then
+        ffmpeg -i "$1" -vframes 1 -f image2 - 2> /dev/null | preview_image
+    elif [ "${mimetype: -14}" == "charset=binary" ]; then
+        7z l "$1" 2> /dev/null | sed '1,/^--/d'
+        if [ "${PIPESTATUS[0]}" != "0" ]; then
+            hexyl --length=4KiB "$1"
+        fi
+    elif [ "${1: -3}" == ".md" ]; then
+        glow --style dark "$1" | bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500
+    else
+        bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500 "$1"
+    fi
+}
+
+preview_image()
+{
+    if [[ -n "$TMUX" && -z "$TMUX_PANE" ]]; then
+        # Disable unsupported image protocols inside tmux popup
+        chafa --format symbols --animate off --size "$width"x"$height" ${1:+"$1"}
+    else
+        chafa --size "$width"x"$height" ${1:+"$1"}
+    fi
+}
+
+# TODO: Clean this up...
+header()
+{
+    # TODO: Fallback to ls
+    if [ "${2:0:15}" == "inode/directory" ]; then
+        # name="📁 $(ls -lahd --color=always "$1" | awk -F " " -v dir="$(dirname "$1")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 " " yellow $5 normal'} )  $(set -- "$file"/*; echo $#) files"
+        name="📁 $(eza -lad --color=always --no-permissions --no-user --no-time "$1" | awk -F " " -v dir="$(dirname "$1")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2'} )  $(set -- "$1"/*; echo $#) files"
+    else
+        # name="📄 $(ls -lah --color=always "$1" | awk -F " " -v dir="$(dirname "$1")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 "  " yellow $5 normal'} )"
+        name="📄 $(eza -la --color=always --no-permissions --no-user --no-time "$1" | awk -F " " -v dir="$(dirname "$1")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2 "  " $1 "B"'} )"
+    fi
+    colorless=$(echo "$name" | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g')
+    remain=$((width - ${#colorless} - margin))
+    if [ $remain -le 0 ]; then
+        info=""
+    else
+        info="  "$(file --brief "$1")
+
+        if [ ${#info} -ge $remain ]; then
+            half=$(((remain - 3) / 2))
+            info=${info:0:$half}…${info:$((-half + remain % 2 - 1))}
+        else
+            info=$(printf '%*s' "$((remain - 2 - ${#info}))")$info
+        fi
+    fi
+
+    echo "$name$italic$dim$info$normal"
+    printf "$dim%*s$normal\n" "$width" '' | tr ' ' '―'
+}
+
+files=()
+header=
+margin=0
 width=${FZF_PREVIEW_COLUMNS:-${COLUMNS:-$(tput cols)}}
 height=${FZF_PREVIEW_LINES:-${LINES:-$(tput lines)}}
-margin=0
+length=
 
 if [ -z "$FZF_PREVIEW_COLUMNS" ]; then
     ((height--))
 else
-    # TODO: Add option for margin and max lines
     margin=8
 fi
 
-while [ True ]; do
-    if [ "$1" = "--header" ] || [ "$1" = "-h" ]; then
-        # TODO: Add support for when tput is unavailable
-        header=true
-        # TODO: Option for eza (yellow is only used to color the size from ls)
-        # yellow=$(tput setaf 3)
-        dim=$(tput dim)
-        italic=$(tput sitm)
-        normal=$(tput sgr0)
-
-        shift 1
-    elif [ "$1" = "--width" ] || [ "$1" = "-w" ]; then
-        width=$2
-        shift 2
-    elif [ "$1" = "--height" ] || [ "$1" = "-h" ]; then
-        height=$2
-        shift 2
-    else
-        break
-    fi
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -#|--header)     header=1;         shift ;;
+        -m|--margin)     margin="$2";      shift; shift ;;
+        -m=*|--margin=*) margin="${1#*=}"; shift ;;
+        -w|--width)      width="$2";       shift; shift ;;
+        -w=*|--width=*)  width="${1#*=}";  shift ;;
+        -h|--height)     height="$2";      shift; shift ;;
+        -h=*|--height=*) height="${1#*=}"; shift ;;
+        -l|--length)     length="$2";      shift; shift ;;
+        -l=*|--length=*) length="${1#*=}"; shift ;;
+        -\?|--help)      usage;            exit 1 ;;
+        -v|--version)    version;          exit 1 ;;
+        -*|--*)          invalid "$1";     exit 1 ;;
+        *)               files+=("$1");    shift ;;
+    esac
 done
 
-if [ "$header" = true ]; then
+if [ -n "$header" ]; then
     height=$((height - 2))
 fi
 
-for file in "$@"; do
-    mime=$(file --brief --mime-type --mime-encoding "$file")
+if [ ${#files[@]} -eq 0 ]; then
+    version; echo ""; usage; exit 1
+fi
 
-    if [ "$header" = true ]; then
-        # TODO: Option for eza
-        if [ "${mime:0:15}" == "inode/directory" ]; then
-            # TODO: ls version
-            # name="📁 $(ls -lahd --color=always "$file" | awk -F " " -v dir="$(dirname "$file")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 " " yellow $5 normal'} )  $(set -- "$file"/*; echo $#) files"
-            name="📁 $(eza -lad --color=always --no-permissions --no-user --no-time "$file" | awk -F " " -v dir="$(dirname "$file")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2'} )  $(set -- "$file"/*; echo $#) files"
-        else
-            # name="📄 $(ls -lah --color=always "$file" | awk -F " " -v dir="$(dirname "$file")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 "  " yellow $5 normal'} )"
-            name="📄 $(eza -la --color=always --no-permissions --no-user --no-time "$file" | awk -F " " -v dir="$(dirname "$file")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2 "  " $1 "B"'} )"
-        fi
-        colorless=$(echo "$name" | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g')
-        remain=$((width - ${#colorless} - margin))
-        if [ $remain -le 0 ]; then
-            info=""
-        else
-            info="  $(file --brief "$file")"
-
-            if [ ${#info} -ge $remain ]; then
-                half=$(((remain - 3) / 2))
-                info=${info:0:$half}…${info:$((-half + remain % 2 - 1))}
-            else
-                info=$(printf '%*s' "$((remain - 2 - ${#info}))")$info
-            fi
-        fi
-
-        echo "$name$italic$dim$info$normal"
-        printf "$dim%*s$normal\n" "$width" '' | tr ' ' '―'
-    fi
-
-    if [ "${mime:0:15}" == "inode/directory" ]; then
-        eza --all --long --git --color=always "$file"
-    elif [ "${mime:0:6}" == "image/" ]; then
-        if [ -n "$FZF_PREVIEW_COLUMNS" ]; then
-            chafa --format symbols --size "$width"x"$height" "$file"
-        elif [ -n "$TMUX" ]; then
-            chafa --passthrough tmux --size "$width"x"$height" "$file"
-        else
-            chafa --size "$width"x"$height" "$file"
-        fi
-    elif [ "${mime: -14}" == "charset=binary" ]; then
-        hexyl --length=4KiB "$file"
-    elif [ "${file: -3}" == ".md" ]; then
-        glow --style dark "$file" | bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500
-    elif [ "${file: -5}" == ".html" ]; then
-        # TODO: This is a bit slow, should be an option --render
-        # pandoc --from html --to gfm "$file" | glow --local --style dark - | bat --style=numbers --color=always --terminal-width $width --wrap auto --line-range :500
-        # w3m "$file"
-        bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500 "$file"
-    else
-        bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500 "$file"
-    fi
+for file in "${files[@]}"
+do
+    preview "$file"
 done
