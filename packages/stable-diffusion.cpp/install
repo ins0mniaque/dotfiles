@@ -1,6 +1,6 @@
 #!/bin/sh
 
-curl -o sd-macOS-arm64.zip -L $(curl -s https://api.github.com/repos/leejet/stable-diffusion.cpp/releases/latest | jq -r '.assets[] | select(.name | contains ("macOS") and contains("arm64")) | .browser_download_url')
+curl -o sd-macOS-arm64.zip -L "$(curl -s https://api.github.com/repos/leejet/stable-diffusion.cpp/releases/latest | jq -r '.assets[] | select(.name | contains ("macOS") and contains("arm64")) | .browser_download_url')"
 unzip sd-macOS-arm64.zip -d sd-macOS-arm64
 
 mkdir -p ~/.local/bin/stable-diffusion
@@ -13,7 +13,7 @@ rm sd-macOS-arm64.zip
 {
     echo '#!/bin/sh'
     echo ''
-    echo 'SCRIPT_DIR=$"$(dirname "${BASH_SOURCE[0]}")"'
+    echo 'SCRIPT_DIR="$(dirname "$0")"'
     echo 'DYLD_LIBRARY_PATH="$SCRIPT_DIR/stable-diffusion" "$SCRIPT_DIR/stable-diffusion/sd" "$@"'
 } > ~/.local/bin/sd
 
