@@ -2,7 +2,7 @@
 
 version()
 {
-    echo "${0##*/}: Multi-format preview script (version 0.1)"
+    echo "${0##*/}: Multi-format preview script (version 0.2)"
 }
 
 usage()
@@ -12,7 +12,7 @@ Usage: ${0##*/} <options>... <files>...
 
 Options:
   -#, --header              show header
-  -m, --margin=<MARGIN>     set header margin to MARGIN columns
+  -p, --padding=<PAD>       set header right padding to PAD columns
   -w, --width=<WIDTH>       set terminal width to WIDTH columns
   -h, --height=<HEIGHT>     set terminal height to HEIGHT lines
   -l, --length=<LENGTH>     limit output to LENGTH lines
@@ -27,7 +27,6 @@ invalid()
     echo "${0##*/}: Try '$0 --help' for more information."
 }
 
-# TODO: Support $length
 preview()
 {
     mimetype=$(file --mime-type --mime-encoding --brief --dereference "$1")
@@ -36,105 +35,140 @@ preview()
         header "$1" "$mimetype"
     fi
 
-    if [ "${mimetype:0:15}" == "inode/directory" ]; then
-        # TODO: Fallback to ls
-        eza --all --long --git --color=always "$1"
-    elif [ "${mimetype:0:6}" == "image/" ]; then
-        preview_image "$1"
-    elif [ "${mimetype:0:6}" == "video/" ]; then
-        ffmpeg -i "$1" -vframes 1 -f image2 - 2> /dev/null | preview_image
-    elif [ "${mimetype: -14}" == "charset=binary" ]; then
-        7z l "$1" 2> /dev/null | sed '1,/^--/d'
-        if [ "${PIPESTATUS[0]}" != "0" ]; then
-            hexyl --length=4KiB "$1"
-        fi
-    elif [ "${1: -3}" == ".md" ]; then
-        glow --style dark "$1" | bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500
+    case $mimetype in
+        inode/directory*)         preview_dir "$1" ;;
+        image/*)                  preview_image "$1" ;;
+        video/*)                  ffmpeg -i "$1" -vframes 1 -f image2 - 2> /dev/null | preview_image ;;
+        application/vnd.sqlite3*) sqlite3 "$1" .schema | preview_code -l sql ;;
+        *charset=binary)
+            if archive=$(7z l "$1" 2> /dev/null); then
+                echo "$archive" | sed '1,/^--/d'
+            else
+                hexyl ${length:+--length=$((length * 16))} "$1"
+            fi
+            ;;
+        *)
+            case $1 in
+                *.md|*.MD) glow --style dark "$1" | preview_code ;;
+                *)         preview_code "$1" ;;
+            esac
+            ;;
+    esac
+}
+
+preview_code()
+{
+    bat --style=numbers --color=always --terminal-width "$width" --wrap auto ${length:+--line-range :$length} "$@"
+}
+
+preview_dir()
+{
+    if command -v eza >/dev/null; then
+        eza --all --long --git --color=always "${NERDFONT:+--icons=always}" "$@"
     else
-        bat --style=numbers --color=always --terminal-width "$width" --wrap auto --line-range :500 "$1"
+        ls -al --color=always "$@"
+    fi
+
+    if log=$(git -C "$1" log --color=always -1 2> /dev/null); then
+        separator
+        echo "$log"
     fi
 }
 
 preview_image()
 {
-    if [[ -n "$TMUX" && -z "$TMUX_PANE" ]]; then
-        # Disable unsupported image protocols inside tmux popup
-        chafa --format symbols --animate off --size "$width"x"$height" ${1:+"$1"}
+    if [ -n "$header" ]; then
+        size="$width""x""$((height - 2))"
     else
-        chafa --size "$width"x"$height" ${1:+"$1"}
+        size="$width""x""$height"
+    fi
+
+    if [ -n "$TMUX" ] && [ -z "$TMUX_PANE" ]; then
+        # Disable unsupported image protocols inside tmux popup
+        chafa --format symbols --animate off --size "$size" "$@"
+    else
+        chafa --size "$size" "$@"
     fi
 }
 
-# TODO: Clean this up...
 header()
 {
-    # TODO: Fallback to ls
-    if [ "${2:0:15}" == "inode/directory" ]; then
-        # name="📁 $(ls -lahd --color=always "$1" | awk -F " " -v dir="$(dirname "$1")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 " " yellow $5 normal'} )  $(set -- "$file"/*; echo $#) files"
-        name="📁 $(eza -lad --color=always --no-permissions --no-user --no-time "$1" | awk -F " " -v dir="$(dirname "$1")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2'} )  $(set -- "$1"/*; echo $#) files"
+    if command -v eza >/dev/null; then
+        icons=${NERDFONT:+--icons=always}
+        name="$(eza -d --color=always "$icons" "$1")"
     else
-        # name="📄 $(ls -lah --color=always "$1" | awk -F " " -v dir="$(dirname "$1")/" -v yellow="$yellow" -v normal="$normal" {'for (i = 10; i <= NF; i++) { $9 = $9 " " $i }; sub(dir, "", $9); print $9 "  " yellow $5 normal'} )"
-        name="📄 $(eza -la --color=always --no-permissions --no-user --no-time "$1" | awk -F " " -v dir="$(dirname "$1")/" {'for (i = 3; i <= NF; i++) { $2 = $2 " " $i }; sub(dir, "", $2); print $2 "  " $1 "B"'} )"
+        icons=
+        name="$(ls -d --color=always "$1")"
     fi
-    colorless=$(echo "$name" | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g')
-    remain=$((width - ${#colorless} - margin))
-    if [ $remain -le 0 ]; then
-        info=""
-    else
+
+    if [ -z "$icons" ]; then
+        case $2 in
+            inode/directory*) name="📁 $name" ;;
+            *)                name="📄 $name" ;;
+        esac
+    fi
+
+    name="$name  $italic$yellow$(du -sh "$1" | cut -f1)$normal"
+    info=
+
+    colorless=$(echo "$name" | sed -e 's/\x1b\[[0-9;]*[mGKHF]//g' | sed 's/\x0f//g')
+    remaining=$((width - ${#colorless} - padding))
+
+    if [ $remaining -gt 3 ]; then
         info="  "$(file --brief "$1")
 
-        if [ ${#info} -ge $remain ]; then
-            half=$(((remain - 3) / 2))
-            info=${info:0:$half}…${info:$((-half + remain % 2 - 1))}
+        if [ ${#info} -ge $remaining ]; then
+            half=$(((remaining - 3) / 2))
+            left=$(echo "$info" | cut -c1-$((half - 1)))
+            right=$(echo "$info" | cut -c$((${#info} - half + remaining % 2 - 1))-)
+            info="$left…$right"
         else
-            info=$(printf '%*s' "$((remain - 2 - ${#info}))")$info
+            info=$(printf '%*s' "$((remaining - 2 - ${#info}))" '')$info
         fi
     fi
 
     echo "$name$italic$dim$info$normal"
+    separator
+}
+
+separator()
+{
     printf "$dim%*s$normal\n" "$width" '' | tr ' ' '―'
 }
 
-files=()
+dim=$(tput dim)
+italic=$(tput sitm)
+normal=$(tput sgr0)
+yellow=$(tput setaf 3)
+
 header=
-margin=0
+padding=${FZF_PREVIEW_COLUMNS:+8}
 width=${FZF_PREVIEW_COLUMNS:-${COLUMNS:-$(tput cols)}}
 height=${FZF_PREVIEW_LINES:-${LINES:-$(tput lines)}}
-length=
+length=512
 
-if [ -z "$FZF_PREVIEW_COLUMNS" ]; then
-    ((height--))
-else
-    margin=8
+if [ -z "$FZF_PREVIEW_LINES" ]; then
+    height=$((height - 1))
 fi
 
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
     case $1 in
-        -#|--header)     header=1;         shift ;;
-        -m|--margin)     margin="$2";      shift; shift ;;
-        -m=*|--margin=*) margin="${1#*=}"; shift ;;
-        -w|--width)      width="$2";       shift; shift ;;
-        -w=*|--width=*)  width="${1#*=}";  shift ;;
-        -h|--height)     height="$2";      shift; shift ;;
-        -h=*|--height=*) height="${1#*=}"; shift ;;
-        -l|--length)     length="$2";      shift; shift ;;
-        -l=*|--length=*) length="${1#*=}"; shift ;;
-        -\?|--help)      usage;            exit 1 ;;
-        -v|--version)    version;          exit 1 ;;
-        -*|--*)          invalid "$1";     exit 1 ;;
-        *)               files+=("$1");    shift ;;
+        -#|--header)      header=1;          shift ;;
+        -p|--padding)     padding="$2";      shift; shift ;;
+        -p=*|--padding=*) padding="${1#*=}"; shift ;;
+        -w|--width)       width="$2";        shift; shift ;;
+        -w=*|--width=*)   width="${1#*=}";   shift ;;
+        -h|--height)      height="$2";       shift; shift ;;
+        -h=*|--height=*)  height="${1#*=}";  shift ;;
+        -l|--length)      length="$2";       shift; shift ;;
+        -l=*|--length=*)  length="${1#*=}";  shift ;;
+        -\?|--help)       usage;             exit 1 ;;
+        -v|--version)     version;           exit 1 ;;
+        -*)               invalid "$1";      exit 1 ;;
+        *)                preview "$1";      shift; previewed=1 ;;
     esac
 done
 
-if [ -n "$header" ]; then
-    height=$((height - 2))
-fi
-
-if [ ${#files[@]} -eq 0 ]; then
+if [ -z "$previewed" ]; then
     version; echo ""; usage; exit 1
 fi
-
-for file in "${files[@]}"
-do
-    preview "$file"
-done
