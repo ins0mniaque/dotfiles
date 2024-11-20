@@ -1,14 +1,21 @@
 #!/bin/sh
 
-if [ "$#" -ne 2 ]; then
-    echo "Illegal number of parameters. Usage: $0 model[:version] destination"
-    exit 1
-fi
+base_dir=~/.ollama/models
+manifest_dir=$base_dir/manifests/registry.ollama.ai
+blob_dir=$base_dir/blobs
+output_dir=${1:-.}
 
-IFS=':' read -ra MODEL <<< "$1"
+find "$output_dir" -type l -exec rm {} +
+mkdir -p "$output_dir"
 
-MANIFEST="$HOME/.ollama/models/manifests/registry.ollama.ai/library/${MODEL[0]}/${MODEL[1]:-latest}"
-BLOB=$(jq -r '.layers[] | select(.mediaType == "application/vnd.ollama.image.model") | .digest' "$MANIFEST")
-BLOB="$HOME/.ollama/models/blobs/${BLOB/:/-}"
+find "$manifest_dir" -type f -mindepth 3 -maxdepth 3 | while IFS= read -r file; do
+    user=$(basename "$(dirname "$(dirname "$file")")" | sed 's/^registry\.ollama\.ai/ollama/')
+    model=$(basename "$(dirname "$file")")
+    tag=$(basename "$file")
 
-ln -s "$BLOB" "$2/${1/:/-}.gguf"
+    digest=$(jq -r '.layers[] | select(.mediaType == "application/vnd.ollama.image.model") | .digest' "$file")
+
+    ln -s "$blob_dir/$digest" "$output_dir/$user-$model-$tag.gguf"
+
+    echo "$output_dir/$user-$model-$tag.gguf"
+done
