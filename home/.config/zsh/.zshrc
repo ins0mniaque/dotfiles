@@ -72,7 +72,7 @@ zstyle ':completion:*' fzf-search-display true
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}'
 zstyle ':completion:*' menu no
-zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -ww"
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,command -ww"
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':completion:*:descriptions' format '[%d]'
 
