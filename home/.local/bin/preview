@@ -2,7 +2,7 @@
 
 version()
 {
-    echo "${0##*/}: Multi-format preview script (version 0.2)"
+    echo "${0##*/}: Multi-format preview script (version 0.3)"
 }
 
 usage()
@@ -49,7 +49,7 @@ preview()
             ;;
         *)
             case $1 in
-                *.md|*.MD) glow --style dark "$1" | preview_code ;;
+                *.md|*.MD) glow --style dark "$1" ;;
                 *)         preview_code "$1" ;;
             esac
             ;;
@@ -117,14 +117,11 @@ header()
     colorless=$(echo "$name" | sed -e 's/\x1b\[[0-9;]*[mGKHF]//g' | sed 's/\x0f//g')
     remaining=$((width - ${#colorless} - padding))
 
-    if [ $remaining -gt 3 ]; then
-        info="  "$(file --brief "$1")
+    if [ $remaining -gt 2 ]; then
+        info="  $(file --brief "$1")"
 
         if [ ${#info} -ge $remaining ]; then
-            half=$(((remaining - 3) / 2))
-            left=$(echo "$info" | cut -c1-$((half - 1)))
-            right=$(echo "$info" | cut -c$((${#info} - half + remaining % 2 - 1))-)
-            info="$left…$right"
+            info="$(echo "$info" | LC_ALL=C cut -c1-$((remaining - 1)))…"
         else
             info=$(printf '%*s' "$((remaining - 2 - ${#info}))" '')$info
         fi
