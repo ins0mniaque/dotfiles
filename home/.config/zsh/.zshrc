@@ -23,6 +23,11 @@ export FZF_DEFAULT_COMMAND="fd --strip-cwd-prefix --hidden --follow --exclude .g
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND --type file"
 export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type directory"
 
+export FZF_CTRL_T_PREVIEW="preview --header {}"
+export FZF_CTRL_T_OPTS="--preview '$FZF_CTRL_T_PREVIEW'"
+export FZF_ALT_C_PREVIEW="preview --header {}"
+export FZF_ALT_C_OPTS="--preview '$FZF_ALT_C_PREVIEW'"
+
 if [ "$COLORTERM" = truecolor ] || [ "$COLORTERM" = 24bit ]; then
     export FZF_COLORS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#E6DB74,hl:#7E8E91,fg:#F8F8F2,header:#7E8E91,info:#A6E22E,pointer:#A6E22E,marker:#F92672,fg+:#F8F8F2,prompt:#F92672,hl+:#F92672'
 else
@@ -30,20 +35,21 @@ else
 fi
 
 export FZF_DEFAULT_OPTS="
-  --height 40% --tmux 80%
+  --height 50% --tmux 80%
   --layout=default
   --info=inline-right
-  --prompt='❯ ' --pointer='❯' --marker='⚫'
-  --preview-window 'border-left'
-  --bind 'ctrl-p:change-preview-window(down,border-top|hidden|border-left)'
+  --prompt='❯ ' --pointer='❯' --marker='☑️'
+  --preview-window '~2,60%,border-left'
+  --bind 'ctrl-p:change-preview-window(~2,75%,down,border-top|hidden|~2,60%,border-left)'
+  --bind 'ctrl-d:reload($FZF_ALT_C_COMMAND)+change-preview($FZF_ALT_C_PREVIEW)'
+  --bind 'ctrl-f:reload($FZF_CTRL_T_COMMAND)+change-preview($FZF_CTRL_T_PREVIEW)'
+  --bind 'ctrl-y:execute-silent(echo {+} | pbcopy)'
+  --bind 'ctrl-t:replace-query'
+  --bind 'ctrl-s:toggle-sort'
+  --bind 'ctrl-a:toggle-all'
+  --bind 'ctrl-o:become:($EDITOR {+})'
   --bind bspace:backward-delete-char/eof
   $FZF_COLORS"
-export FZF_CTRL_T_OPTS="
-  --walker-skip .git,node_modules,target
-  --preview 'preview --header {}'"
-export FZF_ALT_C_OPTS="
-  --walker-skip .git,node_modules,target
-  --preview 'preview --header {}'"
 
 _fzf_compgen_path() { fd --hidden --follow --exclude ".git" . "$1" }
 _fzf_compgen_dir() { fd --type d --hidden --follow --exclude ".git" . "$1" }
