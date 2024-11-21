@@ -135,5 +135,5 @@ eval "$(starship init zsh)"
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ls='eza --all'
-alias ll='eza --all --long --git --group-directories-first'
+alias ls='eza --all ${NERDFONT:+--icons}'
+alias ll='eza --all --long --git --group-directories-first ${NERDFONT:+--icons}'
