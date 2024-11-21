@@ -19,20 +19,25 @@ source $ZDOTDIR/plugins/zsh-modern-keybindings/zsh-modern-keybindings.zsh
 eval "$(zoxide init zsh --cmd j)"
 
 # Configure fzf
+if [ "$COLORTERM" = truecolor ] || [ "$COLORTERM" = 24bit ]; then
+    FZF_COLORS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#E6DB74,hl:#7E8E91,fg:#F8F8F2,header:#7E8E91,info:#A6E22E,pointer:#A6E22E,marker:#F92672,fg+:#F8F8F2,prompt:#F92672,hl+:#F92672'
+else
+    FZF_COLORS=''
+fi
+
+case $EDITOR in
+    *vim*)   FZF_EDITOR="$EDITOR {1} +{2}" ;;
+    *emacs*) FZF_EDITOR="$EDITOR +{2} {1}" ;;
+    code)    FZF_EDITOR="$EDITOR {1}:{2}" ;;
+    *)       FZF_EDITOR="$EDITOR {1}" ;;
+esac
+
+FZF_CTRL_T_PREVIEW="preview --header {}"
+FZF_ALT_C_PREVIEW="preview --header {}"
+
 export FZF_DEFAULT_COMMAND="fd --strip-cwd-prefix --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND --type file"
 export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type directory"
-
-export FZF_CTRL_T_PREVIEW="preview --header {}"
-export FZF_CTRL_T_OPTS="--preview '$FZF_CTRL_T_PREVIEW'"
-export FZF_ALT_C_PREVIEW="preview --header {}"
-export FZF_ALT_C_OPTS="--preview '$FZF_ALT_C_PREVIEW'"
-
-if [ "$COLORTERM" = truecolor ] || [ "$COLORTERM" = 24bit ]; then
-    export FZF_COLORS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#E6DB74,hl:#7E8E91,fg:#F8F8F2,header:#7E8E91,info:#A6E22E,pointer:#A6E22E,marker:#F92672,fg+:#F8F8F2,prompt:#F92672,hl+:#F92672'
-else
-    export FZF_COLORS=''
-fi
 
 export FZF_DEFAULT_OPTS="
   --height 50% --tmux 80%
@@ -47,12 +52,15 @@ export FZF_DEFAULT_OPTS="
   --bind 'ctrl-t:replace-query'
   --bind 'ctrl-s:toggle-sort'
   --bind 'ctrl-a:toggle-all'
-  --bind 'ctrl-o:become:($EDITOR {+})'
+  --bind 'ctrl-o:become($FZF_EDITOR < /dev/tty > /dev/tty)'
+  --bind 'ctrl-e:execute($FZF_EDITOR)'
   --bind bspace:backward-delete-char/eof
   $FZF_COLORS"
+export FZF_CTRL_T_OPTS="--preview '$FZF_CTRL_T_PREVIEW'"
+export FZF_ALT_C_OPTS="--preview '$FZF_ALT_C_PREVIEW'"
 
 _fzf_compgen_path() { fd --hidden --follow --exclude ".git" . "$1" }
-_fzf_compgen_dir() { fd --type d --hidden --follow --exclude ".git" . "$1" }
+_fzf_compgen_dir() { fd --type directory --hidden --follow --exclude ".git" . "$1" }
 _fzf_comprun() {
   local command=$1
   shift
