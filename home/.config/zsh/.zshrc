@@ -131,9 +131,9 @@ source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
 
+if [ -n "$NERDFONT" ]; then
+    export EZA_ICONS_AUTO=1
+fi
+
 # Aliases
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias ls='eza --all ${NERDFONT:+--icons}'
-alias ll='eza --all --long --git --group-directories-first ${NERDFONT:+--icons}'
+source ~/.config/aliases

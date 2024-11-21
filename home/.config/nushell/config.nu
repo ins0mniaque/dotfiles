@@ -18,3 +18,7 @@ source ~/.cache/zoxide/init.nu
 
 # Install Starship
 use ~/.cache/starship/init.nu
+
+# Aliases
+alias ls = ls -a
+alias ll = ls -al

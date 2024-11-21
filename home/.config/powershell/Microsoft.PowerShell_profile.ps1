@@ -52,3 +52,12 @@ $Env:FZF_DEFAULT_OPTS = "--multi --bind 'ctrl-p:toggle-preview+change-preview(pr
 # Install Starship
 $Env:STARSHIP_CONFIG = "$HOME/.config/starship/starship.ansi.toml"
 Invoke-Expression (&starship init powershell)
+
+# Aliases
+switch -regex -file ~/.config/aliases
+{
+    "^\s*alias\s*(.+?)\s*=\s*?(.*)"
+    {
+        New-Item -Path function: -Name "script:$($matches[1])" -Value $matches[2].Trim("""").Trim("'") | Out-Null
+    }
+}

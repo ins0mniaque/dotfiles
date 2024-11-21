@@ -33,3 +33,6 @@ set -g -x FZF_DEFAULT_OPTS '--multi --bind "ctrl-p:toggle-preview+change-preview
 # Install Starship
 set -g -x STARSHIP_CONFIG ~/.config/starship/starship.toml
 starship init fish | source
+
+# Aliases
+source ~/.config/aliases

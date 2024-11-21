@@ -1,0 +1,5 @@
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ls='eza --all'
+alias ll='eza --all --long --git --group-directories-first'
