@@ -78,7 +78,7 @@ zstyle ':completion:*' fzf-search-display true
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}'
 zstyle ':completion:*' menu no
-zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,command -ww"
+zstyle ':completion:*:*:*:*:processes' command 'ps -u "$USER" -o pid,user,command -ww'
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':completion:*:descriptions' format '[%d]'
 
@@ -90,28 +90,28 @@ zstyle ':fzf-tab:complete:*:*' fzf-preview 'preview --header ${(Q)realpath}'
 zstyle ':fzf-tab:complete:*:options' fzf-preview 
 zstyle ':fzf-tab:complete:*:argument-1' fzf-preview
 zstyle ':fzf-tab:complete:(kill|ps):*' fzf-preview
-zstyle ':fzf-tab:complete:ssh:*' fzf-preview 'dig +short $word'
-zstyle ':fzf-tab:complete:brew-(install|uninstall|search|info):*-argument-rest' fzf-preview 'brew info $word'
-zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+zstyle ':fzf-tab:complete:ssh:*' fzf-preview 'dig +short "$word"'
+zstyle ':fzf-tab:complete:brew-(install|uninstall|search|info):*-argument-rest' fzf-preview 'brew info "$word"'
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status "$word"'
 
-zstyle ':fzf-tab:complete:(-parameter-|-brace-parameter-|export|unset|expand|typeset|declare|local):*' fzf-preview 'echo ${(P)word}'
-zstyle ':fzf-tab:complete:man:argument-1' fzf-preview 'man "$word"'
-zstyle ':fzf-tab:complete:tldr:argument-1' fzf-preview 'tldr --color always "$word"'
+zstyle ':fzf-tab:complete:(-parameter-|-brace-parameter-|export|unset|expand|typeset|declare|local):*' fzf-preview 'echo "${(P)word}"'
+zstyle ':fzf-tab:complete:man:*' fzf-preview 'man "$word" | bat -p -l man --color=always'
+zstyle ':fzf-tab:complete:tldr:*' fzf-preview 'tldr --color always "$word"'
 zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
- '(out=$(tldr --color always "$word") 2>/dev/null && echo $out) ||
-  (out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2>/dev/null && echo $out) ||
-  (out=$(which "$word") && echo $out) ||
+ '(out=$(tldr --color always "$word") 2>/dev/null && echo "$out") ||
+  (out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2>/dev/null && echo "$out") ||
+  (out=$(which "$word") && echo "$out") ||
   echo "${(P)word}"'
 
-zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview 'git diff $word'
-zstyle ':fzf-tab:complete:git-log:*' fzf-preview 'git log --color=always $word'
-zstyle ':fzf-tab:complete:git-help:*' fzf-preview 'git help $word | bat -plman --color=always'
-zstyle ':fzf-tab:complete:git-show:*' fzf-preview 'git show --color=always $word'
+zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview 'git diff "$word"'
+zstyle ':fzf-tab:complete:git-log:*' fzf-preview 'git log --color=always "$word"'
+zstyle ':fzf-tab:complete:git-help:*' fzf-preview 'git help "$word" | bat -p -l man --color=always'
+zstyle ':fzf-tab:complete:git-show:*' fzf-preview 'git show --color=always "$word"'
 zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
  'case "$group" in
-    "modified file") git diff $word ;;
-    "recent commit object name") git show --color=always $word ;;
-    *) git log --color=always $word ;;
+    "modified file") git diff "$word" ;;
+    "recent commit object name") git show --color=always "$word" ;;
+    *) git log --color=always "$word" ;;
   esac'
 
 # Configure auto-suggestions / syntax highlighting
