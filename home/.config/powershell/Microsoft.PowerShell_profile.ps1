@@ -8,7 +8,8 @@ $Env:PAGER = "less"
 $Env:LESS = "FRX --mouse"
 
 # Autocompletion
-Set-PSReadLineOption -PredictionSource History
+try   { Set-PSReadLineOption -PredictionSource History }
+catch { [Console]::ForegroundColor = 'Yellow'; [Console]::Error.Write("WARNING: "); [Console]::ResetColor(); [Console]::Error.WriteLine($_) }
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
