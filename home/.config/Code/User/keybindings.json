@@ -1,4 +1,3 @@
-// Place your key bindings in this file to override the defaultsauto[]
 [
     {
         "key": "ctrl+shift+alt+cmd+space",
@@ -6,6 +5,11 @@
     },
     {
         "key": "cmd+[Slash]",
+        "command": "editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+[Slash]",
         "command": "editor.action.commentLine",
         "when": "editorTextFocus && !editorReadonly"
     },
