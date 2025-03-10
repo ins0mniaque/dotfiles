@@ -29,9 +29,6 @@ elseif ($IsLinux)
 # Add .NET Core SDK tools
 $Env:Path += ";$HOME/.dotnet/tools"
 
-# Configure .NET telemetry
-$Env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
-
 # Fix PowerShell command (see https://github.com/PowerShell/PowerShell/issues/12205)
 Set-Alias pwsh "$HOME/.dotnet/tools/pwsh"
 
@@ -62,3 +59,9 @@ switch -regex -file ~/.config/aliases
         New-Item -Path function: -Name "script:$($matches[1])" -Value $matches[2].Trim("""").Trim("'") | Out-Null
     }
 }
+
+# Disable telemetry
+$Env:DO_NOT_TRACK = 1
+$Env:DISABLE_TELEMETRY = 1
+$Env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
+$Env:HF_HUB_DISABLE_TELEMETRY = 1

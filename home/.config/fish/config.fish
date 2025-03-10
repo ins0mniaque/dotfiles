@@ -36,3 +36,9 @@ starship init fish | source
 
 # Aliases
 source ~/.config/aliases
+
+# Disable telemetry
+set -g -x DO_NOT_TRACK 1
+set -g -x DISABLE_TELEMETRY 1
+set -g -x DOTNET_CLI_TELEMETRY_OPTOUT 1
+set -g -x HF_HUB_DISABLE_TELEMETRY 1

@@ -1,22 +1,18 @@
 # Configure Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Configure applications to XDG specification
-source $HOME/.config/xdg/configure
-
 # Reclaim Ctrl-S / Ctrl-Q
 stty -ixon -ixoff
 
 # Add .NET Core SDK tools
 export PATH="$PATH:$HOME/.dotnet/tools"
 
-# Configure .NET telemetry
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
-
 # Add Go SDK tools
-export GOPATH=$HOME/.go
 export GOROOT="$(brew --prefix golang)/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
-# Add local bin
-export PATH="$PATH:$HOME/.local/bin"
+# Disable telemetry
+export DO_NOT_TRACK=1
+export DISABLE_TELEMETRY=1
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export HF_HUB_DISABLE_TELEMETRY=1
