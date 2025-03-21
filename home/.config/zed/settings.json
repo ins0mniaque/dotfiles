@@ -14,8 +14,9 @@
   "assistant": {
     "default_model": {
       "provider": "ollama",
-      "model": "codestral:latest"
+      "model": "deepseek-r1:14b"
     },
+    "enable_experimental_live_diffs": true,
     "version": "2"
   },
   "languages": {
