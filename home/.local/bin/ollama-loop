@@ -39,8 +39,8 @@ GREEN=$( tput setaf 2 2> /dev/null || printf '\033[32m')
 
 print() {
     case $1 in
-        A)  printf "${BOLD}${RED}%s (%s):${NORMAL} ${DIM}%s${NORMAL}\n\n" "$2" "${3:-Unvoiced}" "$4" ;;
-        B)  printf "${BOLD}${GREEN}%s (%s):${NORMAL} %s\n\n" "$2" "${3:-Unvoiced}" "$4" ;;
+        A) printf "${BOLD}${RED}%s (%s):${NORMAL} ${DIM}%s${NORMAL}\n\n" "$2" "${3:-Unvoiced}" "$4" ;;
+        B) printf "${BOLD}${GREEN}%s (%s):${NORMAL} %s\n\n" "$2" "${3:-Unvoiced}" "$4" ;;
     esac
 }
 
