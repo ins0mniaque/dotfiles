@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+# ollama-loop - Loop 2 ollama models into a conversation
+
+modelA='llama3.1'
+modelB='llama3.1'
+promptA='Pretend you are a user interacting with an AI assistant. Never reveal you are an AI. Do not offer unspecific assistance. Continue the conversation with the AI while staying on topic. Select a random task or question if nothing follows this sentence.'
+promptB='You are a helpful AI assistant.'
+responseA=
+responseB=
+speak=
+voiceA='Karen'
+voiceB='Samantha'
+
+while [ $# -gt 0 ]; do
+    case $1 in
+        --modelA)  modelA="$2";  [ $# -gt 1 ] && shift; shift ;;
+        --modelB)  modelB="$2";  [ $# -gt 1 ] && shift; shift ;;
+        --promptA) promptA="$2"; [ $# -gt 1 ] && shift; shift ;;
+        --promptB) promptB="$2"; [ $# -gt 1 ] && shift; shift ;;
+        --voiceA)  voiceA="$2";  [ $# -gt 1 ] && shift; shift ;;
+        --voiceB)  voiceB="$2";  [ $# -gt 1 ] && shift; shift ;;
+        --speak)   speak=1;        shift ;;
+        *)         responseA="$1"; shift ;;
+    esac
+done
+
+if [ -z "$speak" ]; then
+    voiceA=
+    voiceB=
+fi
+
+NORMAL=$(tput sgr0    2> /dev/null || printf '\033[0m')
+BOLD=$(  tput bold    2> /dev/null || printf '\033[1m')
+DIM=$(   tput dim     2> /dev/null || printf '\033[2m')
+ITALIC=$(tput sitm    2> /dev/null || printf '\033[3m')
+RED=$(   tput setaf 1 2> /dev/null || printf '\033[31m')
+GREEN=$( tput setaf 2 2> /dev/null || printf '\033[32m')
+
+print() {
+    case $1 in
+        A)  printf "${BOLD}${RED}%s (%s):${NORMAL} ${DIM}%s${NORMAL}\n\n" "$2" "${3:-Unvoiced}" "$4" ;;
+        B)  printf "${BOLD}${GREEN}%s (%s):${NORMAL} %s\n\n" "$2" "${3:-Unvoiced}" "$4" ;;
+    esac
+}
+
+speak() {
+    if [ -n "$speak" ]; then
+        trap 'pkill say > /dev/null' INT
+        say -v "$1" "$2"
+        trap - INT
+    fi
+}
+
+printf "${BOLD}Model A: ${RED}%s (%s):${NORMAL} ${ITALIC}%s${NORMAL}\n" "$modelA" "${voiceA:-Unvoiced}" "$promptA"
+printf "${BOLD}Model B: ${GREEN}%s (%s):${NORMAL} ${ITALIC}%s${NORMAL}\n\n" "$modelB" "${voiceB:-Unvoiced}" "$promptB"
+
+while true; do
+    responseA=${responseA:-$(ollama run "$modelA" "$promptA\n\n$responseB")}
+    print A "$modelA" "$voiceA" "$responseA"
+    speak "$voiceA" "$responseA"
+
+    responseB=$(ollama run "$modelB" "$promptB\n\n$responseA")
+    print B "$modelB" "$voiceB" "$responseB"
+    speak "$voiceB" "$responseB"
+    responseA=
+done
