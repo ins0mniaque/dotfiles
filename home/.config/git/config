@@ -16,6 +16,7 @@
 
 [core]
 	autocrlf = input
+	editor = nvim
 	pager = delta
 
 [push]
@@ -28,11 +29,24 @@
 	features = theme
 	navigate = true
 
-[merge]
-	conflictstyle = diff3
-
 [diff]
 	colorMoved = default
+	tool = nvimdiff
+
+[difftool]
+	prompt = false
+	trustExitCode = true
+
+[merge]
+	conflictstyle = zdiff3
+	tool = nvimdiff
+
+[mergetool]
+	prompt = false
+	keepBackup = false
+
+[mergetool "nvimdiff"]
+	layout = "LOCAL,BASE,REMOTE / MERGED"
 
 [delta "theme"]
 	commit-decoration-style = bold box ul
