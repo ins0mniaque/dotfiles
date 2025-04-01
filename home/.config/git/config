@@ -25,6 +25,9 @@
 [interactive]
 	diffFilter = delta --color-only
 
+[grep]
+	linenumber = true
+
 [delta]
 	features = theme
 	navigate = true
