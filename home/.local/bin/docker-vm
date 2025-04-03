@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# docker-vm - Start or stop the docker virtual machine
+
+if [ "$1" = "stop" ]; then
+    prlctl stop docker
+else
+    prlctl start docker
+    ssh-add --apple-use-keychain
+    docker context use docker
+fi
