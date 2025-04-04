@@ -52,5 +52,10 @@
         "key": "shift+alt+down",
         "command": "editor.action.insertCursorBelow",
         "when": "editorTextFocus"
+    },
+    {
+        "key": "cmd+down",
+        "command": "editor.action.inlineSuggest.acceptNextLine",
+        "when": "inlineSuggestionVisible"
     }
 ]
