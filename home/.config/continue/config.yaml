@@ -1,0 +1,71 @@
+name: ins0mniaque
+version: 0.0.1
+schema: v1
+
+rules:
+  - Please provide concise answers. Don't explain obvious concepts. You can assume that I am knowledgable about most programming topics.
+
+models:
+  - name: Ollama
+    provider: ollama
+    model: AUTODETECT
+
+  - name: qwen2.5-coder:14b
+    provider: ollama
+    model: qwen2.5-coder:14b
+    roles:
+      - chat
+      - edit
+      - apply
+
+  - name: qwen2.5-coder:7b
+    provider: ollama
+    model: qwen2.5-coder:7b
+    roles:
+      - autocomplete
+
+  - name: qwen2.5-coder:3b
+    provider: ollama
+    model: qwen2.5-coder:3b
+    roles:
+      - autocomplete
+
+  - name: qwen2.5-coder:0.5b
+    provider: ollama
+    model: qwen2.5-coder:0.5b
+    roles:
+      - autocomplete
+
+  - name: nomic-embed-text
+    provider: ollama
+    model: nomic-embed-text
+    roles:
+      - embed
+
+  - name: linux6200/bge-reranker-v2-m3
+    provider: ollama
+    model: linux6200/bge-reranker-v2-m3
+    roles:
+      - rerank
+
+mcpServers:
+  - name: mcp-server-fetch
+    command: uvx
+    args:
+      - mcp-server-fetch
+
+context:
+  - provider: code
+
+  - provider: codebase
+
+  - provider: docs
+
+  - provider: diff
+
+  - provider: folder
+
+  - provider: problems
+
+  - provider: terminal
+
