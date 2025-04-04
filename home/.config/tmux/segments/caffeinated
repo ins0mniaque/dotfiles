@@ -11,14 +11,14 @@ case "$1" in
                          pkill caffeinate > /dev/null
                      fi
 
-                     caffeinate -dim &
+                     caffeinate -dims &
 
                      tmux refresh-client -S
                      ;;
     -t | --toggle  ) if pgrep caffeinate > /dev/null; then
                          pkill caffeinate > /dev/null
                      else
-                         caffeinate -dim &
+                         caffeinate -dims &
                      fi
 
                      tmux refresh-client -S
