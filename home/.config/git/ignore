@@ -1,2 +1,11 @@
+# vim
 *~
+
+# MacOS
 .DS_Store
+
+# JetBrains IDE
+.idea/
+
+# Visual Studio Code
+.vscode/
