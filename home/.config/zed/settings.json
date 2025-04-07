@@ -14,7 +14,7 @@
   "assistant": {
     "default_model": {
       "provider": "ollama",
-      "model": "deepseek-r1:14b"
+      "model": "qwen2.5-coder"
     },
     "enable_experimental_live_diffs": true,
     "version": "2"
