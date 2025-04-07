@@ -1,12 +1,24 @@
 {
     "workbench.colorTheme": "Monokai",
+    "editor.codeLens": false,
+    "editor.dragAndDrop": false,
     "editor.renderWhitespace": "all",
     "editor.multiCursorModifier": "ctrlCmd",
+    "editor.rulers": [ { "column": 120, "color": "#DC143C" } ],
+    "explorer.confirmDelete": false,
     "terminal.integrated.defaultProfile.osx": "zsh",
     "telemetry.telemetryLevel": "off",
     "dotnetAcquisitionExtension.enableTelemetry": false,
     "continue.telemetryEnabled": false,
     "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
     "lldb.launch.expressions": "native",
-    "editor.dragAndDrop": false
+    "roo-cline.allowedCommands": [
+        "npm test",
+        "npm install",
+        "tsc",
+        "git log",
+        "git diff",
+        "git show"
+    ],
+    "go.toolsManagement.autoUpdate": true
 }
