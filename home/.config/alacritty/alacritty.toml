@@ -1,6 +1,6 @@
 [terminal.shell]
 program = "/bin/zsh"
-args = ["-l", "-c", 'tmux attach -t "$(hostname -s)" &> /dev/null || tmux new -s "$(hostname -s)"']
+args = ["-l", "-c", 'tmux new -A -s "$(hostname -s)"']
 
 [font]
 size = 13.0
