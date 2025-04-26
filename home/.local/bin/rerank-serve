@@ -1,0 +1,6 @@
+#!/bin/sh
+
+tmux new -s rerank -d 'llama-server \
+    --hf-repo klnstpr/bge-reranker-v2-m3-Q8_0-GGUF \
+    --hf-file bge-reranker-v2-m3-q8_0.gguf \
+    --port 11435 --reranking --pooling rank'
