@@ -3,7 +3,7 @@ version: 0.0.1
 schema: v1
 
 rules:
-  - Please provide concise answers. Don't explain obvious concepts. You can assume that I am knowledgable about most programming topics.
+  - Please provide concise answers. Don't explain obvious concepts. You can assume that I am knowledgeable about most programming topics.
 
 models:
   - name: Ollama
@@ -18,21 +18,27 @@ models:
       - edit
       - apply
 
-  - name: qwen2.5-coder:7b
+  - name: qwen2.5-coder:7b-base
     provider: ollama
-    model: qwen2.5-coder:7b
+    model: qwen2.5-coder:7b-base
     roles:
       - autocomplete
 
-  - name: qwen2.5-coder:3b
+  - name: qwen2.5-coder:3b-base
     provider: ollama
-    model: qwen2.5-coder:3b
+    model: qwen2.5-coder:3b-base
     roles:
       - autocomplete
 
-  - name: qwen2.5-coder:0.5b
+  - name: qwen2.5-coder:1.5b-base
     provider: ollama
-    model: qwen2.5-coder:0.5b
+    model: qwen2.5-coder:1.5b-base
+    roles:
+      - autocomplete
+
+  - name: qwen2.5-coder:0.5b-base
+    provider: ollama
+    model: qwen2.5-coder:0.5b-base
     roles:
       - autocomplete
 
@@ -42,9 +48,11 @@ models:
     roles:
       - embed
 
-  - name: linux6200/bge-reranker-v2-m3
-    provider: ollama
-    model: linux6200/bge-reranker-v2-m3
+  # llama-server --hf-repo klnstpr/bge-reranker-v2-m3-Q8_0-GGUF --hf-file bge-reranker-v2-m3-q8_0.gguf --port 11435 --reranking --pooling rank
+  - name: bge-reranker-v2-m3
+    provider: huggingface-tei
+    apiBase: http://localhost:11435
+    model: bge-reranker-v2-m3
     roles:
       - rerank
 
@@ -56,16 +64,9 @@ mcpServers:
 
 context:
   - provider: code
-
   - provider: codebase
-
   - provider: docs
-
   - provider: diff
-
   - provider: folder
-
   - provider: problems
-
   - provider: terminal
-
