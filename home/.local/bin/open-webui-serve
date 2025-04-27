@@ -3,4 +3,4 @@
 WEBUI_SECRET_KEY=$(cat ~/.config/open-webui/webui_secret_key) && \
 tmux new -s open-webui -d "uv tool upgrade --python 3.11 open-webui && \
 WEBUI_SECRET_KEY=$WEBUI_SECRET_KEY \
-open-webui serve"
+open-webui serve --port 11431"
