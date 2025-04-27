@@ -125,7 +125,11 @@ zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
     *) git log --color=always "$word" ;;
   esac'
 
-zstyle ':fzf-tab:complete:ollama:*' fzf-preview 'echo "\033[35m$word\n" && ollama show "$word"'
+zstyle ':fzf-tab:complete:ollama:*' fzf-preview \
+  'printf "\033[35m" && ' \
+  'ollama list "$word" | tail -n 1 && ' \
+  'printf "\033[0m\n" && ' \
+  'ollama show "$word"'
 
 # Configure auto-suggestions / syntax highlighting / history substring search
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
