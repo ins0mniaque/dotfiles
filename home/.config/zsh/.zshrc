@@ -12,6 +12,9 @@ autoload -U compinit
 compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
 zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
 
+# Configure ollama completion
+source $ZDOTDIR/plugins/ollama_zsh_completion/ollama_zsh_completion.plugin.zsh
+
 # Configure keyboard
 source $ZDOTDIR/plugins/zsh-modern-keybindings/zsh-modern-keybindings.zsh
 
@@ -121,6 +124,8 @@ zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
     "recent commit object name") git show --color=always "$word" ;;
     *) git log --color=always "$word" ;;
   esac'
+
+zstyle ':fzf-tab:complete:ollama:*' fzf-preview 'echo "\033[35m$word\n" && ollama show "$word"'
 
 # Configure auto-suggestions / syntax highlighting
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)

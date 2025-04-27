@@ -17,3 +17,7 @@ cd ..
 cd zsh-modern-keybindings
 git pull
 cd ..
+
+cd ollama_zsh_completion
+git pull
+cd ..
