@@ -127,10 +127,11 @@ zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
 
 zstyle ':fzf-tab:complete:ollama:*' fzf-preview 'echo "\033[35m$word\n" && ollama show "$word"'
 
-# Configure auto-suggestions / syntax highlighting
+# Configure auto-suggestions / syntax highlighting / history substring search
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZDOTDIR/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # Install Starship
 export STARSHIP_CONFIG=~/.config/starship/starship.toml

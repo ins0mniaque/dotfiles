@@ -14,6 +14,10 @@ cd zsh-syntax-highlighting
 git pull
 cd ..
 
+cd zsh-history-substring-search
+git pull
+cd ..
+
 cd zsh-modern-keybindings
 git pull
 cd ..
