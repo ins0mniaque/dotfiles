@@ -1,5 +1,4 @@
 tap "brewforge/extras"
-tap "homebrew/bundle"
 tap "ins0mniaque/cf-keylayout"
 tap "ins0mniaque/srcenv"
 brew "act"
@@ -26,7 +25,6 @@ brew "docker"
 brew "docker-compose"
 brew "editorconfig"
 brew "elixir"
-brew "elvish"
 brew "eza"
 brew "fclones"
 brew "fd"
@@ -58,14 +56,11 @@ brew "micro"
 brew "mksh"
 brew "mosh"
 brew "mpv"
-brew "murex"
 brew "navi"
 brew "neovim"
-brew "nim"
 brew "node"
 brew "nudoku"
 brew "numbat"
-brew "nushell"
 brew "nyancat"
 brew "ollama"
 brew "pam-reattach"
@@ -89,15 +84,14 @@ brew "wakeonlan"
 brew "wget"
 brew "whisper-cpp"
 brew "xh"
-brew "xonsh"
 brew "zig"
 brew "zizmor"
 brew "zoxide"
 brew "ins0mniaque/srcenv/srcenv"
-cask "5ire"
 cask "alacritty"
 cask "alfred"
 cask "android-platform-tools"
+cask "android-studio"
 cask "apparency"
 cask "bettertouchtool"
 cask "blender"
@@ -115,12 +109,9 @@ cask "godot"
 cask "godot-mono"
 cask "google-chrome"
 cask "ios-app-signer"
-cask "jan"
 cask "kitty"
-cask "lm-studio"
 cask "logi-options+"
 cask "material-maker"
-cask "msty"
 cask "obsidian"
 cask "openemu@experimental"
 cask "parallels"
@@ -128,16 +119,16 @@ cask "popclip"
 cask "powershell"
 cask "sage"
 cask "steam"
+cask "temurin@17"
 cask "transmit"
 cask "ukelele"
 cask "visual-studio-code"
-cask "whisky"
 cask "zed"
 mas "Actions", id: 1586435171
 mas "Baking Soda", id: 1601151613
+mas "Blackmagic Disk Speed Test", id: 425264550
 mas "Deliveries", id: 290986013
 mas "Developer", id: 640199958
-mas "Disk Speed Test", id: 425264550
 mas "Draw Things", id: 6444050820
 mas "DualSenseM", id: 1598693570
 mas "Enchanted", id: 6474268307
@@ -147,9 +138,9 @@ mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "KeyPad", id: 1491684442
 mas "Kiwix", id: 997079563
-mas "Microsoft Remote Desktop", id: 1295203466
 mas "Noir", id: 1592917505
 mas "Numbers", id: 409203825
+mas "Obsidian Web Clipper", id: 6720708363
 mas "Pages", id: 409201541
 mas "Peek", id: 1554235898
 mas "Pixelmator Pro", id: 1289583905
@@ -157,6 +148,7 @@ mas "rcmd", id: 1596283165
 mas "Reeder", id: 1529448980
 mas "Slack", id: 803453959
 mas "Swift Playground", id: 1496833156
+mas "udm14 for Safari", id: 6520379591
 mas "Vinegar", id: 1591303229
 mas "Windows App", id: 1295203466
 mas "Wipr", id: 1662217862
@@ -167,11 +159,13 @@ vscode "chouzz.vscode-better-align"
 vscode "continue.continue"
 vscode "davidanson.vscode-markdownlint"
 vscode "dbaeumer.vscode-eslint"
+vscode "docker.docker"
 vscode "foxundermoon.shell-format"
 vscode "github.vscode-github-actions"
 vscode "golang.go"
 vscode "gruntfuggly.todo-tree"
 vscode "humao.rest-client"
+vscode "llvm-vs-code-extensions.lldb-dap"
 vscode "mark-wiemer.vscode-autohotkey-plus-plus"
 vscode "ms-azuretools.vscode-docker"
 vscode "ms-dotnettools.csdevkit"
