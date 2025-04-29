@@ -12,6 +12,15 @@ autoload -U compinit
 compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
 zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
 
+# Configure auto-suggestions / syntax highlighting / history substring search
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZDOTDIR/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
 # Configure ollama completion
 source $ZDOTDIR/plugins/ollama_zsh_completion/ollama_zsh_completion.plugin.zsh
 
@@ -20,6 +29,11 @@ source $ZDOTDIR/plugins/zsh-modern-keybindings/zsh-modern-keybindings.zsh
 
 # Configure zoxide
 eval "$(zoxide init zsh --cmd j)"
+
+# Configure eza
+if [ -n "$NERDFONT" ]; then
+    export EZA_ICONS_AUTO=1
+fi
 
 # Configure fzf
 if [ "$COLORTERM" = truecolor ] || [ "$COLORTERM" = 24bit ]; then
@@ -35,22 +49,27 @@ case $EDITOR in
     *)       FZF_EDITOR="$EDITOR {1}" ;;
 esac
 
-FZF_CTRL_T_PREVIEW="preview --header {}"
-FZF_ALT_C_PREVIEW="preview --header {}"
-
 export FZF_DEFAULT_COMMAND="fd --strip-cwd-prefix --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND --type file"
 export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type directory"
 
+FZF_PREVIEW="preview --header {}"
+
+if [ "$TERM_PROGRAM" = tmux ]; then
+    FZF_DEFAULT_OPTS="--height 50% --tmux 80%"
+else
+    FZF_DEFAULT_OPTS="--height 99%"
+fi
+
 export FZF_DEFAULT_OPTS="
-  --height 50% --tmux 80%
+  $FZF_DEFAULT_OPTS
+  --preview-window '~2,60%,border-left'
   --layout=default
   --info=inline-right
   --prompt='❯ ' --pointer='❯' --marker='☑️'
-  --preview-window '~2,60%,border-left'
   --bind 'ctrl-p:change-preview-window(~2,75%,down,border-top|hidden|~2,60%,border-left)'
-  --bind 'ctrl-d:reload($FZF_ALT_C_COMMAND)+change-preview($FZF_ALT_C_PREVIEW)'
-  --bind 'ctrl-f:reload($FZF_CTRL_T_COMMAND)+change-preview($FZF_CTRL_T_PREVIEW)'
+  --bind 'ctrl-d:reload($FZF_ALT_C_COMMAND)+change-preview($FZF_PREVIEW)'
+  --bind 'ctrl-f:reload($FZF_CTRL_T_COMMAND)+change-preview($FZF_PREVIEW)'
   --bind 'ctrl-y:execute-silent(echo {+} | pbcopy)'
   --bind 'ctrl-t:replace-query'
   --bind 'ctrl-s:toggle-sort'
@@ -59,21 +78,8 @@ export FZF_DEFAULT_OPTS="
   --bind 'ctrl-e:execute($FZF_EDITOR)'
   --bind bspace:backward-delete-char/eof
   $FZF_COLORS"
-export FZF_CTRL_T_OPTS="--preview '$FZF_CTRL_T_PREVIEW'"
-export FZF_ALT_C_OPTS="--preview '$FZF_ALT_C_PREVIEW'"
-
-_fzf_compgen_path() { fd --hidden --follow --exclude ".git" . "$1" }
-_fzf_compgen_dir() { fd --type directory --hidden --follow --exclude ".git" . "$1" }
-_fzf_comprun() {
-  local command=$1
-  shift
-
-  case "$command" in
-    export|unset) fzf --preview "eval 'echo \$'{}"    "$@" ;;
-    ssh)          fzf --preview 'dig {}'              "$@" ;;
-    *)            fzf --preview 'preview --header {}' "$@" ;;
-  esac
-}
+export FZF_CTRL_T_OPTS="--preview '$FZF_PREVIEW'"
+export FZF_ALT_C_OPTS="--preview '$FZF_PREVIEW'"
 
 source <(fzf --zsh)
 
@@ -82,8 +88,11 @@ bindkey '^G' fzf-cd-widget
 bindkey '^H' fzf-history-widget
 
 # Configure fzf-tab
-# TODO: Automatically run build-fzf-tab-module on first install
 source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
+
+if [ -z "$FZF_TAB_MODULE_VERSION" ]; then
+    echo "\033[33mWarning:\033[0m fzf-tab binary module is missing; run \033[32mbuild-fzf-tab-module\033[0m to build"
+fi
 
 zstyle ':completion:*' fzf-search-display true
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
@@ -97,6 +106,7 @@ zstyle ':fzf-tab:*' switch-group F1 F2
 zstyle ':fzf-tab:*' continuous-trigger 'tab'
 zstyle ':fzf-tab:*' fzf-flags ${(Q)${(Z:nC:)FZF_DEFAULT_OPTS}}
 
+# Configure fzf-tab previews
 zstyle ':fzf-tab:complete:*:*' fzf-preview 'preview --header ${(Q)realpath}'
 zstyle ':fzf-tab:complete:*:options' fzf-preview 
 zstyle ':fzf-tab:complete:*:argument-1' fzf-preview
@@ -127,26 +137,13 @@ zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
 
 zstyle ':fzf-tab:complete:ollama:*' fzf-preview \
   'printf "\033[35m" && ' \
-  'ollama list "$word" | tail -n 1 && ' \
+  'ollama list "$word" | tail -n +2 && ' \
   'printf "\033[0m\n" && ' \
   'ollama show "$word"'
-
-# Configure auto-suggestions / syntax highlighting / history substring search
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $ZDOTDIR/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
 
 # Install Starship
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
-
-if [ -n "$NERDFONT" ]; then
-    export EZA_ICONS_AUTO=1
-fi
 
 # Aliases
 source ~/.config/aliases
