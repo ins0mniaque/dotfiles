@@ -149,3 +149,9 @@ eval "$(starship init zsh)"
 
 # Aliases
 source ~/.config/aliases
+
+# Disable telemetry
+export DO_NOT_TRACK=1
+export DISABLE_TELEMETRY=1
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export HF_HUB_DISABLE_TELEMETRY=1
