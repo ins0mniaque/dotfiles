@@ -12,7 +12,7 @@ eval "$(zoxide init bash --cmd j)"
 
 # Setup fzf
 if [[ ! "$PATH" == */opt/homebrew/opt/fzf/bin* ]]; then
-  export PATH="${PATH:+${PATH}:}/opt/homebrew/opt/fzf/bin"
+    export PATH="${PATH:+${PATH}:}/opt/homebrew/opt/fzf/bin"
 fi
 
 # Auto-completion
@@ -20,6 +20,18 @@ fi
 
 # Key bindings
 source "/opt/homebrew/opt/fzf/shell/key-bindings.bash"
+
+# Configure dotnet completion
+function _dotnet_bash_complete()
+{
+    local word="${COMP_WORDS[COMP_CWORD]}" IFS=$'\n'
+    local candidates
+
+    read -d '' -ra candidates < <(dotnet complete --position "${COMP_POINT}" "${COMP_LINE}" 2>/dev/null)
+    read -d '' -ra COMPREPLY < <(compgen -W "${candidates[*]:-}" -- "$word")
+}
+
+complete -f -F _dotnet_bash_complete dotnet
 
 # Install Starship
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
