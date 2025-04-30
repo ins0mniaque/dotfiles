@@ -34,7 +34,7 @@
 
 # Configure environment access
 
-if [[ "$1" == "launchctl" ]]; then
+if [ "$1" = "launchctl" ]; then
     setenv() {
         launchctl setenv "$1" "$2"
     }
@@ -55,16 +55,16 @@ XDG_STATE_HOME=${XDG_STATE_HOME:=~/.local/state}
 [ -z "$XDG_RUNTIME_DIR" ] && XDG_RUNTIME_TMPDIR=${TMPDIR-/tmp} && XDG_RUNTIME_DIR=${XDG_RUNTIME_TMPDIR%/}/runtime-user-$UID
 [ -d "$XDG_RUNTIME_DIR" ] || mkdir -m 0700 -p "$XDG_RUNTIME_DIR"
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    xattr -w com.apple.metadata:com_apple_backup_excludeItem com.apple.backupd "${XDG_CACHE_HOME}"
-    xattr -w com.apple.metadata:com_apple_backup_excludeItem com.apple.backupd "${XDG_RUNTIME_DIR}"
-fi
+case $OSTYPE in
+    darwin*) xattr -w com.apple.metadata:com_apple_backup_excludeItem com.apple.backupd "${XDG_CACHE_HOME}"
+             xattr -w com.apple.metadata:com_apple_backup_excludeItem com.apple.backupd "${XDG_RUNTIME_DIR}" ;;
+esac
 
-setenv XDG_CONFIG_HOME $XDG_CONFIG_HOME
-setenv XDG_CACHE_HOME  $XDG_CACHE_HOME
-setenv XDG_DATA_HOME   $XDG_DATA_HOME
-setenv XDG_STATE_HOME  $XDG_STATE_HOME
-setenv XDG_RUNTIME_DIR $XDG_RUNTIME_DIR
+setenv XDG_CONFIG_HOME "$XDG_CONFIG_HOME"
+setenv XDG_CACHE_HOME  "$XDG_CACHE_HOME"
+setenv XDG_DATA_HOME   "$XDG_DATA_HOME"
+setenv XDG_STATE_HOME  "$XDG_STATE_HOME"
+setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
 
 # Configure local bin/lib to XDG specification
 
