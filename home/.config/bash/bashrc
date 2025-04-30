@@ -21,6 +21,10 @@ fi
 # Key bindings
 source "/opt/homebrew/opt/fzf/shell/key-bindings.bash"
 
+# Install Starship
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
+eval "$(starship init bash)"
+
 # Aliases
 source ~/.config/aliases
 
