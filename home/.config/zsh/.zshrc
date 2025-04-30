@@ -1,11 +1,11 @@
-# Configure default programs
-export EDITOR=nvim
-export VISUAL=nvim
-export BROWSER=open
-export LOCKPRG="lock neo"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export PAGER=less
-export LESS="FRX --mouse"
+# Environment
+source "${XDG_CONFIG_HOME:-~/.config}"/env
+
+# Aliases
+source "${XDG_CONFIG_HOME:-~/.config}"/aliases
+
+# Functions
+fpath=($fpath $ZDOTDIR/functions)
 
 # Configure zsh autocompletion cache to XDG specification
 autoload -U compinit
@@ -24,9 +24,6 @@ source $ZDOTDIR/plugins/zsh-history-substring-search/zsh-history-substring-searc
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-# Configure ollama completion
-source $ZDOTDIR/plugins/ollama_zsh_completion/ollama_zsh_completion.plugin.zsh
-
 # Configure dotnet completion
 _dotnet_zsh_complete()
 {
@@ -41,60 +38,13 @@ _dotnet_zsh_complete()
 
 compdef _dotnet_zsh_complete dotnet
 
+# Configure ollama completion
+source $ZDOTDIR/plugins/ollama_zsh_completion/ollama_zsh_completion.plugin.zsh
+
 # Configure zoxide
 eval "$(zoxide init zsh --cmd j)"
 
-# Configure eza
-if [ -n "$NERDFONT" ]; then
-    export EZA_ICONS_AUTO=1
-fi
-
 # Configure fzf
-if [ "$COLORTERM" = truecolor ] || [ "$COLORTERM" = 24bit ]; then
-    FZF_COLORS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#E6DB74,hl:#7E8E91,fg:#F8F8F2,header:#7E8E91,info:#A6E22E,pointer:#A6E22E,marker:#F92672,fg+:#F8F8F2,prompt:#F92672,hl+:#F92672'
-else
-    FZF_COLORS=''
-fi
-
-case $EDITOR in
-    *vim*)   FZF_EDITOR="$EDITOR {1} +{2}" ;;
-    *emacs*) FZF_EDITOR="$EDITOR +{2} {1}" ;;
-    code)    FZF_EDITOR="$EDITOR {1}:{2}" ;;
-    *)       FZF_EDITOR="$EDITOR {1}" ;;
-esac
-
-export FZF_DEFAULT_COMMAND="fd --strip-cwd-prefix --hidden --follow --exclude .git"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND --type file"
-export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type directory"
-
-FZF_PREVIEW="preview --header {}"
-
-if [ "$TERM_PROGRAM" = tmux ]; then
-    FZF_DEFAULT_OPTS="--height 50% --tmux 80%"
-else
-    FZF_DEFAULT_OPTS="--height 99%"
-fi
-
-export FZF_DEFAULT_OPTS="
-    $FZF_DEFAULT_OPTS
-    --preview-window '~2,60%,border-left'
-    --layout=default
-    --info=inline-right
-    --prompt='❯ ' --pointer='❯' --marker='☑️'
-    --bind 'ctrl-p:change-preview-window(~2,75%,down,border-top|hidden|~2,60%,border-left)'
-    --bind 'ctrl-d:reload($FZF_ALT_C_COMMAND)+change-preview($FZF_PREVIEW)'
-    --bind 'ctrl-f:reload($FZF_CTRL_T_COMMAND)+change-preview($FZF_PREVIEW)'
-    --bind 'ctrl-y:execute-silent(echo {+} | pbcopy)'
-    --bind 'ctrl-t:replace-query'
-    --bind 'ctrl-s:toggle-sort'
-    --bind 'ctrl-a:toggle-all'
-    --bind 'ctrl-o:become($FZF_EDITOR < /dev/tty > /dev/tty)'
-    --bind 'ctrl-e:execute($FZF_EDITOR)'
-    --bind bspace:backward-delete-char/eof
-    $FZF_COLORS"
-export FZF_CTRL_T_OPTS="--preview '$FZF_PREVIEW'"
-export FZF_ALT_C_OPTS="--preview '$FZF_PREVIEW'"
-
 source <(fzf --zsh)
 
 bindkey '^F' fzf-file-widget
@@ -161,14 +111,5 @@ zstyle ':fzf-tab:complete:ollama:*' fzf-preview \
     'ollama show "$word"'
 
 # Install Starship
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
+export STARSHIP_CONFIG="${XDG_CONFIG_HOME:-~/.config}"/starship/starship.toml
 eval "$(starship init zsh)"
-
-# Aliases
-source ~/.config/aliases
-
-# Disable telemetry
-export DO_NOT_TRACK=1
-export DISABLE_TELEMETRY=1
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
-export HF_HUB_DISABLE_TELEMETRY=1
