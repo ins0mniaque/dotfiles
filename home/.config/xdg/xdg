@@ -127,7 +127,7 @@ setenv LD_LIBRARY_PATH "$LD_LIBRARY_PATH:$HOME/.local/lib"
     setenv W3M_DIR "$XDG_DATA_HOME"/w3m
 
     # wget
-    alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
+    alias wget='wget --hsts-file="$XDG_DATA_HOME"/wget-hsts'
 
     # zoxide
     setenv _ZO_DATA_DIR "$XDG_DATA_HOME"/zoxide
@@ -135,9 +135,6 @@ setenv LD_LIBRARY_PATH "$LD_LIBRARY_PATH:$HOME/.local/lib"
 # Configure bash to XDG specification
 
 if [ -n "$BASH_VERSION" ]; then
-
-    # Disable macOS Save/Restore Shell State
-    export SHELL_SESSIONS_DISABLE=1
 
     BASH_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}/bash
     BASH_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}/bash
@@ -161,9 +158,6 @@ fi
 
 if [ -n "$ZSH_VERSION" ]; then
 
-    # Disable macOS Save/Restore Shell State
-    export SHELL_SESSIONS_DISABLE=1
-
     ZDOTDIR=${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}
     ZCACHEDIR=${ZCACHEDIR:-$XDG_CACHE_HOME/zsh}
     ZDATADIR=${ZDATADIR:-$XDG_DATA_HOME/zsh}
@@ -175,8 +169,6 @@ if [ -n "$ZSH_VERSION" ]; then
     [ ! -d "$ZSTATEDIR" ] && mkdir -p "$ZSTATEDIR"
 
     export ZDOTDIR ZCACHEDIR ZDATADIR ZSTATEDIR HISTFILE
-
-    fpath=($fpath $ZDOTDIR/functions)
 
     ZSH_SOURCE="${(%):-%N}"
 
