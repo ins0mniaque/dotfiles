@@ -9,15 +9,6 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export PAGER=less
 export LESS="FRX --mouse"
 
-# Disable telemetry
-export DO_NOT_TRACK=1
-export DISABLE_TELEMETRY=1
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
-export HF_HUB_DISABLE_TELEMETRY=1
-
-# Disable macOS Save/Restore Shell State
-export SHELL_SESSIONS_DISABLE=1
-
 # Configure eza
 if [ -n "$NERDFONT" ]; then
     export EZA_ICONS_AUTO=1
