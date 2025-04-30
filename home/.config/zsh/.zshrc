@@ -12,6 +12,9 @@ autoload -U compinit
 compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
 zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
 
+# Configure keyboard
+source $ZDOTDIR/plugins/zsh-modern-keybindings/zsh-modern-keybindings.zsh
+
 # Configure auto-suggestions / syntax highlighting / history substring search
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -23,9 +26,6 @@ bindkey '^[[B' history-substring-search-down
 
 # Configure ollama completion
 source $ZDOTDIR/plugins/ollama_zsh_completion/ollama_zsh_completion.plugin.zsh
-
-# Configure keyboard
-source $ZDOTDIR/plugins/zsh-modern-keybindings/zsh-modern-keybindings.zsh
 
 # Configure zoxide
 eval "$(zoxide init zsh --cmd j)"
@@ -62,22 +62,22 @@ else
 fi
 
 export FZF_DEFAULT_OPTS="
-  $FZF_DEFAULT_OPTS
-  --preview-window '~2,60%,border-left'
-  --layout=default
-  --info=inline-right
-  --prompt='❯ ' --pointer='❯' --marker='☑️'
-  --bind 'ctrl-p:change-preview-window(~2,75%,down,border-top|hidden|~2,60%,border-left)'
-  --bind 'ctrl-d:reload($FZF_ALT_C_COMMAND)+change-preview($FZF_PREVIEW)'
-  --bind 'ctrl-f:reload($FZF_CTRL_T_COMMAND)+change-preview($FZF_PREVIEW)'
-  --bind 'ctrl-y:execute-silent(echo {+} | pbcopy)'
-  --bind 'ctrl-t:replace-query'
-  --bind 'ctrl-s:toggle-sort'
-  --bind 'ctrl-a:toggle-all'
-  --bind 'ctrl-o:become($FZF_EDITOR < /dev/tty > /dev/tty)'
-  --bind 'ctrl-e:execute($FZF_EDITOR)'
-  --bind bspace:backward-delete-char/eof
-  $FZF_COLORS"
+    $FZF_DEFAULT_OPTS
+    --preview-window '~2,60%,border-left'
+    --layout=default
+    --info=inline-right
+    --prompt='❯ ' --pointer='❯' --marker='☑️'
+    --bind 'ctrl-p:change-preview-window(~2,75%,down,border-top|hidden|~2,60%,border-left)'
+    --bind 'ctrl-d:reload($FZF_ALT_C_COMMAND)+change-preview($FZF_PREVIEW)'
+    --bind 'ctrl-f:reload($FZF_CTRL_T_COMMAND)+change-preview($FZF_PREVIEW)'
+    --bind 'ctrl-y:execute-silent(echo {+} | pbcopy)'
+    --bind 'ctrl-t:replace-query'
+    --bind 'ctrl-s:toggle-sort'
+    --bind 'ctrl-a:toggle-all'
+    --bind 'ctrl-o:become($FZF_EDITOR < /dev/tty > /dev/tty)'
+    --bind 'ctrl-e:execute($FZF_EDITOR)'
+    --bind bspace:backward-delete-char/eof
+    $FZF_COLORS"
 export FZF_CTRL_T_OPTS="--preview '$FZF_PREVIEW'"
 export FZF_ALT_C_OPTS="--preview '$FZF_PREVIEW'"
 
@@ -119,27 +119,29 @@ zstyle ':fzf-tab:complete:(-parameter-|-brace-parameter-|export|unset|expand|typ
 zstyle ':fzf-tab:complete:man:*' fzf-preview 'man "$word" | bat -p -l man --color=always'
 zstyle ':fzf-tab:complete:tldr:*' fzf-preview 'tldr --color always "$word"'
 zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
- '(out=$(tldr --color always "$word") 2>/dev/null && echo "$out") ||
-  (out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2>/dev/null && echo "$out") ||
-  (out=$(which "$word") && echo "$out") ||
-  echo "${(P)word}"'
+    '(out=$(tldr --color always "$word") 2>/dev/null && echo "$out") || ' \
+    '(out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2>/dev/null && echo "$out") || ' \
+    '(out=$(which "$word") && echo "$out") || ' \
+    'echo "${(P)word}"'
 
-zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview 'git diff "$word"'
+git_diff_preview='git diff --color=always ${(Q)realpath:-$word} | $(git config --get interactive.diffFilter || echo ${PAGER:-less})'
+
+zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview "$git_diff_preview"
 zstyle ':fzf-tab:complete:git-log:*' fzf-preview 'git log --color=always "$word"'
 zstyle ':fzf-tab:complete:git-help:*' fzf-preview 'git help "$word" | bat -p -l man --color=always'
 zstyle ':fzf-tab:complete:git-show:*' fzf-preview 'git show --color=always "$word"'
 zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
- 'case "$group" in
-    "modified file") git diff "$word" ;;
-    "recent commit object name") git show --color=always "$word" ;;
-    *) git log --color=always "$word" ;;
-  esac'
+    'case "$group" in' \
+    '  "modified file") '"$git_diff_preview"' ;;' \
+    '  "recent commit object name") git show --color=always "$word" ;;' \
+    '  *) git log --color=always "$word" ;;' \
+    'esac'
 
 zstyle ':fzf-tab:complete:ollama:*' fzf-preview \
-  'printf "\033[35m" && ' \
-  'ollama list "$word" | tail -n +2 && ' \
-  'printf "\033[0m\n" && ' \
-  'ollama show "$word"'
+    'printf "\033[35m" && ' \
+    'ollama list "$word" | tail -n +2 && ' \
+    'printf "\033[0m\n" && ' \
+    'ollama show "$word"'
 
 # Install Starship
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
