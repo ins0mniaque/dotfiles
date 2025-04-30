@@ -15,30 +15,18 @@ Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 
-# Alias
-if ($IsWindows)
-{
-    Set-Alias open Invoke-Item
-    function su { & Start-Process pwsh -Verb runAs }
+# Configure dotnet completion
+Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
+    param($wordToComplete, $commandAst, $cursorPosition)
+        dotnet complete --position $cursorPosition "$commandAst" | ForEach-Object {
+            [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+        }
 }
-elseif ($IsLinux)
-{
-    function open { & setsid nohup xdg-open $Args > /dev/null 2> /dev/null }
-}
-
-# Add .NET Core SDK tools
-$Env:Path += ";$HOME/.dotnet/tools"
-
-# Fix PowerShell command (see https://github.com/PowerShell/PowerShell/issues/12205)
-Set-Alias pwsh "$HOME/.dotnet/tools/pwsh"
 
 # Add Go SDK tools
 $Env:GOPATH = "$HOME/.go"
 $Env:GOROOT = "$(brew --prefix golang)/libexec"
 $Env:Path += ";$Env:GOPATH/bin;$Env:GOROOT/bin"
-
-# Add tools
-$Env:Path += ";$HOME/.tools/arm64;$HOME/.tools/x64"
 
 # Configure zoxide
 Invoke-Expression (& { (zoxide init powershell --cmd j | Out-String) })
@@ -58,6 +46,16 @@ switch -regex -file ~/.config/aliases
     {
         New-Item -Path function: -Name "script:$($matches[1])" -Value $matches[2].Trim("""").Trim("'") | Out-Null
     }
+}
+
+if ($IsWindows)
+{
+    Set-Alias open Invoke-Item
+    function su { & Start-Process pwsh -Verb runAs }
+}
+elseif ($IsLinux)
+{
+    function open { & setsid nohup xdg-open $Args > /dev/null 2> /dev/null }
 }
 
 # Disable telemetry
