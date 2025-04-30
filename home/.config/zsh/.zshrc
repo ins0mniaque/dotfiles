@@ -121,8 +121,11 @@ zstyle ':fzf-tab:*' continuous-trigger 'tab'
 zstyle ':fzf-tab:*' fzf-flags ${(Q)${(Z:nC:)FZF_DEFAULT_OPTS}}
 
 # Configure fzf-tab previews
-zstyle ':fzf-tab:complete:*:*' fzf-preview 'preview --header ${(Q)realpath}'
-zstyle ':fzf-tab:complete:*:options' fzf-preview 
+zstyle ':fzf-tab:complete:*:*' fzf-preview \
+    'preview --header ${(Q)realpath} 2> /dev/null || ' \
+    'echo "No preview for \033[32m$word\033[0m"'
+
+zstyle ':fzf-tab:complete:*:options' fzf-preview
 zstyle ':fzf-tab:complete:*:argument-1' fzf-preview
 zstyle ':fzf-tab:complete:(kill|ps):*' fzf-preview
 zstyle ':fzf-tab:complete:ssh:*' fzf-preview 'dig +short "$word"'
@@ -133,8 +136,8 @@ zstyle ':fzf-tab:complete:(-parameter-|-brace-parameter-|export|unset|expand|typ
 zstyle ':fzf-tab:complete:man:*' fzf-preview 'man "$word" | bat -p -l man --color=always'
 zstyle ':fzf-tab:complete:tldr:*' fzf-preview 'tldr --color always "$word"'
 zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
-    '(out=$(tldr --color always "$word") 2>/dev/null && echo "$out") || ' \
-    '(out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2>/dev/null && echo "$out") || ' \
+    '(out=$(tldr --color always "$word") 2> /dev/null && echo "$out") || ' \
+    '(out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2> /dev/null && echo "$out") || ' \
     '(out=$(which "$word") && echo "$out") || ' \
     'echo "${(P)word}"'
 
