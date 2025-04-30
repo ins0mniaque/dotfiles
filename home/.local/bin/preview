@@ -1,13 +1,15 @@
 #!/bin/sh
+#
+# preview - Multi-format preview script
 
 version()
 {
-    echo "${0##*/}: Multi-format preview script (version 0.3)"
+    echo >&2 "${0##*/}: Multi-format preview script (version 0.4)"
 }
 
 usage()
 {
-    cat <<EOF
+    cat >&2 <<EOF
 Usage: ${0##*/} <options>... <files>...
 
 Options:
@@ -23,8 +25,8 @@ EOF
 
 invalid()
 {
-    echo "${0##*/}: Unknown option '$1'"
-    echo "${0##*/}: Try '$0 --help' for more information."
+    echo >&2 "${0##*/}: Unknown option '$1'"
+    echo >&2 "${0##*/}: Try '$0 --help' for more information."
 }
 
 preview()
@@ -170,5 +172,5 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$previewed" ]; then
-    version; echo ""; usage; exit 1
+    version; echo >&2; usage; exit 1
 fi
