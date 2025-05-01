@@ -1,25 +1,14 @@
-# Configure default programs
-export EDITOR=nvim
-export VISUAL=nvim
-export BROWSER=open
-export LOCKPRG="lock neo"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export PAGER=less
-export LESS="FRX --mouse"
+# Environment
+source "${XDG_CONFIG_HOME:-~/.config}"/env
 
-# Setup zoxide
-eval "$(zoxide init bash --cmd j)"
-
-# Setup fzf
-if [[ ! "$PATH" == */opt/homebrew/opt/fzf/bin* ]]; then
-    export PATH="${PATH:+${PATH}:}/opt/homebrew/opt/fzf/bin"
-fi
-
-# Auto-completion
-[[ $- == *i* ]] && source "/opt/homebrew/opt/fzf/shell/completion.bash" 2> /dev/null
+# Aliases
+source "${XDG_CONFIG_HOME:-~/.config}"/aliases
 
 # Key bindings
 source "/opt/homebrew/opt/fzf/shell/key-bindings.bash"
+
+# Auto-completion
+[[ $- == *i* ]] && source "/opt/homebrew/opt/fzf/shell/completion.bash" 2> /dev/null
 
 # Configure dotnet completion
 function _dotnet_bash_complete()
@@ -33,15 +22,14 @@ function _dotnet_bash_complete()
 
 complete -f -F _dotnet_bash_complete dotnet
 
+# Setup zoxide
+eval "$(zoxide init bash --cmd j)"
+
+# Setup fzf
+if [[ ! "$PATH" == */opt/homebrew/opt/fzf/bin* ]]; then
+    export PATH="${PATH:+${PATH}:}/opt/homebrew/opt/fzf/bin"
+fi
+
 # Install Starship
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init bash)"
-
-# Aliases
-source ~/.config/aliases
-
-# Disable telemetry
-export DO_NOT_TRACK=1
-export DISABLE_TELEMETRY=1
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
-export HF_HUB_DISABLE_TELEMETRY=1
