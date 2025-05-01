@@ -71,8 +71,13 @@ zstyle ':fzf-tab:*' continuous-trigger 'tab'
 zstyle ':fzf-tab:*' fzf-flags ${(Q)${(Z:nC:)FZF_DEFAULT_OPTS}}
 
 # Configure fzf-tab previews
+case $FZF_DEFAULT_OPTS in
+    *--tmux*) tmux_popup=--tmux-popup ;;
+    *)        tmux_popup= ;;
+esac
+
 zstyle ':fzf-tab:complete:*:*' fzf-preview \
-    'preview --header ${(Q)realpath} 2> /dev/null || ' \
+    'preview --header '"$tmux_popup"' ${(Q)realpath} 2> /dev/null || ' \
     'echo "No preview for \033[32m$word\033[0m"'
 
 zstyle ':fzf-tab:complete:*:options' fzf-preview
