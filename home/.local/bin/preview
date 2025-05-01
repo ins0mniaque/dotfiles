@@ -4,7 +4,7 @@
 
 version()
 {
-    echo >&2 "${0##*/}: Multi-format preview script (version 0.4)"
+    echo >&2 "${0##*/}: Multi-format preview script (version 0.5)"
 }
 
 usage()
@@ -18,6 +18,7 @@ Options:
   -w, --width=<WIDTH>       set terminal width to WIDTH columns
   -h, --height=<HEIGHT>     set terminal height to HEIGHT lines
   -l, --length=<LENGTH>     limit output to LENGTH lines
+  --tmux-popup              use tmux popup compatibility mode
   -?, --help                display help and exit
   -v, --version             display the version number and exit
 EOF
@@ -85,15 +86,12 @@ preview_image()
         size="$width""x""$height"
     fi
 
-    if [ -n "$TMUX" ]; then
-        if [ -z "$TMUX_PANE" ] || [ "$(ps -o command "$PPID" | tail -n 1 | cut -c1-24)" = 'fzf --bind=ctrl-z:ignore' ]; then
-            # Disable unsupported image protocols inside tmux popup
-            chafa --format symbols --animate off --size "$size" "$@"
-            return
-        fi
+    if [ -n "$tmux_popup" ]; then
+        # Disable unsupported image protocols inside tmux popup
+        chafa --format symbols --animate off --size "$size" "$@"
+    else
+        chafa --size "$size" "$@"
     fi
-
-    chafa --size "$size" "$@"
 }
 
 header()
@@ -148,6 +146,7 @@ padding=${FZF_PREVIEW_COLUMNS:+8}
 width=${FZF_PREVIEW_COLUMNS:-${COLUMNS:-$(tput cols)}}
 height=${FZF_PREVIEW_LINES:-${LINES:-$(tput lines)}}
 length=512
+tmux_popup=
 
 if [ -z "$FZF_PREVIEW_LINES" ]; then
     height=$((height - 1))
@@ -164,6 +163,7 @@ while [ $# -gt 0 ]; do
         -h=*|--height=*)  height="${1#*=}";  shift ;;
         -l|--length)      length="$2";       shift; shift ;;
         -l=*|--length=*)  length="${1#*=}";  shift ;;
+        --tmux-popup)     tmux_popup=1;      shift ;;
         -\?|--help)       usage;             exit 1 ;;
         -v|--version)     version;           exit 1 ;;
         -*)               invalid "$1";      exit 1 ;;
