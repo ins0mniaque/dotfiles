@@ -22,14 +22,14 @@ function _dotnet_bash_complete()
 
 complete -f -F _dotnet_bash_complete dotnet
 
-# Setup zoxide
+# Configure zoxide
 eval "$(zoxide init bash --cmd j)"
 
-# Setup fzf
+# Configure fzf
 if [[ ! "$PATH" == */opt/homebrew/opt/fzf/bin* ]]; then
     export PATH="${PATH:+${PATH}:}/opt/homebrew/opt/fzf/bin"
 fi
 
-# Install Starship
+# Configure Starship
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init bash)"
