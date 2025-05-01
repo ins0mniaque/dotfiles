@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Reclaim Ctrl-S / Ctrl-Q
+stty -ixon -ixoff
+
 # Disable telemetry
 export DO_NOT_TRACK=1
 export DISABLE_TELEMETRY=1
@@ -8,3 +11,16 @@ export HF_HUB_DISABLE_TELEMETRY=1
 
 # Disable macOS Save/Restore Shell State
 export SHELL_SESSIONS_DISABLE=1
+
+# Configure Homebrew
+if [ -f /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# Configure Go SDK
+HOMEBREW_GO=$(brew --prefix golang 2> /dev/null)
+[ -n "$HOMEBREW_GO" ] && export GOROOT="$HOMEBREW_GO"/libexec
+[ -d /usr/local/go ] && export GOROOT=/usr/local/go
+[ -d "$HOME"/go ] && export GOPATH="$HOME"/go
+[ -n "$GOROOT" ] && export PATH="${PATH}:$GOROOT/bin"
+[ -n "$GOPATH" ] && export PATH="${PATH}:$GOPATH/bin"
