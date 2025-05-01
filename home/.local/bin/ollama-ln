@@ -13,9 +13,13 @@ find "$manifest_dir" -type f -mindepth 3 -maxdepth 3 | while IFS= read -r file; 
     model=$(basename "$(dirname "$file")")
     tag=$(basename "$file")
 
-    digest=$(jq -r '.layers[] | select(.mediaType == "application/vnd.ollama.image.model") | .digest' "$file")
+    digest=$(jq -r '.layers[] | select(.mediaType == "application/vnd.ollama.image.model") | .digest | sub("sha256:"; "sha256-")' "$file")
 
-    ln -s "$blob_dir/$digest" "$output_dir/$user-$model-$tag.gguf"
-
-    echo "$output_dir/$user-$model-$tag.gguf"
+    if [ "$user" = library ]; then
+        ln -s "$blob_dir/$digest" "$output_dir/$model-$tag.gguf"
+        echo "$output_dir/$model-$tag.gguf"
+    else
+        ln -s "$blob_dir/$digest" "$output_dir/$user-$model-$tag.gguf"
+        echo "$output_dir/$user-$model-$tag.gguf"
+    fi
 done
