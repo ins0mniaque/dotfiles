@@ -115,6 +115,6 @@ zstyle ':fzf-tab:complete:ollama:*' fzf-preview \
     'printf "\033[0m\n" && ' \
     'ollama show "$word"'
 
-# Install Starship
+# Configure Starship
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME:-~/.config}"/starship/starship.toml
 eval "$(starship init zsh)"
