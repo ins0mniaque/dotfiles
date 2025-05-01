@@ -23,7 +23,7 @@ Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
         }
 }
 
-# Add Go SDK tools
+# Configure Go SDK
 $Env:GOPATH = "$HOME/.go"
 $Env:GOROOT = "$(brew --prefix golang)/libexec"
 $Env:Path += ";$Env:GOPATH/bin;$Env:GOROOT/bin"
@@ -35,7 +35,7 @@ Invoke-Expression (& { (zoxide init powershell --cmd j | Out-String) })
 $Env:FZF_DEFAULT_COMMAND = "fd --type f"
 $Env:FZF_DEFAULT_OPTS = "--multi --bind 'ctrl-p:toggle-preview+change-preview(preview {})'"
 
-# Install Starship
+# Configure Starship
 $Env:STARSHIP_CONFIG = "$HOME/.config/starship/starship.ansi.toml"
 Invoke-Expression (&starship init powershell)
 
