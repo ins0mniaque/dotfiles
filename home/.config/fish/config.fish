@@ -7,7 +7,7 @@ set -g -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 set -g -x PAGER less
 set -g -x LESS "FRX --mouse"
 
-# Add Go SDK tools
+# Configure Go SDK
 set -g -x GOPATH ~/.go
 set -g -x GOROOT (brew --prefix golang)/libexec
 fish_add_path $GOPATH/bin
@@ -23,7 +23,7 @@ complete -f -c dotnet -a "(dotnet complete (commandline -cp))"
 set -g -x FZF_DEFAULT_COMMAND 'fd --type f --color=always'
 set -g -x FZF_DEFAULT_OPTS '--multi --bind "ctrl-p:toggle-preview+change-preview(preview {})"'
 
-# Install Starship
+# Configure Starship
 set -g -x STARSHIP_CONFIG ~/.config/starship/starship.toml
 starship init fish | source
 
