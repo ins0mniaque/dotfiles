@@ -110,6 +110,11 @@ setenv LD_LIBRARY_PATH "$LD_LIBRARY_PATH:$HOME/.local/lib"
     # ripgrep
     setenv RIPGREP_CONFIG_PATH "$XDG_CONFIG_HOME"/ripgrep/config
 
+    # Ruby
+    setenv BUNDLE_USER_CONFIG "$XDG_CONFIG_HOME"/bundle
+    setenv BUNDLE_USER_CACHE "$XDG_CACHE_HOME"/bundle
+    setenv BUNDLE_USER_PLUGIN "$XDG_DATA_HOME"/bundle
+
     # Rust
     setenv CARGO_HOME "$XDG_DATA_HOME"/cargo
     setenv RUSTUP_HOME "$XDG_DATA_HOME"/rustup
