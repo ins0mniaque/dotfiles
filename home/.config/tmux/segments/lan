@@ -11,4 +11,6 @@ done
 
 if [ -n "$LAN_IP" ]; then
     echo "#[fg=colour33]$LAN_ICON#[fg=colour39]$LAN_IP"
+else
+    exit 1
 fi

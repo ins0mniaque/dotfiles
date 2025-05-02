@@ -6,4 +6,6 @@ fi
 
 if DOCKER_PS=$(docker ps 2> /dev/null); then
     echo "$DOCKER_ICON $(echo "$DOCKER_PS" | tail -n +2 | wc -l | tr -d ' ')"
+else
+    exit 1
 fi

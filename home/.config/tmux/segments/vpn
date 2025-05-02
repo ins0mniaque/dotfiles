@@ -11,4 +11,6 @@ done
 
 if [ -n "$VPN_IP" ]; then
     echo "#[fg=colour162]$VPN_ICON#[fg=colour205]$VPN_IP"
+else
+    exit 1
 fi

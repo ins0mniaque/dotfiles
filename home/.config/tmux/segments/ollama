@@ -6,4 +6,6 @@ fi
 
 if OLLAMA_PS=$(ollama ps 2> /dev/null); then
     echo "$OLLAMA_ICON $(echo "$OLLAMA_PS" | tail -n +2 | wc -l | tr -d ' ')"
+else
+    exit 1
 fi
