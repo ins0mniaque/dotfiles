@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ -z "$TMUX_SEGMENTS_ASCII_MODE" ]; then OLLAMA_ICON=" 🦙";
+else                                        OLLAMA_ICON="#[fg=colour33] O#[fg=default]";
+fi
+
+if OLLAMA_PS=$(ollama ps 2> /dev/null); then
+    echo "$OLLAMA_ICON $(echo "$OLLAMA_PS" | tail -n +2 | wc -l | tr -d ' ')"
+fi
