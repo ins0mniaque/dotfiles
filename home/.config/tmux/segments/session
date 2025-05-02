@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then SESSION_ICON=" 🖥  "; ZOOMED_ICON=" 🔎 ";
+if [ -z "$TMUX_SEGMENTS_ASCII_MODE" ]; then SESSION_ICON=" 🖥  "; ZOOMED_ICON=" 🔎 ";
 else                                        SESSION_ICON=" ";     ZOOMED_ICON=" ⚲";
 fi
 

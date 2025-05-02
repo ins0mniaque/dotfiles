@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then MACHINE_ICON="💻 ";
+if [ -z "$TMUX_SEGMENTS_ASCII_MODE" ]; then MACHINE_ICON="💻 ";
 else                                        MACHINE_ICON="";
 fi
 

@@ -1,32 +1,27 @@
-#!/bin/bash
+#!/bin/sh
 
 case "$1" in
-    -d | --disable ) tmux set-environment -g  TMUX_SEGMENT_WAN_DISABLED 1
-                     tmux refresh-client -S
-                     ;;
-    -e | --enable  ) tmux set-environment -gu TMUX_SEGMENT_WAN_DISABLED
-                     tmux refresh-client -S
-                     ;;
-    -t | --toggle  ) if [[ -z $TMUX_SEGMENT_WAN_DISABLED ]]; then
-                         tmux set-environment -g  TMUX_SEGMENT_WAN_DISABLED 1
-                         tmux refresh-client -S
-                     else
-                         tmux set-environment -gu TMUX_SEGMENT_WAN_DISABLED
-                         tmux refresh-client -S
-                     fi
-                     ;;
+    -d|--disable) tmux set-environment -g  TMUX_SEGMENT_WAN_DISABLED 1
+                  tmux refresh-client -S ;;
+    -e|--enable)  tmux set-environment -gu TMUX_SEGMENT_WAN_DISABLED
+                  tmux refresh-client -S ;;
+    -t|--toggle)  if [ -z "$TMUX_SEGMENT_WAN_DISABLED" ]; then
+                      tmux set-environment -g  TMUX_SEGMENT_WAN_DISABLED 1
+                      tmux refresh-client -S
+                  else
+                      tmux set-environment -gu TMUX_SEGMENT_WAN_DISABLED
+                      tmux refresh-client -S
+                  fi ;;
 
-    * )
-    if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then WAN_ICON=" 🅆 ";
-    else                                        WAN_ICON=" W ";
-    fi
+    *) if [ -z "$TMUX_SEGMENTS_ASCII_MODE" ]; then WAN_ICON=" 🅆 ";
+       else                                        WAN_ICON=" W ";
+       fi
 
-    if [[ -z $TMUX_SEGMENT_WAN_DISABLED ]]; then
-        WAN_IP="#[fg=colour177]$( (dig TXT +short o-o.myaddr.l.google.com @ns1.google.com || echo '#[fg=colour197]Offline') | tr -d '"' )";
-    else
-        WAN_IP="#[fg=colour245]Disabled";
-    fi
+       if [ -z "$TMUX_SEGMENT_WAN_DISABLED" ]; then
+           WAN_IP="#[fg=colour177]$( (dig TXT +short o-o.myaddr.l.google.com @ns1.google.com || echo '#[fg=colour197]Offline') | tr -d '"' )";
+       else
+           WAN_IP="#[fg=colour245]Disabled";
+       fi
 
-    echo "#[fg=colour135]$WAN_ICON$WAN_IP "
-    ;;
+       echo "#[fg=colour135]$WAN_ICON$WAN_IP " ;;
 esac

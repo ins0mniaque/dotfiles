@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then LAN_ICON=" 🄻 ";
+if [ -z "$TMUX_SEGMENTS_ASCII_MODE" ]; then LAN_ICON=" 🄻 ";
 else                                        LAN_ICON=" L ";
 fi
 
@@ -9,6 +9,6 @@ for interface in $interfaces; do
     LAN_IP="$LAN_IP$(ifconfig "${interface}" 2>/dev/null | awk '$1 == "inet" { gsub(/^192\.168\.|^10\./, ".", $2); print $2" " }')"
 done
 
-if [[ -n $LAN_IP ]]; then
+if [ -n "$LAN_IP" ]; then
     echo "#[fg=colour33]$LAN_ICON#[fg=colour39]$LAN_IP"
 fi

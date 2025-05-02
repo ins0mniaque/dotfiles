@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then POWER_ICON="#[fg=default] 🔌 "; BATTERY_ICON="#[fg=default] 🔋 ";
+if [ -z "$TMUX_SEGMENTS_ASCII_MODE" ]; then POWER_ICON="#[fg=default] 🔌 "; BATTERY_ICON="#[fg=default] 🔋 ";
 else                                        POWER_ICON="#[fg=colour220] ↑"; BATTERY_ICON="#[fg=colour160] ↓";
 fi
 

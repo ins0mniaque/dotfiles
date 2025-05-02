@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-if [[ -z $TMUX_SEGMENTS_ASCII_MODE ]]; then VPN_ICON=" 🅅 ";
+if [ -z "$TMUX_SEGMENTS_ASCII_MODE" ]; then VPN_ICON=" 🅅 ";
 else                                        VPN_ICON=" V ";
 fi
 
@@ -9,6 +9,6 @@ for interface in $interfaces; do
     VPN_IP="$VPN_IP$(ifconfig "${interface}" 2>/dev/null | awk '$1 == "inet" { gsub(/^192\.168\./, ".", $2); print $2" " }')"
 done
 
-if [[ -n $VPN_IP ]]; then
+if [ -n "$VPN_IP" ]; then
     echo "#[fg=colour162]$VPN_ICON#[fg=colour205]$VPN_IP"
 fi
