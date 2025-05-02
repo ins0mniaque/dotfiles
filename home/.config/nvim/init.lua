@@ -395,6 +395,9 @@ require("lazy").setup
         -- Git decorations
         { "lewis6991/gitsigns.nvim", opts = { } },
 
+        -- Auto-save session files
+        { "tpope/vim-obsession" },
+
         -- Automatic tabstop and shiftwidth
         { "tpope/vim-sleuth" },
 
