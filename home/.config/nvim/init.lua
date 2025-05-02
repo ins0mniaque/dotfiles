@@ -6,9 +6,6 @@ vim.g.maplocalleader = " "
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Terminal Graphics
-vim.g.graphics = os.getenv("GRAPHICS") and true or false
-
 -- Nerd Font
 vim.g.nerdfont = os.getenv("NERDFONT") and true or false
 
