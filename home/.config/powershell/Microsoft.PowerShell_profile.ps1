@@ -7,7 +7,11 @@ $Env:MANPAGER = "sh -c 'col -bx | bat -l man -p'"
 $Env:PAGER = "less"
 $Env:LESS = "FRX --mouse"
 
-# Autocompletion
+# Configure SHLVL support
+try   { $Env:SHLVL = [int]$Env:SHLVL + 1 }
+catch { [Console]::ForegroundColor = 'Yellow'; [Console]::Error.Write("WARNING: "); [Console]::ResetColor(); [Console]::Error.WriteLine($_) }
+
+# Configure autocompletion
 try   { Set-PSReadLineOption -PredictionSource History }
 catch { [Console]::ForegroundColor = 'Yellow'; [Console]::Error.Write("WARNING: "); [Console]::ResetColor(); [Console]::Error.WriteLine($_) }
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd
