@@ -3,5 +3,10 @@
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+alias ........='cd ../../../../../../..'
+
 alias ls='eza --all --hyperlink'
 alias ll='eza --all --long --git --group-directories-first --hyperlink'
