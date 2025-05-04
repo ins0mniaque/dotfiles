@@ -2,10 +2,29 @@
 
 cd "$(dirname "${(%):-%N}")";
 
-git clone https://github.com/Aloxaf/fzf-tab
-git clone https://github.com/zsh-users/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-completions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-history-substring-search
-git clone https://github.com/ins0mniaque/zsh-modern-keybindings
-git clone https://github.com/ocodo/ollama_zsh_completion.git
+git clone --depth 1 https://github.com/Aloxaf/fzf-tab
+git clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
+git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
+git clone --depth 1 https://github.com/zsh-users/zsh-history-substring-search
+git clone --depth 1 https://github.com/ins0mniaque/zsh-modern-keybindings
+git clone --depth 1 https://github.com/ocodo/ollama_zsh_completion.git
+
+git init zsh-completions && \
+cd zsh-completions && \
+git remote add origin https://github.com/zsh-users/zsh-completions && \
+git config core.sparseCheckout true && \
+echo "src/_bundle
+src/_cmake
+src/_golang
+src/_neo
+src/_node
+src/_openssl
+src/_rails
+src/_shellcheck
+src/_tsc
+src/_uuidgen
+src/_xsel" > .git/info/sparse-checkout && \
+git fetch origin master && \
+git checkout master && \
+git pull && \
+cd ..

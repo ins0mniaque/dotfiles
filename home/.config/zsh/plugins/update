@@ -2,30 +2,10 @@
 
 cd "$(dirname "${(%):-%N}")";
 
-cd fzf-tab
-git pull
-cd ..
-
-cd zsh-autosuggestions
-git pull
-cd ..
-
-cd zsh-completions
-git pull
-cd ..
-
-cd zsh-syntax-highlighting
-git pull
-cd ..
-
-cd zsh-history-substring-search
-git pull
-cd ..
-
-cd zsh-modern-keybindings
-git pull
-cd ..
-
-cd ollama_zsh_completion
-git pull
-cd ..
+cd fzf-tab; git pull; cd ..
+cd zsh-autosuggestions; git pull; cd ..
+cd zsh-syntax-highlighting; git pull; cd ..
+cd zsh-history-substring-search; git pull; cd ..
+cd zsh-modern-keybindings; git pull; cd ..
+cd ollama_zsh_completion; git pull; cd ..
+cd zsh-completions; git pull; cd ..
