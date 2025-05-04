@@ -44,9 +44,6 @@ compdef _dotnet_zsh_complete dotnet
 # Configure ollama completion
 source $ZDOTDIR/plugins/ollama_zsh_completion/ollama_zsh_completion.plugin.zsh
 
-# Remove wrong play completion added by zsh-completions
-compdef -d play
-
 # Configure zoxide
 eval "$(zoxide init zsh --cmd j)"
 
