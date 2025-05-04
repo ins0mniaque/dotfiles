@@ -11,7 +11,7 @@
 # • Link ~/.zshenv to this file
 # • Add the following lines to $XDG_CONFIG_HOME/zsh/.zshrc:
 #       # Configure zsh completion cache to XDG specification
-#       autoload -U compinit
+#       autoload -Uz compinit
 #       compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
 #       zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
 # macOS
