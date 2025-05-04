@@ -8,7 +8,7 @@ source "${XDG_CONFIG_HOME:-~/.config}"/aliases
 fpath=($fpath $ZDOTDIR/functions)
 
 # Configure zsh autocompletion cache to XDG specification
-autoload -U compinit
+autoload -Uz compinit
 compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
 zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
 
