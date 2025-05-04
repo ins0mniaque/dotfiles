@@ -10,7 +10,7 @@
 # zsh
 # • Link ~/.zshenv to this file
 # • Add the following lines to $XDG_CONFIG_HOME/zsh/.zshrc:
-#       # Configure zsh autocompletion cache to XDG specification
+#       # Configure zsh completion cache to XDG specification
 #       autoload -U compinit
 #       compinit -d "$ZCACHEDIR/zcompdump-$ZSH_VERSION"
 #       zstyle ':completion:*' cache-path "$ZCACHEDIR"/zcompcache
