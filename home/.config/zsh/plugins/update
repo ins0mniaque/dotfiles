@@ -10,6 +10,10 @@ cd zsh-autosuggestions
 git pull
 cd ..
 
+cd zsh-completions
+git pull
+cd ..
+
 cd zsh-syntax-highlighting
 git pull
 cd ..
