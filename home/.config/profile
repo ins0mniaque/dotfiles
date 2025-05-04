@@ -12,11 +12,6 @@ export HF_HUB_DISABLE_TELEMETRY=1
 # Disable macOS Save/Restore Shell State
 export SHELL_SESSIONS_DISABLE=1
 
-# Configure Homebrew
-if [ -f /opt/homebrew/bin/brew ]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
-
 # Configure Go SDK
 HOMEBREW_GO=$(brew --prefix golang 2> /dev/null)
 [ -n "$HOMEBREW_GO" ] && export GOROOT="$HOMEBREW_GO"/libexec
