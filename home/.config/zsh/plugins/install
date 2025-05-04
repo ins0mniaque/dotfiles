@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/zsh
 
-cd "$(dirname "${BASH_SOURCE}")";
+cd "$(dirname "${(%):-%N}")";
 
 git clone https://github.com/Aloxaf/fzf-tab
 git clone https://github.com/zsh-users/zsh-autosuggestions
