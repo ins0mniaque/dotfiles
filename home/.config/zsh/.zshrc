@@ -5,10 +5,10 @@ source "${XDG_CONFIG_HOME:-~/.config}"/env
 source "${XDG_CONFIG_HOME:-~/.config}"/aliases
 
 # Functions
-fpath=($fpath $ZDOTDIR/functions)
+fpath+="$ZDOTDIR"/functions
 
 # Configure additional completions
-fpath=($fpath $ZDOTDIR/plugins/zsh-completions/src)
+fpath+="$ZDOTDIR"/plugins/zsh-completions/src
 
 # Configure zsh completion cache to XDG specification
 autoload -Uz compinit
