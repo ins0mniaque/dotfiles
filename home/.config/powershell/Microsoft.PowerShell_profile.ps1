@@ -20,11 +20,14 @@ Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 
 # Configure dotnet completion
-Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
+Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock `
+{
     param($wordToComplete, $commandAst, $cursorPosition)
-        dotnet complete --position $cursorPosition "$commandAst" | ForEach-Object {
-            [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
-        }
+
+    dotnet complete --position $cursorPosition "$commandAst" | ForEach-Object
+    {
+        [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+    }
 }
 
 # Configure Go SDK
