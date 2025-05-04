@@ -7,8 +7,14 @@ source "${XDG_CONFIG_HOME:-~/.config}"/aliases
 # Functions
 fpath+="$ZDOTDIR"/functions
 
+# Completions
+fpath+="$ZDOTDIR"/completions
+
 # Configure additional completions
 fpath+="$ZDOTDIR"/plugins/zsh-completions/src
+
+# Configure ollama completion
+fpath+="$ZDOTDIR"/plugins/ollama_zsh_completion
 
 # Configure zsh completion cache to XDG specification
 autoload -Uz compinit
@@ -26,23 +32,6 @@ source $ZDOTDIR/plugins/zsh-history-substring-search/zsh-history-substring-searc
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-
-# Configure dotnet completion
-_dotnet_zsh_complete()
-{
-    local completions=("$(dotnet complete "$words")")
-    if [ -z "$completions" ]; then
-        _arguments '*::arguments: _normal'
-        return
-    fi
-
-    _values = "${(ps:\n:)completions}"
-}
-
-compdef _dotnet_zsh_complete dotnet
-
-# Configure ollama completion
-source $ZDOTDIR/plugins/ollama_zsh_completion/ollama_zsh_completion.plugin.zsh
 
 # Configure zoxide
 eval "$(zoxide init zsh --cmd j)"
