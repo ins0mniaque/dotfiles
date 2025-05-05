@@ -51,6 +51,7 @@ if [ -z "$FZF_TAB_MODULE_VERSION" ]; then
 fi
 
 zstyle ':completion:*' fzf-search-display true
+zstyle ':completion:*' insert-tab false
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}'
 zstyle ':completion:*' menu no
