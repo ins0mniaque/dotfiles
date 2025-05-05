@@ -59,7 +59,7 @@ zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':completion:*:descriptions' format '[%d]'
 
 zstyle ':fzf-tab:*' switch-group F1 F2
-zstyle ':fzf-tab:*' continuous-trigger 'tab'
+zstyle ':fzf-tab:*' continuous-trigger tab
 zstyle ':fzf-tab:*' fzf-flags ${(Q)${(Z:nC:)FZF_DEFAULT_OPTS}}
 
 # Configure fzf-tab previews
@@ -75,24 +75,23 @@ zstyle ':fzf-tab:complete:*:*' fzf-preview \
 zstyle ':fzf-tab:complete:*:options' fzf-preview
 zstyle ':fzf-tab:complete:*:argument-1' fzf-preview
 zstyle ':fzf-tab:complete:(kill|ps):*' fzf-preview
-zstyle ':fzf-tab:complete:ssh:*' fzf-preview 'dig +short "$word"'
+zstyle ':fzf-tab:complete:ssh:*' fzf-preview '[ "$group" = "[remote host name]" ] && dig +short "$word"'
 zstyle ':fzf-tab:complete:brew-(install|uninstall|search|info):*-argument-rest' fzf-preview 'brew info "$word"'
 zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status "$word"'
 
 zstyle ':fzf-tab:complete:(-parameter-|-brace-parameter-|export|unset|expand|typeset|declare|local):*' fzf-preview 'echo "${(P)word}"'
-zstyle ':fzf-tab:complete:man:*' fzf-preview 'man "$word" | bat -p -l man --color=always'
+zstyle ':fzf-tab:complete:man:*' fzf-preview 'man "$word"'
 zstyle ':fzf-tab:complete:tldr:*' fzf-preview 'tldr --color always "$word"'
 zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
-    '(out=$(tldr --color always "$word") 2> /dev/null && echo "$out") || ' \
-    '(out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2> /dev/null && echo "$out") || ' \
-    '(out=$(which "$word") && echo "$out") || ' \
-    'echo "${(P)word}"'
+    'tldr --color always "$word" 2> /dev/null || ' \
+    'man "$word" 2> /dev/null || ' \
+    'which "$word"'
 
 git_diff_preview='git diff --color=always ${(Q)realpath:-$word} | $(git config --get interactive.diffFilter || echo ${PAGER:-less})'
 
 zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview "$git_diff_preview"
 zstyle ':fzf-tab:complete:git-log:*' fzf-preview 'git log --color=always "$word"'
-zstyle ':fzf-tab:complete:git-help:*' fzf-preview 'git help "$word" | bat -p -l man --color=always'
+zstyle ':fzf-tab:complete:git-help:*' fzf-preview 'git help "$word"'
 zstyle ':fzf-tab:complete:git-show:*' fzf-preview 'git show --color=always "$word"'
 zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
     'case "$group" in' \
