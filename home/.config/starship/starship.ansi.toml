@@ -1,7 +1,7 @@
 # Layout
 
 add_newline = false
-format = "\u001b7$fill$shell$all\u001b8$directory$character"
+format = """$directory$character\u001b7${fill}$shell$all\u001b8"""
 
 [fill]
 symbol = " "
